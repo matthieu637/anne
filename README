@@ -1,0 +1,20 @@
+####################################################
+####################################################
+#    			ANNE                       #
+#             Artificial Neural NEtworks           #
+####################################################
+####################################################
+
+This project contains :
+- an example of implementation for the article
+Consciousness and metarepresentaion : A computational
+sketch [ Axel Cleeremans, Bert Timmermans, Antoine
+Pasquali] using feedforward backpropagation networks
+
+
+The entire code is written with python.
+
+
+----------------------------------------------------
+This source code is currently free of any right.
+
