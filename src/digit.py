@@ -19,6 +19,7 @@ class Factory:
         if d < 0 or d > 9 :
             raise Exception("%d is not a digit" % d)
         else :
+            #TODO : shape for 0
             mat = np.zeros((n,n), dtype)
             #right vertical line
             if d in (1,3,8,9):
