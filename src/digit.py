@@ -12,44 +12,44 @@ class Factory:
     create matrix who contains a graphical representation of digits
     '''
     @staticmethod
-    def digitToMatrix(d, (n,m) = (5,4), dtype = np.int_):
+    def digitToMatrix(d, (n,n) = (5,4), dtype = np.int_):
         '''
-        return a matrix(n,m) with graphical representation of d
+        return a matrix(n,n) with graphical representation of d
         ''' 
         if d < 0 or d > 9 :
             raise Exception("%d is not a digit" % d)
         else :
-            mat = np.zeros((n,m), dtype)
+            mat = np.zeros((n,n), dtype)
             #right vertical line
             if d in (1,3,8,9):
-                mat.T[m-1] = np.ones(n, dtype)
+                mat.T[n-1] = np.ones(n, dtype)
                 if d == 1:
-                    tir = m-1-m/3
-                    mat[0][tir:m-1]= np.ones(m-1-tir, dtype)
+                    tir = n-1-n/3
+                    mat[0][tir:n-1]= np.ones(n-1-tir, dtype)
             #top, bottom and middle horizontal lines
             if d in (2,3,5,6,8,9):
-                mat[0] = np.ones(m, dtype)
-                mat[n/2] = np.ones(m, dtype)
-                mat[n-1] = np.ones(m, dtype)
+                mat[0] = np.ones(n, dtype)
+                mat[n/2] = np.ones(n, dtype)
+                mat[n-1] = np.ones(n, dtype)
                 if d == 2:
                     mat.T[0][n/2:n-1]= np.ones(n-1-n/2, dtype)
-                    mat.T[m-1][0:n/2]= np.ones(n/2, dtype)
+                    mat.T[n-1][0:n/2]= np.ones(n/2, dtype)
                 elif d in (6,8):
                     mat.T[0] = np.ones(n, dtype)
                 elif d in (5, 9):
                     mat.T[0][0:n/2]= np.ones(n/2, dtype)
                 if d in (5,6):
-                    mat.T[m-1][n/2:n-1]= np.ones(n-1-n/2, dtype)
+                    mat.T[n-1][n/2:n-1]= np.ones(n-1-n/2, dtype)
             #middle horizontal line
             if d in (4, 7):
-                mat[n/2] = np.ones(m, dtype)
+                mat[n/2] = np.ones(n, dtype)
                 if d== 7:
-                    mat[0] = np.ones(m, dtype)
+                    mat[0] = np.ones(n, dtype)
                     mat[1][3] = 1
                     mat[3][1] = 1
                     mat[4][0] = 1
                 else:
-                    mat.T[0][0:m/2]= np.ones(m/2, dtype)
+                    mat.T[0][0:n/2]= np.ones(n/2, dtype)
                     mat[1][2] = 1
                     mat[3][2] = 1
                     mat[4][2] = 1
