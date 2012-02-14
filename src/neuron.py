@@ -37,19 +37,21 @@ class Neuron:
         self.state = self._sigmoid(a)
         return self.state
     
-    def learn(self, inputs, wanted):
+    def learn(self, inputs, wanted=0., w_sum=0.):
         self.calc_output(inputs)
         self.last_weights = self.weights
         
+        y = 0.
         if self.ntype == Neuron.Output:
             err = wanted - self.state
-            y = 2 * self.learning_rate * self._derivated_sigmoid(self.a) * err
-            self.weights = map(lambda wt, xi, wtm: 
-                           wt +  y * xi + self.momemtum * (wt - wtm), 
-                           self.weights, inputs, self.last_weights)
+            y = 2 * self._derivated_sigmoid(self.a) * err
         elif self.ntype == Neuron.Hidden:
-            #TODO:learning hidden neurons
-            pass
+            y = self._derivated_sigmoid(self.a) * w_sum
+        
+        self.weights = map(lambda wt, xi, wtm: 
+               wt + self.learning_rate * y * xi + self.momemtum * (wt - wtm), 
+               self.weights, inputs, self.last_weights)
+        return y
 
     def _sigmoid (self, x):
         return (m.exp(-self.gradient * x) - 1) / (1 + m.exp(-self.gradient * x))
