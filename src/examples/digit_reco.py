@@ -16,10 +16,10 @@ if __name__ == '__main__':
     mn = MultilayerNetwork(20, 5, 10)
 
     #create example
-    examples=[{} for _ in range(10)]
+    examples = [{} for _ in range(10)]
     for ex in range(10):
         examples[ex]["inputs"] = digits[ex].ravel().tolist()
-        examples[ex]["outputs"] = [-1]*10
+        examples[ex]["outputs"] = [-1] * 10
         examples[ex]["outputs"][ex] = 1
 
     #learning
@@ -35,4 +35,3 @@ if __name__ == '__main__':
         print "\n".join(i.__str__() for i in mn.calc_output(examples[ex]["inputs"]))
         print "recognition : ", findMax(mn.calc_output(digits[ex].ravel().tolist()))
         print 
-        #[print i for i in list]

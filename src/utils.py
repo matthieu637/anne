@@ -7,17 +7,20 @@ Created on 14 fevr. 2012
 
 import numpy as np
 
-def findMax(activationValues):
+def findMax(l):
+    '''
+    returns the index of the max value in the list l
+    '''
     m = 0
-    for i in range(1, len(activationValues)):
-        if (activationValues[i] > activationValues[m]):
+    for i in range(1, len(l)):
+        if (l[i] > l[m]):
             m = i
     return m
 
 
-def RMS(values):
+def RMS(l):
     '''
-    Root Mean square
+    returns the RMS(Root Mean Square) for the values in the list l
     '''
-    a = np.array(values)
-    return np.sqrt(np.mean(a**2))
+    a = np.array(l)
+    return np.sqrt(np.mean(a ** 2))
