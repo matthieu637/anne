@@ -15,56 +15,50 @@ class MultilayerNetwork:
         '''
         Constructor
         '''
-        self.hiddenNeurons = [n.Neuron(nbr_input, learning_rate, momemtum) for _ in range(nbr_hidden)]
+        self.hiddenNeurons = [n.Neuron(nbr_input, learning_rate, momemtum, ntype=n.Neuron.Hidden) for _ in range(nbr_hidden)]
         self.outputNeurons = [n.Neuron(nbr_hidden, learning_rate, momemtum) for _ in range(nbr_output)]
-        self.outputs_status = []
+        self.stateOutputNeurons = []
         self.stateHiddenNeurons = []
         
     def calc_output(self, inputs):
-        #determine the status of hidden neurons
-        hidden_status = []
+        #determine the state of hidden neurons
+        stateHidden = []
         for i in range(len(self.hiddenNeurons)) :
-            hidden_status.append(self.hiddenNeurons[i].calc_output(inputs))
-        self.stateHiddenNeurons = hidden_status
+            stateHidden.append(self.hiddenNeurons[i].calc_output(inputs))
+        self.stateHiddenNeurons = stateHidden
         
         #then the output layer
-        outputs_status = []
+        stateOutputs = []
         for i in range(len(self.outputNeurons)) :
-            outputs_status.append(self.outputNeurons[i].calc_output(hidden_status))
-        self.outputs_status = outputs_status
-        return outputs_status
+            stateOutputs.append(self.outputNeurons[i].calc_output(stateHidden))
+        self.stateOutputNeurons = stateOutputs
+        return stateOutputs
     
     def learn(self, inputs, outputs):
         self.calc_output(inputs)
         
+        y = []
         for i in range(len(self.outputNeurons)) :
-            y = self.outputs_status[i] * \
-                    (1. - self.outputs_status[i]) * \
-                    (outputs[i] - self.outputs_status[i])
-            self.outputNeurons[i].learn(y, self.stateHiddenNeurons)
+            y.append(self.outputNeurons[i].learn(self.stateHiddenNeurons, outputs[i]))
         
         for i in range(len(self.hiddenNeurons)):
-            wki = 0.
-            for j in range(len(self.outputNeurons)):
-                y = self.stateHiddenNeurons[i] * \
-                        (1. - self.stateHiddenNeurons[i]) * \
-                        (outputs[j] - self.stateHiddenNeurons[i])
-                wki += y * self.outputNeurons[j].weights[i]
-            self.hiddenNeurons[i].learn(wki * self.stateHiddenNeurons[i] * (1 - self.stateHiddenNeurons[i]), inputs)
+            w_sum = 0.
+            for j in range(len(self.outputNeurons)) :
+                w_sum += self.outputNeurons[j].weights[i]*y[j]
+            self.hiddenNeurons[i].learn(inputs, w_sum=w_sum)
             
 if __name__ == '__main__':
     #XOR test
     n = MultilayerNetwork(2, 3, 1)
     
-    
     for epoch in range(1000):
-        n.learn([0, 0], [0])
-        n.learn([0, 1], [1])
-        n.learn([1, 0], [1])
-        n.learn([1, 1], [0])
+        n.learn([-1, -1], [-1])
+        n.learn([-1, 1], [1])
+        n.learn([1, -1], [1])
+        n.learn([1, 1], [-1])
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
+    print n.calc_output([-1, -1])
+    print n.calc_output([-1, 1])
+    print n.calc_output([1, -1])
     print n.calc_output([1, 1])
     
