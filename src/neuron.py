@@ -16,12 +16,11 @@ class Neuron:
     '''
     (Hidden, Output) = range(2)
     
-#TODO:separate hidden/outputs 
-    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0.0, ntype=Output):
+    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., ntype=Output):
         '''
         Constructor
         '''
-        self.weights = [random.random() for _ in range(nbr_input)]
+        self.weights = [random.random() for _ in range(nbr_input+1)]
         self.last_weights = self.weights;
         self.learning_rate = learning_rate
         self.momemtum = momemtum
@@ -31,6 +30,8 @@ class Neuron:
         self.gradient = 1.
 
     def calc_output(self, inputs):
+        if len(inputs) != len(self.weights):
+            inputs.append(-1)
         a = reduce(lambda x, y:x + y, map(lambda x, y:x * y, inputs, self.weights))
         self.a = a
         self.state = self._sigmoid(a)
@@ -41,34 +42,40 @@ class Neuron:
         self.last_weights = self.weights
         
         if self.ntype == Neuron.Output:
-#            y = 2 * self._derivated_sigmoid(self.a) * (wanted - self.state)
-            print self.state, wanted
-            y = (wanted - self.state)
+            err = wanted - self.state
+            y = 2 * self.learning_rate * self._derivated_sigmoid(self.a) * err
             self.weights = map(lambda wt, xi, wtm: 
-                           wt + self.learning_rate * y * xi + self.momemtum * (wt - wtm), self.weights, inputs, self.last_weights)
-        
-        print self.weights
+                           wt +  y * xi + self.momemtum * (wt - wtm), 
+                           self.weights, inputs, self.last_weights)
+        elif self.ntype == Neuron.Hidden:
+            #TODO:learning hidden neurons
+            pass
 
     def _sigmoid (self, x):
-        return 1 / (1 + m.exp(-self.gradient * x))
-    #TODO: use & calc derivated
+        return (m.exp(-self.gradient * x) - 1) / (1 + m.exp(-self.gradient * x))
+    #TODO: calc derivated
     def _derivated_sigmoid (self, x):
-        return (self.gradient / m.pow(1 + m.exp(-self.gradient * x), 2)) * m.exp(-self.gradient * x)
+        return derivative(self._sigmoid)(x)
 
+def derivative(f, epsilon=1e-6):
+    eps = epsilon/2
+    def g(x):
+        return (f(x+eps) - f(x-eps)) / epsilon
+    return g
 
 if __name__ == '__main__':
-    #AND test
+    #AND example
     n = Neuron(2)
-    
-#TODO:implement single perceptron learning
-    for epoch in range(1000):
-        n.learn([0, 0], 0)
-        n.learn([0, 1], 0)
-        n.learn([1, 0], 0)
-        n.learn([1, 1], 1)
+    for epoch in range(200):
+        n.learn([-1,-1], -1)
+        n.learn([-1,1], -1)
+        n.learn([1,-1], -1)
+        n.learn([1,1], 1)
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
+    print n.calc_output([-1,-1])
+    print n.calc_output([-1,1])
+    print n.calc_output([1,-1])
+    print n.calc_output([1,1])
+    
+    
     
