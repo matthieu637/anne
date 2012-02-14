@@ -11,7 +11,7 @@ class MultilayerNetwork:
     '''
     Describe a 
     '''
-    def __init__(self, nbr_input, nbr_hidden, nbr_output, learning_rate=0.1, momemtum=0.9):
+    def __init__(self, nbr_input, nbr_hidden, nbr_output, learning_rate=0.1, momemtum=0.):
         '''
         Constructor
         '''

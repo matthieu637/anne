@@ -28,6 +28,7 @@ class Neuron:
         self.a = 0.
         self.state = 0.
         self.gradient = 1.
+        self.active = False
 
     def calc_output(self, inputs):
         if len(inputs) != len(self.weights):
@@ -35,10 +36,13 @@ class Neuron:
         a = reduce(lambda x, y:x + y, map(lambda x, y:x * y, inputs, self.weights))
         self.a = a
         self.state = self._sigmoid(a)
+        self.active = True
         return self.state
     
     def learn(self, inputs, wanted=0., w_sum=0.):
-        self.calc_output(inputs)
+        if not self.active:
+            self.calc_output(inputs)
+        self.active = False
         self.last_weights = self.weights
         
         y = 0.
