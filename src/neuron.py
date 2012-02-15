@@ -61,8 +61,14 @@ class Neuron:
     def _derivated_sigmoid (self, x):
         return (2 * m.exp(x)) / (m.pow(m.exp(x) + 1, 2))
 
+class Neuron0to1(Neuron):
+    def _sigmoid (self, x):
+        return 1 / (1 + m.exp(-self.gradient * x))
+    def _derivated_sigmoid (self, x):
+        return self._sigmoid(x) * (1 - self._sigmoid(x))
+
 if __name__ == '__main__':
-    #AND example
+    #AND example on {-1, 1}
     n = Neuron(2)
     for epoch in range(200):
         n.learn([-1, -1], -1)
@@ -75,5 +81,17 @@ if __name__ == '__main__':
     print n.calc_output([1, -1])
     print n.calc_output([1, 1])
     
+    print
     
-    
+    #AND example on {0,1}
+    n = Neuron0to1(2)
+    for epoch in range(200):
+        n.learn([0, 0], 0)
+        n.learn([0, 1], 0)
+        n.learn([1, 0], 0)
+        n.learn([1, 1], 1)
+        
+    print n.calc_output([0, 0])
+    print n.calc_output([0, 1])
+    print n.calc_output([1, 0])
+    print n.calc_output([1, 1])
