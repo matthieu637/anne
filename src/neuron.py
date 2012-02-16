@@ -64,7 +64,7 @@ class Neuron:
 
         In case of hidden neurons, wanted must be :
         $wanted = \sum \limits_{k} w_{k}\times y_{k}$
-        $with \left\lbrace \begin{array}{lll} w_{k} : weight\ between\ this\ neuron\ and\ k^{th}\ neuron\ in\ output\ layer\\ y_{k} : return\ of\ this\ function\ for\ the\ k^{th}\ neuron\ on\ output\ layer \end{array}\right.$
+        $with \left\lbrace \begin{array}{lll} w_{k} : weight\ between\ this\ neuron\ and\ k^{th}\ neuron\ in\ output\ layer\\ y_{k} : return\ of\ this\ function\ for\ the\ k^{th}\ neuron\ in\ output\ layer \end{array}\right.$
         In case of output neurons, wanted is just the value to match for inputs
         
         return $y :\left \lbrace \begin{array}{lll} 2 \times g'(a) \times (wanted - e_{k}) : for\ ouput\ neurons\\g'(a) \times wanted : for\ hidden\ neurons \end{array}\right.$
@@ -127,12 +127,16 @@ if __name__ == '__main__':
     print n.calc_output([-1, 1])
     print n.calc_output([1, -1])
     print n.calc_output([1, 1])
+    #-0.999440929256
+    #-0.876805869893
+    #-0.877244822514
+    #0.877681922152
     
     print
     
     #AND example on {0,1}
     n = Neuron0to1(2)
-    for epoch in range(200):
+    for epoch in range(500):
         n.train([0, 0], 0)
         n.train([0, 1], 0)
         n.train([1, 0], 0)
@@ -142,3 +146,8 @@ if __name__ == '__main__':
     print n.calc_output([0, 1])
     print n.calc_output([1, 0])
     print n.calc_output([1, 1])
+    #0.0150476832098
+    #0.186800858015
+    #0.187850888618
+    #0.776676205452
+
