@@ -34,28 +34,28 @@ class MultilayerNetwork:
         self.stateOutputNeurons = stateOutputs
         return stateOutputs
     
-    def learn(self, inputs, outputs):
+    def train(self, inputs, outputs):
         self.calc_output(inputs)
         
         y = []
         for i in range(len(self.outputNeurons)) :
-            y.append(self.outputNeurons[i].learn(self.stateHiddenNeurons, outputs[i]))
+            y.append(self.outputNeurons[i].train(self.stateHiddenNeurons, outputs[i]))
         
         for i in range(len(self.hiddenNeurons)):
             w_sum = 0.
             for j in range(len(self.outputNeurons)) :
                 w_sum += self.outputNeurons[j].weights[i]*y[j]
-            self.hiddenNeurons[i].learn(inputs, w_sum=w_sum)
+            self.hiddenNeurons[i].train(inputs, w_sum=w_sum)
             
 if __name__ == '__main__':
     #XOR test
     n = MultilayerNetwork(2, 3, 1)
     
     for epoch in range(1000):
-        n.learn([-1, -1], [-1])
-        n.learn([-1, 1], [1])
-        n.learn([1, -1], [1])
-        n.learn([1, 1], [-1])
+        n.train([-1, -1], [-1])
+        n.train([-1, 1], [1])
+        n.train([1, -1], [1])
+        n.train([1, 1], [-1])
         
     print n.calc_output([-1, -1])
     print n.calc_output([-1, 1])

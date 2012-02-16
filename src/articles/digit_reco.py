@@ -25,7 +25,7 @@ if __name__ == '__main__':
             example["outputs"] = [-1]*10
             example["outputs"][ex] = 1;
 
-            mn.learn(example["inputs"], example["outputs"])
+            mn.train(example["inputs"], example["outputs"])
             err = reduce(lambda x, y:x + y, map(lambda x, y: abs(x - y), \
                         mn.calc_output(example["inputs"]), example["outputs"]))
             errs.append(err/10)

@@ -26,7 +26,7 @@ if __name__ == '__main__':
     print "Start learning..."
     for epoch in range(1000):
         for ex in range(10):
-            mn.learn(examples[ex]["inputs"], examples[ex]["outputs"])
+            mn.train(examples[ex]["inputs"], examples[ex]["outputs"])
         
     #testing
     for ex in range(10):
