@@ -8,15 +8,19 @@ Created on 13 fevr. 2012
 import neuron as n
 
 class MultilayerNetwork:
+    
+    #defines grid values, R1to1 means real in {-1, 1}
+    (R1to1, R0to1) = range(2)
+    
     '''
     Describe a 
     '''
-    def __init__(self, nbr_input, nbr_hidden, nbr_output, learning_rate=0.1, momemtum=0.):
+    def __init__(self, nbr_input, nbr_hidden, nbr_output, grid, learning_rate=0.1, momemtum=0., gradient=1.):
         '''
         Constructor
         '''
-        self.hiddenNeurons = [n.Neuron(nbr_input, learning_rate, momemtum, ntype=n.Neuron.Hidden) for _ in range(nbr_hidden)]
-        self.outputNeurons = [n.Neuron(nbr_hidden, learning_rate, momemtum) for _ in range(nbr_output)]
+        self.hiddenNeurons = [n.Neuron(nbr_input, learning_rate, momemtum, gradient, ntype=n.Neuron.Hidden) for _ in range(nbr_hidden)]
+        self.outputNeurons = [n.Neuron(nbr_hidden, learning_rate, momemtum, gradient) for _ in range(nbr_output)]
         self.stateOutputNeurons = []
         self.stateHiddenNeurons = []
         
@@ -44,8 +48,8 @@ class MultilayerNetwork:
         for i in range(len(self.hiddenNeurons)):
             w_sum = 0.
             for j in range(len(self.outputNeurons)) :
-                w_sum += self.outputNeurons[j].weights[i]*y[j]
-            self.hiddenNeurons[i].train(inputs, w_sum=w_sum)
+                w_sum += self.outputNeurons[j].weights[i] * y[j]
+            self.hiddenNeurons[i].train(inputs, w_sum)
             
 if __name__ == '__main__':
     #XOR test
