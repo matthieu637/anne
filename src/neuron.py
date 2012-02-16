@@ -13,9 +13,11 @@ class Neuron:
     '''
     a single perceptron with a weight list
     '''
+    
+    #defines neuron type, read __init__ doc
     (Hidden, Output) = range(2)
     
-    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., gradient=1., ntype=Output):
+    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., gradient=1., ntype=Output, random=True, bias=True):
         '''
         initialize a single perceptron with nbr_input random weights
         nType can be Neuron.Hidden or Neuron.Output it specifies the layer of neuron 
@@ -25,15 +27,27 @@ class Neuron:
         self.momemtum = momemtum
         self.gradient = gradient
         self.ntype = ntype
+        self.bias = bias
         
-        self.weights = [random.random() for _ in range(nbr_input + 1)] #+1 for bias node
-        self.last_weights = self.weights #last_weights is used by the momentum algo
+        if(random):
+            self.init_random_weights(nbr_input)
         
-        #these fields are used simply to reuse the output during the training ( if it has been calculated )
+        #these fields are here simply to reuse the output during the training ( if it has been calculated )
         self.a = 0.
         self.state = 0.
         self.stateUpdated = False
         self.last_input = []
+        
+    def init_random_weights(self, nbr_input):
+        '''
+        initialize the perceptron with nbr_input random weights
+        '''
+        self.weights = [random() for _ in range(nbr_input)]
+        
+        if(self.bias):
+            self.weights.append(random()) #+1 for bias node
+        self.last_weights = self.weights #last_weights is used by the momentum algo
+        
 
     def calc_output(self, inputs):
         '''
@@ -43,7 +57,7 @@ class Neuron:
         (The output is a real in [-1, 1]) 
         '''
         # add -1 to inputs for bias node
-        if len(inputs) == len(self.weights) - 1:
+        if self.bias and (len(inputs) == len(self.weights) - 1):
             inputs.append(-1)
             
         #$a = \sum \limits_{i = 0}^{len(weights)} weights_{i}\times inputs_{i}$
@@ -52,7 +66,7 @@ class Neuron:
         self.a = a
         self.state = self._sigmoid(a)
         self.stateUpdated = True
-        self.last_input= inputs
+        self.last_input = inputs
         return self.state
     
     def train(self, inputs, wanted):
@@ -62,10 +76,10 @@ class Neuron:
 
         In case of hidden neurons, wanted must be :
         $wanted = \sum \limits_{k} w_{k}\times y_{k}$
-        $with \left\lbrace \begin{array}{lll} w_{k} : weight\ between\ this\ neuron\ and\ k^{th}\ neuron\ in\ output\ layer\\ y_{k} : return\ of\ this\ function\ for\ the\ k^{th}\ neuron\ on\ output\ layer \end{array}\right.$
+        $with \left\lbrace \begin{array}{lll} w_{k} : weight\ between\ this\ neuron\ and\ k^{th}\ neuron\ in\ output\ layer\\ y_{k} : return\ of\ this\ function\ for\ the\ k^{th}\ neuron\ in\ output\ layer \end{array}\right.$
         In case of output neurons, wanted is just the value to match for inputs
         
-        return $y :\left \lbrace \begin{array}{lll} 2 \times g'(a) \times (wanted - e_{k}) : for\ ouput\ neurons\\g'(a) \times wanted : for\ hidden\ neurons \end{array}\right.$
+        returns $y :\left \lbrace \begin{array}{lll} 2 \times g'(a) \times (wanted - e_{k}) : for\ ouput\ neurons\\g'(a) \times wanted : for\ hidden\ neurons \end{array}\right.$
         '''
         if not self.stateUpdated or self.last_input != inputs:
             self.calc_output(inputs)
@@ -89,7 +103,7 @@ class Neuron:
 
     def _sigmoid (self, x):
         '''
-        return $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
+        returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
         returned values are in [-1 ; 1]
         '''
         return (exp(self.gradient * x) - 1) / (1 + exp(self.gradient * x))
@@ -97,23 +111,65 @@ class Neuron:
         return (2 * exp(x)) / (pow(exp(x) + 1, 2))
 
 
-class Neuron0to1(Neuron):
+class NeuronR0to1(Neuron):
     '''
-    this class of neuron can be used on a grid {0, 1} ( unlike parent on {-1, 1} )
+    this class of neuron can be used on a grid [0, 1] ( unlike parent on [-1, 1] )
     to do this we simply must redefine the sigmoid function
     '''
     def _sigmoid (self, x):
         '''
-        return $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
+        returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
         returned values are in [0 ; 1]
         '''
         return 1 / (1 + exp(-self.gradient * x))
     def _derivated_sigmoid (self, x):
         return self._sigmoid(x) * (1 - self._sigmoid(x))
 
+class NeuronN0to1(Neuron):
+    '''
+    this class of neuron can be used on a grid {0, 1} ( unlike parent on [-1, 1] )
+    the train method is also different and use 
+    '''
+    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., random=True):
+        '''
+        notice that :
+        - bias ( the last weight ) is mandatory and corresponds to the threshold
+        - this type of neuron cannot be in hidden layout ( backpropagation don't work on {0,1} ) 
+        - gradient has no meaning ( there isn't anymore sigmoid )
+        '''
+        Neuron.__init__(self, nbr_input, learning_rate, momemtum, Neuron.Output, random, bias=True)
+    def _sigmoid (self, x):
+        '''
+        this function is not anymore a sigmoid but a Heaviside function
+        '''
+        return 1 if x >= 0 else 0
+    def _derivated_sigmoid (self, x):
+        raise NotImplemented
+    def train(self, inputs, wanted):
+        '''
+        train now follow the Hebb's rule ( with a possible momemtum ) 
+        '''
+        if not self.stateUpdated or self.last_input != inputs:
+            self.calc_output(inputs)
+        self.stateUpdated = False
+        self.last_weights = self.weights
+        
+        y = (wanted - self.state)
+         
+        #update weights
+        #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momemtum \times [w_{j}(t) - w_{j}(t-1) ]$
+        self.weights = map(lambda wt, xi, wtm: 
+               wt + self.learning_rate * y * xi + self.momemtum * (wt - wtm),
+               self.weights, inputs, self.last_weights)
+
+
 
 if __name__ == '__main__':
-    #AND example on {-1, 1}
+    #
+    #Some examples :
+    #
+    
+    #AND example on [-1, 1]
     n = Neuron(2)
     for epoch in range(200):
         n.train([-1, -1], -1)
@@ -125,12 +181,16 @@ if __name__ == '__main__':
     print n.calc_output([-1, 1])
     print n.calc_output([1, -1])
     print n.calc_output([1, 1])
+    #-0.999440929256
+    #-0.876805869893
+    #-0.877244822514
+    #0.877681922152
     
     print
     
-    #AND example on {0,1}
-    n = Neuron0to1(2)
-    for epoch in range(200):
+    #AND example on [0,1]
+    n = NeuronR0to1(2)
+    for epoch in range(500):
         n.train([0, 0], 0)
         n.train([0, 1], 0)
         n.train([1, 0], 0)
@@ -140,3 +200,44 @@ if __name__ == '__main__':
     print n.calc_output([0, 1])
     print n.calc_output([1, 0])
     print n.calc_output([1, 1])
+    #0.0150476832098
+    #0.186800858015
+    #0.187850888618
+    #0.776676205452
+
+    print
+    
+    #OR example without training
+    n = NeuronN0to1(2, random=False)
+    n.weights = [1, 1, 1] # the last weight corresponds to the threshold
+    print n.calc_output([0, 0])
+    print n.calc_output([0, 1])
+    print n.calc_output([1, 0])
+    print n.calc_output([1, 1])
+    
+    #0
+    #1
+    #1
+    #1
+    
+    print
+    
+    #OR example on {0, 1} with training
+    n = NeuronN0to1(2)
+    for epoch in range(500):
+        n.train([0, 0], 0)
+        n.train([0, 1], 1)
+        n.train([1, 0], 1)
+        n.train([1, 1], 1)
+        
+    print n.calc_output([0, 0])
+    print n.calc_output([0, 1])
+    print n.calc_output([1, 0])
+    print n.calc_output([1, 1])
+    print n.weights
+    
+    #0
+    #1
+    #1
+    #1
+    #[0.18717144208686723, 0.3045200897731364, 0.17429902353136525]
