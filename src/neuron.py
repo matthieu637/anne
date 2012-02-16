@@ -13,6 +13,8 @@ class Neuron:
     '''
     a single perceptron with a weight list
     '''
+    
+    #defines neuron type, read __init__ doc
     (Hidden, Output) = range(2)
     
     def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., gradient=1., ntype=Output):
@@ -26,7 +28,7 @@ class Neuron:
         self.gradient = gradient
         self.ntype = ntype
         
-        self.weights = [random.random() for _ in range(nbr_input + 1)] #+1 for bias node
+        self.weights = [random() for _ in range(nbr_input + 1)] #+1 for bias node
         self.last_weights = self.weights #last_weights is used by the momentum algo
         
         #these fields are used simply to reuse the output during the training ( if it has been calculated )
@@ -52,7 +54,7 @@ class Neuron:
         self.a = a
         self.state = self._sigmoid(a)
         self.stateUpdated = True
-        self.last_input= inputs
+        self.last_input = inputs
         return self.state
     
     def train(self, inputs, wanted):
