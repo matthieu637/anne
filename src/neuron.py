@@ -17,7 +17,8 @@ class Neuron:
     #defines neuron type, read __init__ doc
     (Hidden, Output) = range(2)
     
-    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., gradient=1., ntype=Output, random=True, bias=True):
+    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., 
+                 gradient=1., ntype=Output, random=True, bias=True):
         '''
         initialize a single perceptron with nbr_input random weights
         nType can be Neuron.Hidden or Neuron.Output it specifies the layer of neuron 
@@ -48,7 +49,6 @@ class Neuron:
             self.weights.append(random()) #+1 for bias node
         self.last_weights = self.weights #last_weights is used by the momentum algo
         
-
     def calc_output(self, inputs):
         '''
         returns the output to the data inputs according to the formula:
@@ -100,7 +100,6 @@ class Neuron:
                wt + self.learning_rate * y * xi + self.momemtum * (wt - wtm),
                self.weights, inputs, self.last_weights)
         return y
-
     def _sigmoid (self, x):
         '''
         returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
@@ -124,6 +123,7 @@ class NeuronR0to1(Neuron):
         return 1 / (1 + exp(-self.gradient * x))
     def _derivated_sigmoid (self, x):
         return self._sigmoid(x) * (1 - self._sigmoid(x))
+
 
 class NeuronN0to1(Neuron):
     '''
