@@ -17,21 +17,22 @@ class Neuron:
     #defines neuron type, read __init__ doc
     (Hidden, Output) = range(2)
     
-    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., 
+    def __init__(self, nbr_input, learning_rate=0.1, momentum=0., 
                  gradient=1., ntype=Output, random=True, bias=True):
         '''
         initialize a single perceptron with nbr_input random weights
         nType can be Neuron.Hidden or Neuron.Output it specifies the layer of neuron 
             ( it is required because train algo is different for each one )
         '''
+        self.nbr_input = nbr_input
         self.learning_rate = learning_rate
-        self.momemtum = momemtum
+        self.momentum = momentum
         self.gradient = gradient
         self.ntype = ntype
         self.bias = bias
         
         if(random):
-            self.init_random_weights(nbr_input)
+            self.init_random_weights()
         
         #these fields are here simply to reuse the output during the training ( if it has been calculated )
         self.a = 0.
@@ -39,15 +40,24 @@ class Neuron:
         self.stateUpdated = False
         self.last_input = []
         
-    def init_random_weights(self, nbr_input):
+    def init_random_weights(self):
         '''
-        initialize the perceptron with nbr_input random weights
+        initialize the perceptron with random weights
         '''
-        self.weights = [random() for _ in range(nbr_input)]
+        self.weights = [random() for _ in range(self.nbr_input)]
         
         if(self.bias):
             self.weights.append(random()) #+1 for bias node
         self.last_weights = self.weights #last_weights is used by the momentum algo
+        
+    def init_weights(self, val):
+        '''
+        assigns the value val to all the weights of the perceptron
+        '''
+        self.weights = [val for _ in range(self.nbr_input)]
+        if(self.bias):
+            self.weights.append(val) #+1 for bias node
+        self.last_weights = self.weights
         
     def calc_output(self, inputs):
         '''
@@ -57,11 +67,13 @@ class Neuron:
         (The output is a real in [-1, 1]) 
         '''
         # add -1 to inputs for bias node
-        if self.bias and (len(inputs) == len(self.weights) - 1):
-            inputs.append(-1)
-            
+        if self.bias:
+            tmp_inputs = inputs + [-1]
+        else:
+            tmp_inputs = inputs
+        
         #$a = \sum \limits_{i = 0}^{len(weights)} weights_{i}\times inputs_{i}$
-        a = reduce(lambda x, y:x + y, map(lambda x, y:x * y, inputs, self.weights)) 
+        a = reduce(lambda x, y:x + y, map(lambda x, y:x * y, tmp_inputs, self.weights)) 
         
         self.a = a
         self.state = self._sigmoid(a)
@@ -84,7 +96,12 @@ class Neuron:
         if not self.stateUpdated or self.last_input != inputs:
             self.calc_output(inputs)
         self.stateUpdated = False
-        self.last_weights = self.weights
+        
+        # add -1 to inputs for bias node
+        if self.bias:
+            tmp_inputs = inputs + [-1]
+        else:
+            tmp_inputs = inputs
         
         y = 0.
         if self.ntype == Neuron.Output:
@@ -94,11 +111,16 @@ class Neuron:
         else :
             raise Exception("%d : unknown neuron type (ntype param)" % self.ntype)
          
+        tmp = self.weights
         #update weights
-        #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momemtum \times [w_{j}(t) - w_{j}(t-1) ]$
+        #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momentum \times [w_{j}(t) - w_{j}(t-1) ]$
         self.weights = map(lambda wt, xi, wtm: 
-               wt + self.learning_rate * y * xi + self.momemtum * (wt - wtm),
-               self.weights, inputs, self.last_weights)
+               wt + self.learning_rate * y * xi + self.momentum * (wt - wtm),
+               self.weights, tmp_inputs, self.last_weights)
+        
+        if(self.last_weights != self.weights):
+            self.last_weights = tmp
+        
         return y
     def _sigmoid (self, x):
         '''
@@ -147,21 +169,29 @@ class NeuronN0to1(Neuron):
         raise NotImplemented
     def train(self, inputs, wanted):
         '''
-        train now follow the Hebb's rule ( with a possible momemtum ) 
+        train now follow the Hebb's rule ( with a possible momentum ) 
         '''
         if not self.stateUpdated or self.last_input != inputs:
             self.calc_output(inputs)
         self.stateUpdated = False
-        self.last_weights = self.weights
+        
+        # add -1 to inputs for bias node
+        if self.bias:
+            tmp_inputs = inputs + [-1]
+        else:
+            tmp_inputs = inputs
         
         y = (wanted - self.state)
-         
+        
+        tmp = self.weights
         #update weights
-        #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momemtum \times [w_{j}(t) - w_{j}(t-1) ]$
+        #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momentum \times [w_{j}(t) - w_{j}(t-1) ]$
         self.weights = map(lambda wt, xi, wtm: 
-               wt + self.learning_rate * y * xi + self.momemtum * (wt - wtm),
-               self.weights, inputs, self.last_weights)
+               wt + self.learning_rate * y * xi + self.momentum * (wt - wtm),
+               self.weights, tmp_inputs, self.last_weights)
 
+        if(self.last_weights != self.weights):
+            self.last_weights = tmp
 
 
 if __name__ == '__main__':
@@ -240,4 +270,4 @@ if __name__ == '__main__':
     #1
     #1
     #1
-    #[0.18717144208686723, 0.3045200897731364, 0.17429902353136525]
+    #[0.6311966499206949, 0.6592035612046748, 0.5904245839754276]

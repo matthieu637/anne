@@ -16,7 +16,7 @@ class MultilayerNetwork:
     (R1to1, R0to1) = (-1,0)
 
     def __init__(self, nbr_input, nbr_hidden, nbr_output, grid=R1to1, learning_rate=0.1,
-                  momemtum=0., gradient=1., random=True, bias=True):
+                  momentum=0., gradient=1., random=True, bias=True):
         '''
         builds a neural network with 2 layers
         nbr_input is the number of inputs to the neurons in the hidden layer
@@ -24,20 +24,34 @@ class MultilayerNetwork:
         '''
         if grid == MultilayerNetwork.R1to1:
             self.hiddenNeurons = \
-                [Neuron(nbr_input, learning_rate, momemtum, gradient, Neuron.Hidden, random, bias) \
+                [Neuron(nbr_input, learning_rate, momentum, gradient, Neuron.Hidden, random, bias) \
                                   for _ in range(nbr_hidden)]
             self.outputNeurons = \
-                [Neuron(nbr_hidden, learning_rate, momemtum, gradient, Neuron.Output, random, bias) \
+                [Neuron(nbr_hidden, learning_rate, momentum, gradient, Neuron.Output, random, bias) \
                                   for _ in range(nbr_output)]
         elif grid == MultilayerNetwork.R0to1:
             self.hiddenNeurons = \
-                [NeuronR0to1(nbr_input, learning_rate, momemtum, gradient, Neuron.Hidden, random, bias) \
+                [NeuronR0to1(nbr_input, learning_rate, momentum, gradient, Neuron.Hidden, random, bias) \
                                   for _ in range(nbr_hidden)]
             self.outputNeurons = \
-                [NeuronR0to1(nbr_hidden, learning_rate, momemtum, gradient, Neuron.Output, random, bias) \
+                [NeuronR0to1(nbr_hidden, learning_rate, momentum, gradient, Neuron.Output, random, bias) \
                                   for _ in range(nbr_output)]
         self.stateOutputNeurons = []
         self.stateHiddenNeurons = []
+
+    def init_random_weights(self):
+        '''
+        assigns a random value to all the weights of the network
+        '''
+        for neuron in self.hiddenNeurons+self.outputNeurons:
+            neuron.init_random_weights()
+       
+    def init_weights(self, val):
+        '''
+        assigns the value val to all the weights of the network
+        '''
+        for neuron in self.hiddenNeurons+self.outputNeurons:
+            neuron.init_weights(val)
         
     def calc_output(self, inputs):
         '''
