@@ -128,7 +128,7 @@ class NeuronR0to1(Neuron):
 class NeuronN0to1(Neuron):
     '''
     this class of neuron can be used on a grid {0, 1} ( unlike parent on [-1, 1] )
-    the train method is also different and use 
+    the train method is also different and use Hebb's rule
     '''
     def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., random=True):
         '''
