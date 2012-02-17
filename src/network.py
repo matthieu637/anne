@@ -13,7 +13,7 @@ class MultilayerNetwork:
     '''
     
     #defines grid values, R1to1 means Real in [-1, 1], R0to1 means Real in [0,1]
-    (R1to1, R0to1) = range(2)
+    (R1to1, R0to1) = (-1,0)
 
     def __init__(self, nbr_input, nbr_hidden, nbr_output, grid=R1to1, learning_rate=0.1,
                   momemtum=0., gradient=1., random=True, bias=True):
