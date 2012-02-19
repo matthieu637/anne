@@ -16,7 +16,7 @@ class MultilayerNetwork:
     (R1to1, R0to1) = (-1,0)
 
     def __init__(self, nbr_input, nbr_hidden, nbr_output, grid=R1to1, learning_rate=0.1,
-                  momentum=0., gradient=1., random=True, bias=True):
+                  momentum=0., gradient=1., random=True, enableBias=True):
         '''
         builds a neural network with 2 layers
         nbr_input is the number of inputs to the neurons in the hidden layer
@@ -24,17 +24,17 @@ class MultilayerNetwork:
         '''
         if grid == MultilayerNetwork.R1to1:
             self.hiddenNeurons = \
-                [Neuron(nbr_input, learning_rate, momentum, gradient, Neuron.Hidden, random, bias) \
+                [Neuron(nbr_input, learning_rate, momentum, gradient, Neuron.Hidden, random, enableBias) \
                                   for _ in range(nbr_hidden)]
             self.outputNeurons = \
-                [Neuron(nbr_hidden, learning_rate, momentum, gradient, Neuron.Output, random, bias) \
+                [Neuron(nbr_hidden, learning_rate, momentum, gradient, Neuron.Output, random, enableBias) \
                                   for _ in range(nbr_output)]
         elif grid == MultilayerNetwork.R0to1:
             self.hiddenNeurons = \
-                [NeuronR0to1(nbr_input, learning_rate, momentum, gradient, Neuron.Hidden, random, bias) \
+                [NeuronR0to1(nbr_input, learning_rate, momentum, gradient, Neuron.Hidden, random, enableBias) \
                                   for _ in range(nbr_hidden)]
             self.outputNeurons = \
-                [NeuronR0to1(nbr_hidden, learning_rate, momentum, gradient, Neuron.Output, random, bias) \
+                [NeuronR0to1(nbr_hidden, learning_rate, momentum, gradient, Neuron.Output, random, enableBias) \
                                   for _ in range(nbr_output)]
         self.stateOutputNeurons = []
         self.stateHiddenNeurons = []
