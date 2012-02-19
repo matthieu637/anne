@@ -12,7 +12,7 @@ class Factory:
     creates matrices who contains a graphical representation of digits
     '''
     @staticmethod
-    def digitToMatrix(d, (n, m)=(5, 4), ini= -1):
+    def digitToMatrix(d, (n, m)=(5, 4), ini=0):
         '''
         returns a matrix(n,m) with graphical representation of d
         the background will be initialized at ini
@@ -22,23 +22,23 @@ class Factory:
         elif n < 2 or m < 2 :
             raise Exception("(%d,%d) is not enough" % n, m)
         else :
-            #TODO: shape for 0
             mat = np.zeros((n, m)) + ini
             #right vertical line
-            if d in (1, 3, 8, 9):
+            if d in (0, 1, 3, 8, 9):
                 mat.T[m - 1] = np.ones(n)
                 if d == 1:
                     tir = m - 1 - m / 3
                     mat[0][tir:m - 1] = np.ones(m - 1 - tir)
             #top, bottom and middle horizontal lines
-            if d in (2, 3, 5, 6, 8, 9):
+            if d in (0, 2, 3, 5, 6, 8, 9):
                 mat[0] = np.ones(m)
-                mat[n / 2] = np.ones(m)
+                if d != 0:
+                    mat[n / 2] = np.ones(m)
                 mat[n - 1] = np.ones(m)
                 if d == 2:
                     mat.T[0][n / 2:n - 1] = np.ones(n - 1 - n / 2)
                     mat.T[m - 1][0:n / 2] = np.ones(n / 2)
-                elif d in (6, 8):
+                elif d in (0, 6, 8):
                     mat.T[0] = np.ones(n)
                 elif d in (5, 9):
                     mat.T[0][0:n / 2] = np.ones(n / 2)
