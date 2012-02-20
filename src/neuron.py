@@ -17,7 +17,7 @@ class Neuron:
     #defines neuron type, read __init__ doc
     (Hidden, Output) = range(2)
     
-    def __init__(self, nbr_input, learning_rate=0.1, momentum=0., 
+    def __init__(self, nbr_input, learning_rate=0.1, momentum=0.,
                  gradient=1., ntype=Output, random=True, enableBias=True):
         '''
         initialize a single perceptron with nbr_input random weights
@@ -102,9 +102,9 @@ class Neuron:
         tmp_weights = self.weights
         #update weights
         #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momentum \times [w_{j}(t) - w_{j}(t-1) ]$
-        self.weights = map(lambda wt, xi, wtm: 
-               wt + self.learning_rate * y * xi + self.momentum * (wt - wtm),
-               self.weights, inputs, self.last_weights)
+        for j in range(len(self.weights)):
+            self.weights[j] = self.weights[j] + self.learning_rate * y * inputs[j] + self.momentum * (self.weights[j] - self.last_weights[j])
+        
         
         if self.enableBias:
             tmp_bias = self.bias 

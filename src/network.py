@@ -5,7 +5,7 @@ Created on 13 fevr. 2012
 @author: matthieu637
 '''
 
-from neuron import Neuron,NeuronR0to1
+from neuron import Neuron, NeuronR0to1
 
 class MultilayerNetwork:
     '''
@@ -13,7 +13,7 @@ class MultilayerNetwork:
     '''
     
     #defines grid values, R1to1 means Real in [-1, 1], R0to1 means Real in [0,1]
-    (R1to1, R0to1) = (-1,0)
+    (R1to1, R0to1) = (-1, 0)
 
     def __init__(self, nbr_input, nbr_hidden, nbr_output, grid=R1to1, learning_rate=0.1,
                   momentum=0., gradient=1., random=True, enableBias=True):
@@ -43,14 +43,14 @@ class MultilayerNetwork:
         '''
         assigns a random value to all the weights of the network
         '''
-        for neuron in self.hiddenNeurons+self.outputNeurons:
+        for neuron in self.hiddenNeurons + self.outputNeurons:
             neuron.init_random_weights()
        
     def init_weights(self, val):
         '''
         assigns the value val to all the weights of the network
         '''
-        for neuron in self.hiddenNeurons+self.outputNeurons:
+        for neuron in self.hiddenNeurons + self.outputNeurons:
             neuron.init_weights(val)
         
     def calc_output(self, inputs):
@@ -90,9 +90,9 @@ class MultilayerNetwork:
             
 if __name__ == '__main__':
     #XOR test on [-1, 1]
-    n = MultilayerNetwork(2, 3, 1)
+    n = MultilayerNetwork(2, 3, 1, momentum=0.9)
     
-    for epoch in range(1000):
+    for epoch in range(100):
         n.train([-1, -1], [-1])
         n.train([-1, 1], [1])
         n.train([1, -1], [1])

@@ -9,8 +9,6 @@ class DataFile():
     '''
     classdocs
     '''
-
-
     def __init__(self, name):
         '''
         Constructor
@@ -24,15 +22,15 @@ class DataFile():
         
         line = file.readline()
         while line != "":
-            if(line[0]=='#'):
-                line=file.readline()
+            if(line[0] == '#'):
+                line = file.readline()
                 continue
-            elif(line[0:1]=="=>"):
-                line=file.readline()
+            elif(line[0:1] == "=>"):
+                line = file.readline()
                 continue
-            print line.replace(" ", "").replace(".","0").replace("x","1").split()
+            print line.replace(" ", "").replace(".", "0").replace("x", "1").split()
 
-            line=file.readline()
+            line = file.readline()
         
         
         print self.inputs
