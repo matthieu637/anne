@@ -1,0 +1,91 @@
+#digits shapes ( as on a digital watch )
+#zero
+ .
+. x
+ .
+. x
+ .
+=>
+x.........
+
+#one
+ .
+. x
+ .
+. x
+ .
+=>
+.x........
+
+#two
+ x
+. x
+ x
+x .
+ x
+=>
+..x.......
+
+#three
+ x
+. x
+ x
+. x
+ x
+=>
+...x......
+
+#four
+ .
+x x
+ x
+. x
+ .
+=>
+....x.....
+
+#five
+ x
+x .
+ x
+. x
+ x
+=>
+.....x....
+
+#six
+ x
+x .
+ x
+x x
+ x
+=>
+......x...
+
+#seven
+ x
+. x
+ .
+. x
+ .
+=>
+.......x..
+
+#eight
+ x
+x x
+ x
+x x
+ x
+=>
+........x.
+
+#nine
+ x
+x x
+ x
+. x
+ x
+=>
+.........x
+
