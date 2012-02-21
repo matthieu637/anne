@@ -33,7 +33,7 @@ class DataFile():
                 self._add_list(self.inputs, nbr_example, self._line_to_list(line))
             elif(line[0] == '\n'):
                 input_area = True
-                nbr_example+=1
+                nbr_example += 1
             else:
                 self._add_list(self.outputs, nbr_example, self._line_to_list(line))
             line = rfile.readline()
@@ -42,11 +42,11 @@ class DataFile():
         
     def _line_to_list(self, line):
         lstring = list(line.replace(" ", "").replace("\n", "").replace(".", "0").replace("x", "1"))
-        lint =  [int(i) for i in lstring]
+        lint = [int(i) for i in lstring]
         return [ 1 if i == 1 else self.bound for i in lint]
     
     def _add_list(self, llist, pos, data):
-        if(len(llist)<= pos):
+        if(len(llist) <= pos):
             llist.append([])
         llist[pos].extend(data)
 
@@ -57,8 +57,8 @@ if __name__ == '__main__':
     
     
     df = DataFile("data/digital_shape.txt", -1)
-    print df.inputs
-    print df.outputs
+    print (df.inputs)
+    print (df.outputs)
 
 
     #[[0, 0, 1, 0, 0, 1, 0], [0, 0, 1, 0, 0, 1, 0], ...

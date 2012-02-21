@@ -114,7 +114,7 @@ if __name__ == '__main__':
             o = network.propagate_forward(samples['input'][i])
 #            print i, samples['input'][i], '%.2f' % o[0],
 #            print '(expected %.2f)' % samples['output'][i]
-            print i,o
+            print (i, o)
             print
         print
 
@@ -193,10 +193,10 @@ if __name__ == '__main__':
             samples[i][0][j] = examples.inputs[i][j]
         samples[i][1][i] = 1
         
-    print samples
+    print(samples)
     print
     
-    print network.propagate_forward(samples['input'][0])
+    print (network.propagate_forward(samples['input'][0]))
     print
 
-    learn(network, samples, epochs=1000*10, lrate=0.1, momentum=0.9)
+    learn(network, samples, epochs=1000 * 10, lrate=0.1, momentum=0.9)

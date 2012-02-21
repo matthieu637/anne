@@ -7,13 +7,13 @@ Created on 21 fevr. 2012
 Article test
 '''
 
-from __future__ import division
 from network import MultilayerNetwork
 from utils import findMax
 from random import shuffle
 from math import sqrt
 import matplotlib.pyplot as plt
 from data import DataFile
+from functools import reduce
 
 if __name__ == '__main__':
     mode = MultilayerNetwork.R0to1
@@ -43,7 +43,7 @@ if __name__ == '__main__':
         for network in range(nbr_network):
 #            for ex in range(10):
 #            for ex in np.random.randint(0, 10, 10):
-            l_exx = range(10)
+            l_exx = list(range(10))
             shuffle(l_exx)
             for ex in l_exx:
                 rms = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
@@ -81,9 +81,9 @@ if __name__ == '__main__':
         y[1].append(sum_rms2)
         y[2].append(sum_rms3)
 
-    y[0] = map(lambda x : x / max_err, y[0])
-    y[1] = map(lambda x : x / max_err2, y[1])
-    y[2] = map(lambda x : x / max_err3, y[2])
+    y[0] = list(map(lambda x : x / max_err, y[0]))
+    y[1] = list(map(lambda x : x / max_err2, y[1]))
+    y[2] = list(map(lambda x : x / max_err3, y[2]))
     
     yy = [y[0][0]] + [y[0][25]] + [y[0][50]] + [y[0][100]] + [y[0][200]] + [y[0][500]] + [y[0][999]]
     yyy = [y[1][0]] + [y[1][25]] + [y[1][50]] + [y[1][100]] + [y[1][200]] + [y[1][500]] + [y[1][999]]
@@ -101,8 +101,8 @@ if __name__ == '__main__':
     
 
     #testing
-    for ex in range(10):
-        for network in mn:
-            print examples.inputs[ex]
-            print network.calc_output(examples.inputs[ex])
-            print findMax(network.calc_output(examples.inputs[ex]))
+#    for ex in range(10):
+#        for network in mn:
+#            print(examples.inputs[ex])
+#            print(network.calc_output(examples.inputs[ex]))
+#            print(findMax(network.calc_output(examples.inputs[ex])))

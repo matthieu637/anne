@@ -130,7 +130,7 @@ class Neuron:
         '''
         return (exp(self.gradient * x) - 1) / (1 + exp(self.gradient * x))
     def _derivated_sigmoid (self, x):
-        return (2 * exp(x)) / ((exp(x) + 1)** 2)
+        return (2 * exp(x)) / ((exp(x) + 1) ** 2)
 
 class NeuronR0to1(Neuron):
     '''
@@ -186,10 +186,10 @@ if __name__ == '__main__':
         n.train([1, -1], -1)
         n.train([1, 1], 1)
         
-    print n.calc_output([-1, -1])
-    print n.calc_output([-1, 1])
-    print n.calc_output([1, -1])
-    print n.calc_output([1, 1])
+    print(n.calc_output([-1, -1]))
+    print(n.calc_output([-1, 1]))
+    print(n.calc_output([1, -1]))
+    print(n.calc_output([1, 1]))
     #-0.999440929256
     #-0.876805869893
     #-0.877244822514
@@ -205,10 +205,10 @@ if __name__ == '__main__':
         n.train([1, 0], 0)
         n.train([1, 1], 1)
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
+    print(n.calc_output([0, 0]))
+    print(n.calc_output([0, 1]))
+    print(n.calc_output([1, 0]))
+    print(n.calc_output([1, 1]))
     #0.0150476832098
     #0.186800858015
     #0.187850888618
@@ -220,10 +220,10 @@ if __name__ == '__main__':
     n = NeuronN0to1(2, random=False)
     n.weights = [1, 1] 
     n.bias = -1 # corresponds to the threshold
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
+    print(n.calc_output([0, 0]))
+    print(n.calc_output([0, 1]))
+    print(n.calc_output([1, 0]))
+    print(n.calc_output([1, 1]))
     
     #0
     #1
@@ -240,11 +240,11 @@ if __name__ == '__main__':
         n.train([1, 0], 1)
         n.train([1, 1], 1)
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
-    print n.weights , n.bias
+    print(n.calc_output([0, 0]))
+    print(n.calc_output([0, 1]))
+    print(n.calc_output([1, 0]))
+    print(n.calc_output([1, 1]))
+    print(n.weights , n.bias)
     
     #0
     #1

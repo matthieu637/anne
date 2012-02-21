@@ -7,13 +7,13 @@ Created on 21 fevr. 2012
 Article test
 '''
 
-from __future__ import division
 from network import MultilayerNetwork
 from utils import findMax
 from random import shuffle
 from math import sqrt
 import matplotlib.pyplot as plt
 from data import DataFile
+from functools import reduce
 
 if __name__ == '__main__':
     mode = MultilayerNetwork.R0to1
@@ -45,7 +45,7 @@ if __name__ == '__main__':
 #            for ex in range(10):
 #            for ex in np.random.randint(0, 10, 10):
             l_exx = range(10)
-            shuffle(l_exx)
+            shuffle(list(l_exx))
             for ex in l_exx:
 #                cell=[0,0]
 #                if findMax(mn[network].stateOutputNeurons) == findMax(examples.outputs[ex]):
@@ -85,11 +85,11 @@ if __name__ == '__main__':
 #        y[1].append(sum_rms2)
 #        y[2].append(sum_rms3)
         
-    y[0] = map(lambda x : x / max_err, y[0])
+    y[0] = list(map(lambda x : x / max_err, y[0]))
 #    y[1] = map(lambda x : x / max_err2, y[1])
 #    y[2] = map(lambda x : x / max_err3, y[2])
     
-    plt.plot(range(200)[1::5] ,y[0][1::5], label="first-order network")
+    plt.plot(range(200)[1::5] , y[0][1::5], label="first-order network")
 #    plt.plot(range(200)[1::5] ,y[1][1::5], label="high-order network (10 hidden units)")
 #    plt.plot(range(200)[1::5] ,y[2][1::5], label="high-order network (5 hidden units)")
     plt.ylabel('ERROR')
@@ -102,6 +102,6 @@ if __name__ == '__main__':
     #testing
     for ex in range(10):
         for network in mn:
-            print examples.inputs[ex]
-            print network.calc_output(examples.inputs[ex])
-            print findMax(network.calc_output(examples.inputs[ex]))
+            print(examples.inputs[ex])
+            print(network.calc_output(examples.inputs[ex]))
+            print(findMax(network.calc_output(examples.inputs[ex])))

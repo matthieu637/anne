@@ -98,10 +98,10 @@ if __name__ == '__main__':
         n.train([1, -1], [1])
         n.train([1, 1], [-1])
         
-    print n.calc_output([-1, -1])
-    print n.calc_output([-1, 1])
-    print n.calc_output([1, -1])
-    print n.calc_output([1, 1])
+    print(n.calc_output([-1, -1]))
+    print(n.calc_output([-1, 1]))
+    print(n.calc_output([1, -1]))
+    print(n.calc_output([1, 1]))
     
     #[-0.9424440588256111]
     #[0.9583671093424109]
@@ -119,10 +119,10 @@ if __name__ == '__main__':
         n.train([1, 0], [1])
         n.train([1, 1], [0])
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
+    print(n.calc_output([0, 0]))
+    print(n.calc_output([0, 1]))
+    print(n.calc_output([1, 0]))
+    print(n.calc_output([1, 1]))
     
     #[0.18486650386859885]
     #[0.8124738577513108]
