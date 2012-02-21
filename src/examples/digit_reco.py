@@ -5,23 +5,18 @@ Created on 14 fevr. 2012
 @author: matthieu637
 '''
 
-from digit import Factory as DigitsFactory
+from data import DataFile
 from network import MultilayerNetwork
 from utils import findMax
 from numpy import random
 
 if __name__ == '__main__':
 
-    mode = MultilayerNetwork.R0to1
-    digits = [DigitsFactory.digitToMatrix(k, (5, 4), mode) for k in range(10)]
-    mn = MultilayerNetwork(20, 5, 10, learning_rate=.2, grid=mode)
+    mode = MultilayerNetwork.R1to1
+    mn = MultilayerNetwork(20, 5, 10, learning_rate=.1, grid=mode)
 
     #create example
-    examples = [{} for _ in range(10)]
-    for ex in range(10):
-        examples[ex]["inputs"] = digits[ex].ravel().tolist()
-        examples[ex]["outputs"] = [mode] * 10
-        examples[ex]["outputs"][ex] = 1
+    examples = DataFile("../data/digit_shape.txt", mode)
 
     #learning
     print "Start learning..."
@@ -29,14 +24,14 @@ if __name__ == '__main__':
     for epoch in range(1000): 
         for ex in random.randint(0, 10, 10):
 #        for ex in range(10):
-            mn.train(examples[ex]["inputs"], examples[ex]["outputs"])
+            mn.train(examples.inputs[ex], examples.outputs[ex])
             
     #testing
     for ex in range(10):
-        print "inputs : \n", digits[ex]
+        print "inputs : \n", examples.inputs[ex]
         print "outputs state : "
-        print "\n".join(i.__str__() for i in mn.calc_output(examples[ex]["inputs"]))
-        print "recognition : ", findMax(mn.calc_output(digits[ex].ravel().tolist()))
+        print "\n".join(i.__str__() for i in mn.calc_output(examples.inputs[ex]))
+        print "recognition : ", findMax(mn.calc_output(examples.inputs[ex]))
         print 
 
 

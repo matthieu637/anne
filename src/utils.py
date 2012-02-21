@@ -16,11 +16,3 @@ def findMax(l):
         if (l[i] > l[m]):
             m = i
     return m
-
-
-def RMS(l):
-    '''
-    returns the RMS(Root Mean Square) for the values in the list l
-    '''
-    a = np.array(l)
-    return np.sqrt(np.mean(a ** 2))

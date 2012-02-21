@@ -7,30 +7,26 @@ Created on 13 fevr. 2012
 Article test
 '''
 
-from digit import Factory as DigitsFactory
+from __future__ import division
 from network import MultilayerNetwork
 from utils import findMax
+from random import shuffle
 from math import sqrt
 import matplotlib.pyplot as plt
-import numpy as np
+from data import DataFile
 
 if __name__ == '__main__':
-    mode = MultilayerNetwork.R1to1
-    digits = [DigitsFactory.digitToMatrix(k, (5, 4), mode) for k in range(10)]
+    mode = MultilayerNetwork.R0to1
     nbr_network = 5
+    momentum = 0.9
     
-    
-    mn = [MultilayerNetwork(20, 5, 10, learning_rate=0.1, momentum=.9, grid=mode) for _ in range(nbr_network)]
-    mn2 = [MultilayerNetwork(5, 10, 35, learning_rate=0.1, momentum=.9, grid=mode) for _ in range(nbr_network)]
-    mn3 = [MultilayerNetwork(5, 5, 35, learning_rate=0.1, momentum=.9, grid=mode) for _ in range(nbr_network)]
+    mn = [MultilayerNetwork(20, 5, 10, learning_rate=0.1, momentum=momentum, grid=mode) for _ in range(nbr_network)]
+    mn2 = [MultilayerNetwork(5, 10, 35, learning_rate=0.1, momentum=momentum, grid=mode) for _ in range(nbr_network)]
+    mn3 = [MultilayerNetwork(5, 5, 35, learning_rate=0.1, momentum=momentum, grid=mode) for _ in range(nbr_network)]
     
 
     #create example
-    examples = [{} for _ in range(10)]
-    for ex in range(10):
-        examples[ex]["inputs"] = digits[ex].ravel().tolist()
-        examples[ex]["outputs"] = [mode] * 10
-        examples[ex]["outputs"][ex] = 1
+    examples = DataFile("../data/digit_shape.txt", mode)
 
 
     nbEpoch = 1000
@@ -45,31 +41,33 @@ if __name__ == '__main__':
         sum_rms2 = 0. 
         sum_rms3 = 0. 
         for network in range(nbr_network):
-            for ex in range(10):
+#            for ex in range(10):
 #            for ex in np.random.randint(0, 10, 10):
+            l_exx = range(10)
+            shuffle(l_exx)
+            for ex in l_exx:
                 rms = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
-                    mn[network].calc_output(examples[ex]["inputs"]), examples[ex]["outputs"]))
+                    mn[network].calc_output(examples.inputs[ex]), examples.outputs[ex]))
                 rms = sqrt(rms / 10)
                 sum_rms += rms
                 
-                mn2[network].train(mn[network].stateHiddenNeurons, examples[ex]["inputs"] + \
-                    mn[network].stateHiddenNeurons + mn[network].stateOutputNeurons)
-                mn3[network].train(mn[network].stateHiddenNeurons, examples[ex]["inputs"] + \
-                    mn[network].stateHiddenNeurons + mn[network].stateOutputNeurons)
-                
                 rms2 = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
-                    mn2[network].calc_output(mn[network].stateHiddenNeurons), examples[ex]["inputs"] + \
+                    mn2[network].calc_output(mn[network].stateHiddenNeurons), examples.inputs[ex] + \
                     mn[network].stateHiddenNeurons + mn[network].stateOutputNeurons))
                 rms2 += sqrt(rms2 / 10)
                 sum_rms2 += rms2
                 
                 rms3 = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
-                    mn3[network].calc_output(mn[network].stateHiddenNeurons), examples[ex]["inputs"] + \
+                    mn3[network].calc_output(mn[network].stateHiddenNeurons), examples.inputs[ex] + \
                     mn[network].stateHiddenNeurons + mn[network].stateOutputNeurons))
                 rms3 += sqrt(rms3 / 10)
                 sum_rms3 += rms3
     
-                mn[network].train(examples[ex]["inputs"], examples[ex]["outputs"])
+                mn[network].train(examples.inputs[ex], examples.outputs[ex])
+                mn2[network].train(mn[network].stateHiddenNeurons, examples.inputs[ex] + \
+                    mn[network].stateHiddenNeurons + mn[network].stateOutputNeurons)
+                mn3[network].train(mn[network].stateHiddenNeurons, examples.inputs[ex] + \
+                    mn[network].stateHiddenNeurons + mn[network].stateOutputNeurons)
 
             
         if sum_rms > max_err:
@@ -105,6 +103,6 @@ if __name__ == '__main__':
     #testing
     for ex in range(10):
         for network in mn:
-            print digits[ex]
-            print network.calc_output(digits[ex].ravel().tolist())
-            print findMax(network.calc_output(digits[ex].ravel().tolist()))
+            print examples.inputs[ex]
+            print network.calc_output(examples.inputs[ex])
+            print findMax(network.calc_output(examples.inputs[ex]))

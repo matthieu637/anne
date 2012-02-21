@@ -7,7 +7,7 @@ Created on 10 fevr. 2012
 
 from __future__ import division
 from random import random
-from math import exp, pow
+from math import exp
 
 class Neuron:
     '''
@@ -35,20 +35,18 @@ class Neuron:
             self.init_random_weights()
         
         #these fields are here simply to reuse the output during the training ( if it has been calculated )
-        self.a = 0.
-        self.state = 0.
         self.stateUpdated = False
         self.last_input = []
         
     def init_random_weights(self):
         '''
-        initialize the perceptron with random weights
+        initialize the perceptron with random weights between [-0.5 ; 0.5]
         '''
-        self.weights = [random() for _ in range(self.nbr_input)]
+        self.weights = [random() - 0.5 for _ in range(self.nbr_input)]
         
         if(self.enableBias):
-            self.bias = random()
-        self.last_weights = self.weights #last_weights is used by the momentum algo
+            self.bias = random() - 0.5
+        self.last_weights = list(self.weights) #last_weights is used by the momentum algo
         self.last_bias = self.bias
         
     def init_weights(self, val):
@@ -59,7 +57,7 @@ class Neuron:
         if(self.enableBias):
             self.bias = val
             self.last_bias = self.bias
-        self.last_weights = self.weights
+        self.last_weights = list(self.weights) #last_weights is used by the momentum algo
         
     def calc_output(self, inputs):
         '''
@@ -69,11 +67,13 @@ class Neuron:
         (The output is a real in [-1, 1]) 
         '''
         
-        #$a = \sum \limits_{i = 0}^{len(weights)} weights_{i}\times inputs_{i}$
-        a = reduce(lambda x, y:x + y, map(lambda x, y:x * y, inputs, self.weights)) 
+        #$a = \sum \limits_{i = 1}^{len(weights)} weights_{i}\times inputs_{i}$
+        a = 0.
+        for i in range(len(self.weights)):
+            a += inputs[i] * self.weights[i]
         
         if self.enableBias:
-            a += self.bias * -1
+            a += self.bias
             
         self.a = a
         self.state = self._sigmoid(a)
@@ -93,23 +93,25 @@ class Neuron:
         
         returns $y :\left \lbrace \begin{array}{lll} 2 \times g'(a) \times (wanted - e_{k}) : for\ ouput\ neurons\\g'(a) \times wanted : for\ hidden\ neurons \end{array}\right.$
         '''
+        #recalculates the output if necessary
         if not self.stateUpdated or self.last_input != inputs:
             self.calc_output(inputs)
         self.stateUpdated = False
         
         y = self._calc_y(wanted)
          
-        tmp_weights = self.weights
+        tmp_weights = list(self.weights)
         #update weights
         #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momentum \times [w_{j}(t) - w_{j}(t-1) ]$
         for j in range(len(self.weights)):
-            self.weights[j] = self.weights[j] + self.learning_rate * y * inputs[j] + self.momentum * (self.weights[j] - self.last_weights[j])
-        
+            dw = self.weights[j] - self.last_weights[j]
+            self.weights[j] += self.learning_rate * y * inputs[j] + self.momentum * dw
         
         if self.enableBias:
             tmp_bias = self.bias 
-            self.bias = self.bias + self.learning_rate * y * -1 + self.momentum * (self.bias - self.last_bias)
+            self.bias += self.learning_rate * y + self.momentum * (self.bias - self.last_bias)
             self.last_bias = tmp_bias
+
         
         self.last_weights = tmp_weights
         
@@ -128,8 +130,7 @@ class Neuron:
         '''
         return (exp(self.gradient * x) - 1) / (1 + exp(self.gradient * x))
     def _derivated_sigmoid (self, x):
-        return (2 * exp(x)) / (pow(exp(x) + 1, 2))
-
+        return (2 * exp(x)) / ((exp(x) + 1)** 2)
 
 class NeuronR0to1(Neuron):
     '''
@@ -218,7 +219,7 @@ if __name__ == '__main__':
     #OR example without training
     n = NeuronN0to1(2, random=False)
     n.weights = [1, 1] 
-    n.bias = 1 # corresponds to the threshold
+    n.bias = -1 # corresponds to the threshold
     print n.calc_output([0, 0])
     print n.calc_output([0, 1])
     print n.calc_output([1, 0])
