@@ -95,7 +95,7 @@ class MultilayerNetwork:
         
 if __name__ == '__main__':
     #XOR test on [-1, 1]
-    n = MultilayerNetwork(2, 3, 1, momentum=0.9, grid=MultilayerNetwork.R1to1)
+    n = MultilayerNetwork(2, 3, 1, momentum=0.5, grid=MultilayerNetwork.R1to1)
     
     for epoch in range(2000):
         n.train([-1, -1], [-1])
