@@ -81,25 +81,7 @@ class Neuron:
         self.last_input = inputs
         return self.state
     
-    def train(self, inputs, wanted):
-        '''
-        train the neuron by using the backpropagation algorithm
-        inputs : list of values to match with wanted
-
-        In case of hidden neurons, wanted must be :
-        $wanted = \sum \limits_{k} w_{k}\times y_{k}$
-        $with \left\lbrace \begin{array}{lll} w_{k} : weight\ between\ this\ neuron\ and\ k^{th}\ neuron\ in\ output\ layer\\ y_{k} : return\ of\ this\ function\ for\ the\ k^{th}\ neuron\ in\ output\ layer \end{array}\right.$
-        In case of output neurons, wanted is just the value to match for inputs
-        
-        returns $y :\left \lbrace \begin{array}{lll} 2 \times g'(a) \times (wanted - e_{k}) : for\ ouput\ neurons\\g'(a) \times wanted : for\ hidden\ neurons \end{array}\right.$
-        '''
-        #recalculates the output if necessary
-        if not self.stateUpdated or self.last_input != inputs:
-            self.calc_output(inputs)
-        self.stateUpdated = False
-        
-        y = self._calc_y(wanted)
-         
+    def upd_w(self, y, inputs):
         tmp_weights = list(self.weights)
         #update weights
         #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momentum \times [w_{j}(t) - w_{j}(t-1) ]$
@@ -115,10 +97,9 @@ class Neuron:
         
         self.last_weights = tmp_weights
         
-        return y
     def _calc_y(self, wanted):
         if self.ntype == Neuron.Output:
-            return  2 * self._derivated_sigmoid(self.a) * (wanted - self.state)
+            return  self._derivated_sigmoid(self.a) * (wanted - self.state)
         elif self.ntype == Neuron.Hidden:
             return  self._derivated_sigmoid(self.a) * wanted
         else :

@@ -78,21 +78,26 @@ class MultilayerNetwork:
         
         y = []
         for i in range(len(self.outputNeurons)) :
-            y.append(self.outputNeurons[i].train(self.stateHiddenNeurons, outputs[i]))
+            y.append(self.outputNeurons[i]._calc_y(outputs[i]))
         
+        yy = []
         for i in range(len(self.hiddenNeurons)):
             w_sum = 0.
             for j in range(len(self.outputNeurons)) :
                 w_sum += self.outputNeurons[j].weights[i] * y[j]
-            self.hiddenNeurons[i].train(inputs, w_sum)
+            yy.append(self.hiddenNeurons[i]._calc_y(w_sum))
             
-            
-            
+        for i in range(len(self.hiddenNeurons)) :
+            self.hiddenNeurons[i].upd_w(yy[i] , inputs)
+ 
+        for i in range(len(self.outputNeurons)) :
+            self.outputNeurons[i].upd_w(y[i] , self.stateHiddenNeurons)
+        
 if __name__ == '__main__':
     #XOR test on [-1, 1]
-    n = MultilayerNetwork(2, 3, 1, momentum=0.9)
+    n = MultilayerNetwork(2, 3, 1, momentum=0.9, grid=MultilayerNetwork.R1to1)
     
-    for epoch in range(100):
+    for epoch in range(2000):
         n.train([-1, -1], [-1])
         n.train([-1, 1], [1])
         n.train([1, -1], [1])
@@ -111,7 +116,7 @@ if __name__ == '__main__':
     print
     
     #XOR test on [0, 1]
-    n = MultilayerNetwork(2, 3, 1, grid=MultilayerNetwork.R0to1)
+    n = MultilayerNetwork(2, 3, 1, grid=MultilayerNetwork.R0to1, momentum=0.9)
     
     for epoch in range(2000):
         n.train([0, 0], [0])
