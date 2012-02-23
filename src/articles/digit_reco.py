@@ -1,11 +1,11 @@
 # -*- coding: UTF-8 -*-
 '''
-Created on 21 fevr. 2012
+Created on 13 fevr. 2012
 
 @author: matthieu637
 
 Article implementation
-$<img src="" />$
+$<img src="../../datadoc/digit_reco.png" />$
 '''
 
 from network import MultilayerNetwork
@@ -71,7 +71,6 @@ if __name__ == '__main__':
                                             entire_first_order)
                 
                 #learn
-                
                 network['high_order_10'].train(network['first_order'].stateHiddenNeurons,
                                                entire_first_order)
                 network['high_order_5'].train(network['first_order'].stateHiddenNeurons,
