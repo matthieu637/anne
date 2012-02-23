@@ -5,9 +5,8 @@ Created on 10 fevr. 2012
 @author: matthieu637
 '''
 
-from __future__ import division
-from random import random
-from math import exp, pow
+from utils import randmm
+from math import exp
 
 class Neuron:
     '''
@@ -34,93 +33,116 @@ class Neuron:
         if(random):
             self.init_random_weights()
         
-        #these fields are here simply to reuse the output during the training ( if it has been calculated )
-        self.a = 0.
-        self.state = 0.
-        self.stateUpdated = False
+        #these fields are here simply to avoid unnecessary computations
+        self.weightsUpdated = True
         self.last_input = []
         
-    def init_random_weights(self):
+    def init_random_weights(self, vmin= -0.25, vmax=0.25):
         '''
-        initialize the perceptron with random weights
+        initialize the perceptron with random weights between [vmin ; vmax]
+        returns None
         '''
-        self.weights = [random() for _ in range(self.nbr_input)]
+        self.weights = [randmm(vmin, vmax) for _ in range(self.nbr_input)]
         
         if(self.enableBias):
-            self.bias = random()
-        self.last_weights = self.weights #last_weights is used by the momentum algo
+            self.bias = randmm(vmin, vmax)
+        self.last_weights = list(self.weights) #last_weights is used by the momentum algo
         self.last_bias = self.bias
         
     def init_weights(self, val):
         '''
         assigns the value val to all the weights of the perceptron
+        returns None
         '''
         self.weights = [val for _ in range(self.nbr_input)]
         if(self.enableBias):
             self.bias = val
             self.last_bias = self.bias
-        self.last_weights = self.weights
+        self.last_weights = list(self.weights) #last_weights is used by the momentum algo
         
     def calc_output(self, inputs):
         '''
-        returns the output to the data inputs according to the formula:
-        $output \leftarrow g(a)=g\left( \sum \limits_{i} w_{i}\times e_{i}\right)$
-        $with \left\lbrace \begin{array}{lll} w : weights\\e : inputs\\ w_{0} : enableBias\\ e_{0} : -1 \end{array}\right.$
+        returns the output state of the neuron to the data inputs according to the formula:
+        $output \leftarrow g(a)=g\left( \sum \limits_{i = 0}^{len(weights)} weights_{i}\times inputs_{i}\right)$
+        $with \left\lbrace \begin{array}{lll} w : weights\\e : inputs\\ w_{0} : bias\\ e_{0} : 1 \end{array}\right.$
         (The output is a real in [-1, 1]) 
         '''
-        
-        #$a = \sum \limits_{i = 0}^{len(weights)} weights_{i}\times inputs_{i}$
-        a = reduce(lambda x, y:x + y, map(lambda x, y:x * y, inputs, self.weights)) 
+
+        #avoids unnecessary computations
+        if not self.weightsUpdated and self.last_input == inputs:
+            return self.state
+        self.last_input = inputs
+        self.weightsUpdated = False
+
+        #calculates the output
+        a = 0.
+        for i in range(len(self.weights)):
+            a += inputs[i] * self.weights[i]
         
         if self.enableBias:
-            a += self.bias * -1
+            a += self.bias
             
         self.a = a
         self.state = self._sigmoid(a)
-        self.stateUpdated = True
-        self.last_input = inputs
         return self.state
     
-    def train(self, inputs, wanted):
+    def calc_error_propagation(self, wanted):
         '''
-        train the neuron by using the backpropagation algorithm
-        inputs : list of values to match with wanted
-
+        calculates the error for gradient descent
+        
         In case of hidden neurons, wanted must be :
         $wanted = \sum \limits_{k} w_{k}\times y_{k}$
+
         $with \left\lbrace \begin{array}{lll} w_{k} : weight\ between\ this\ neuron\ and\ k^{th}\ neuron\ in\ output\ layer\\ y_{k} : return\ of\ this\ function\ for\ the\ k^{th}\ neuron\ in\ output\ layer \end{array}\right.$
-        In case of output neurons, wanted is just the value to match for inputs
+
+        In case of output neurons, wanted is just the output value to match to the neuron
         
-        returns $y :\left \lbrace \begin{array}{lll} 2 \times g'(a) \times (wanted - e_{k}) : for\ ouput\ neurons\\g'(a) \times wanted : for\ hidden\ neurons \end{array}\right.$
+        returns the error to propagate
+        $\left \lbrace \begin{array}{lll} 2 \times g'(a) \times (wanted - e_{k}) : for\ ouput\ neurons\\g'(a) \times wanted : for\ hidden\ neurons \end{array}\right.$
         '''
-        if not self.stateUpdated or self.last_input != inputs:
-            self.calc_output(inputs)
-        self.stateUpdated = False
+        if(self.weightsUpdated):
+            raise Exception("You are trying to calculate the error with an old state,\
+                 please call calc_output(..) first")
         
-        y = self._calc_y(wanted)
-         
-        tmp_weights = self.weights
-        #update weights
-        #$w_{j} (t+1) = w_{j}(t) + learning\_rate \times y \times inputs_j + momentum \times [w_{j}(t) - w_{j}(t-1) ]$
+        if self.ntype == Neuron.Output:
+            return  self._derivated_sigmoid(self.a) * (wanted - self.state)
+        elif self.ntype == Neuron.Hidden:
+            return self._derivated_sigmoid(self.a) * wanted
+        else :
+            raise Exception("%d : unknown neuron type (ntype param)" % self.ntype)
+        
+    def update_weights(self, error, inputs):
+        '''
+        updates all the weights of the neuron according to the formula :
+        $w_{j} (t+1) = w_{j}(t) + learning\_rate \times error \times inputs_j + momentum \times [w_{j}(t) - w_{j}(t-1) ]$
+        returns None
+        '''
+        self.calc_output(inputs)
+        
+        tmp_weights = list(self.weights)
+
         for j in range(len(self.weights)):
-            self.weights[j] = self.weights[j] + self.learning_rate * y * inputs[j] + self.momentum * (self.weights[j] - self.last_weights[j])
-        
+            dw = self.weights[j] - self.last_weights[j] 
+            self.weights[j] += self.learning_rate * error * inputs[j] + self.momentum * dw
         
         if self.enableBias:
             tmp_bias = self.bias 
-            self.bias = self.bias + self.learning_rate * y * -1 + self.momentum * (self.bias - self.last_bias)
+            self.bias += self.learning_rate * error + self.momentum * (self.bias - self.last_bias)
             self.last_bias = tmp_bias
+
         
         self.last_weights = tmp_weights
+        self.weightsUpdated = True
         
-        return y
-    def _calc_y(self, wanted):
-        if self.ntype == Neuron.Output:
-            return  2 * self._derivated_sigmoid(self.a) * (wanted - self.state)
-        elif self.ntype == Neuron.Hidden:
-            return  self._derivated_sigmoid(self.a) * wanted
-        else :
-            raise Exception("%d : unknown neuron type (ntype param)" % self.ntype)
+    def train(self, inputs, ouputs): 
+        '''
+        only to use with single perceptron ( not with multilayer network )
+        '''
+        if(self.ntype != Neuron.Output):
+            raise Exception("Neuron.train is only for single perceptron")
+        
+        self.calc_output(inputs)
+        self.update_weights(self.calc_error_propagation(ouputs), inputs)
     def _sigmoid (self, x):
         '''
         returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
@@ -128,8 +150,7 @@ class Neuron:
         '''
         return (exp(self.gradient * x) - 1) / (1 + exp(self.gradient * x))
     def _derivated_sigmoid (self, x):
-        return (2 * exp(x)) / (pow(exp(x) + 1, 2))
-
+        return (2 * exp(x)) / ((exp(x) + 1) ** 2)
 
 class NeuronR0to1(Neuron):
     '''
@@ -166,7 +187,7 @@ class NeuronN0to1(Neuron):
         return 1 if x >= 0 else 0
     def _derivated_sigmoid (self, x):
         raise NotImplemented
-    def _calc_y(self, wanted):
+    def calc_error_propagation(self, wanted):
         '''
         train now follow the Hebb's rule ( with a possible momentum ) 
         '''
@@ -185,10 +206,10 @@ if __name__ == '__main__':
         n.train([1, -1], -1)
         n.train([1, 1], 1)
         
-    print n.calc_output([-1, -1])
-    print n.calc_output([-1, 1])
-    print n.calc_output([1, -1])
-    print n.calc_output([1, 1])
+    print(n.calc_output([-1, -1]))
+    print(n.calc_output([-1, 1]))
+    print(n.calc_output([1, -1]))
+    print(n.calc_output([1, 1]))
     #-0.999440929256
     #-0.876805869893
     #-0.877244822514
@@ -204,10 +225,10 @@ if __name__ == '__main__':
         n.train([1, 0], 0)
         n.train([1, 1], 1)
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
+    print(n.calc_output([0, 0]))
+    print(n.calc_output([0, 1]))
+    print(n.calc_output([1, 0]))
+    print(n.calc_output([1, 1]))
     #0.0150476832098
     #0.186800858015
     #0.187850888618
@@ -218,11 +239,11 @@ if __name__ == '__main__':
     #OR example without training
     n = NeuronN0to1(2, random=False)
     n.weights = [1, 1] 
-    n.bias = 1 # corresponds to the threshold
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
+    n.bias = -1 # corresponds to the threshold
+    print(n.calc_output([0, 0]))
+    print(n.calc_output([0, 1]))
+    print(n.calc_output([1, 0]))
+    print(n.calc_output([1, 1]))
     
     #0
     #1
@@ -239,11 +260,11 @@ if __name__ == '__main__':
         n.train([1, 0], 1)
         n.train([1, 1], 1)
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
-    print n.weights , n.bias
+    print(n.calc_output([0, 0]))
+    print(n.calc_output([0, 1]))
+    print(n.calc_output([1, 0]))
+    print(n.calc_output([1, 1]))
+    print(n.weights , n.bias)
     
     #0
     #1

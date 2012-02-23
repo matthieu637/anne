@@ -5,6 +5,7 @@ Created on 13 fevr. 2012
 @author: matthieu637
 '''
 
+from math import sqrt
 from neuron import Neuron, NeuronR0to1
 
 class MultilayerNetwork:
@@ -38,13 +39,15 @@ class MultilayerNetwork:
                                   for _ in range(nbr_output)]
         self.stateOutputNeurons = []
         self.stateHiddenNeurons = []
+        self.last_inputs = []
+        self.networkUpdated = True
 
-    def init_random_weights(self):
+    def init_random_weights(self, vmin= -0.25, vmax=0.25):
         '''
-        assigns a random value to all the weights of the network
+        assigns a random value between [ vmin, vmax [ to all the weights of the network 
         '''
         for neuron in self.hiddenNeurons + self.outputNeurons:
-            neuron.init_random_weights()
+            neuron.init_random_weights(vmin, vmax)
        
     def init_weights(self, val):
         '''
@@ -57,6 +60,12 @@ class MultilayerNetwork:
         '''
         returns the responses list of the output neurons to these data inputs
         '''
+        #avoids unnecessary computations
+        if(not self.networkUpdated and self.last_inputs == inputs):
+            return self.stateOutputNeurons
+        self.networkUpdated = False
+        self.last_inputs = inputs
+        
         #determine the state of hidden neurons
         stateHidden = []
         for i in range(len(self.hiddenNeurons)) :
@@ -70,38 +79,62 @@ class MultilayerNetwork:
         self.stateOutputNeurons = stateOutputs
         return stateOutputs
     
+    def calc_RMS(self, inputs, outputs):
+        '''
+        returns the RMS ( Root Mean Square ) according to the formula :
+        $ \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{n} ( o_{i} - d_{i} )^2 } $
+        $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\ o : values\ obtained \\ d : values\ desired \end{array} \right.$
+        (it is used to determine the total error of the network)
+        '''
+        self.calc_output(inputs)
+        
+        s = 0.
+        for i in range(len(outputs)):
+            s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
+        return sqrt(s / len(outputs))
+        
     def train(self, inputs, outputs):
         '''
         trains the network to associate inputs to outputs ( by using the backpropagation algorithm )
         '''
         self.calc_output(inputs)
         
+        #build y the error vector to propagate
         y = []
         for i in range(len(self.outputNeurons)) :
-            y.append(self.outputNeurons[i].train(self.stateHiddenNeurons, outputs[i]))
+            y.append(self.outputNeurons[i].calc_error_propagation(outputs[i]))
         
+        yy = []
         for i in range(len(self.hiddenNeurons)):
             w_sum = 0.
             for j in range(len(self.outputNeurons)) :
                 w_sum += self.outputNeurons[j].weights[i] * y[j]
-            self.hiddenNeurons[i].train(inputs, w_sum)
+            yy.append(self.hiddenNeurons[i].calc_error_propagation(w_sum))
             
+        #updates all weights of the network
+        for i in range(len(self.hiddenNeurons)) :
+            self.hiddenNeurons[i].update_weights(yy[i] , inputs)
+ 
+        for i in range(len(self.outputNeurons)) :
+            self.outputNeurons[i].update_weights(y[i] , self.stateHiddenNeurons)
             
-            
+        self.networkUpdated = True
+        
 if __name__ == '__main__':
     #XOR test on [-1, 1]
-    n = MultilayerNetwork(2, 3, 1, momentum=0.9)
+    n = MultilayerNetwork(2, 3, 1, grid=MultilayerNetwork.R1to1)
+    n.init_random_weights(-1, 1)
     
-    for epoch in range(100):
+    for epoch in range(700):
         n.train([-1, -1], [-1])
         n.train([-1, 1], [1])
         n.train([1, -1], [1])
         n.train([1, 1], [-1])
         
-    print n.calc_output([-1, -1])
-    print n.calc_output([-1, 1])
-    print n.calc_output([1, -1])
-    print n.calc_output([1, 1])
+    print(n.calc_output([-1, -1]))
+    print(n.calc_output([-1, 1]))
+    print(n.calc_output([1, -1]))
+    print(n.calc_output([1, 1]))
     
     #[-0.9424440588256111]
     #[0.9583671093424109]
@@ -111,7 +144,7 @@ if __name__ == '__main__':
     print
     
     #XOR test on [0, 1]
-    n = MultilayerNetwork(2, 3, 1, grid=MultilayerNetwork.R0to1)
+    n = MultilayerNetwork(2, 3, 1, grid=MultilayerNetwork.R0to1, momentum=0.9)
     
     for epoch in range(2000):
         n.train([0, 0], [0])
@@ -119,10 +152,10 @@ if __name__ == '__main__':
         n.train([1, 0], [1])
         n.train([1, 1], [0])
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
+    print(n.calc_output([0, 0]))
+    print(n.calc_output([0, 1]))
+    print(n.calc_output([1, 0]))
+    print(n.calc_output([1, 1]))
     
     #[0.18486650386859885]
     #[0.8124738577513108]

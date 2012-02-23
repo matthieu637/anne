@@ -9,8 +9,7 @@
 # learning.
 # -----------------------------------------------------------------------------
 import numpy as np
-from network import MultilayerNetwork
-import copy
+from data import DataFile
 
 def sigmoid(x):
     ''' Sigmoid like function using tanh '''
@@ -106,20 +105,21 @@ if __name__ == '__main__':
     def learn(network, samples, epochs=2500, lrate=.1, momentum=0.1):
         # Train 
         for i in range(epochs):
-#            n = np.random.randint(samples.size)
-            for n in range(samples.size):
-                network.propagate_forward(samples['input'][n])
-                network.propagate_backward(samples['output'][n], lrate, momentum)
+            n = np.random.randint(samples.size)
+#            for n in range(samples.size):
+            network.propagate_forward(samples['input'][n])
+            network.propagate_backward(samples['output'][n], lrate, momentum)
         # Test
         for i in range(samples.size):
             o = network.propagate_forward(samples['input'][i])
-            print i, samples['input'][i], '%.2f' % o[0],
-            print '(expected %.2f)' % samples['output'][i]
+#            print i, samples['input'][i], '%.2f' % o[0],
+#            print '(expected %.2f)' % samples['output'][i]
+            print (i, o)
+            print
         print
 
 #    network = MLP(2, 2, 1)
-    samples = np.zeros(4, dtype=[('input', float, 2), ('output', float, 1)])
-
+    
     # Example 1 : OR logical function
     # -------------------------------------------------------------------------
 #    print "Learning the OR logical function"
@@ -142,72 +142,61 @@ if __name__ == '__main__':
 
     # Example 3 : XOR logical function
     # -------------------------------------------------------------------------
-    print "Learning the XOR logical function"
-    network = MLP(2, 2, 1)
+#    print "Learning the XOR logical function"
+#    network = MLP(2, 2, 1)
+#    network.reset()
+#    begin_weight = copy.deepcopy(network.weights)
+#    print begin_weight
+#    samples[0] = (0, 0), 0
+#    samples[1] = (1, 0), 1
+#    samples[2] = (0, 1), 1
+#    samples[3] = (1, 1), 0
+#    learn(network, samples, epochs=100, lrate=0.1, momentum=0.1)
+#
+#
+#    print
+#    print begin_weight[0]
+#    print begin_weight[1]
+#    print 
+#    
+#    n = MultilayerNetwork(2, 2, 1, grid=MultilayerNetwork.R0to1, learning_rate=0.1, momentum=0.1)
+#    n.outputNeurons[0].weights = begin_weight[1]
+#    n.hiddenNeurons[0].weights[0] = begin_weight[0][0][0]
+#    n.hiddenNeurons[0].weights[1] = begin_weight[0][1][0]
+#    n.hiddenNeurons[0].bias = begin_weight[0][2][0]
+#    
+#    n.hiddenNeurons[1].weights[0] = begin_weight[0][0][1]
+#    n.hiddenNeurons[1].weights[1] = begin_weight[0][1][1]
+#    n.hiddenNeurons[1].bias = begin_weight[0][2][1]
+#    
+#    
+#    for epoch in range(100):
+#        n.train([0, 0], [0])
+#        n.train([1, 0], [1])
+#        n.train([0, 1], [1])
+#        n.train([1, 1], [0])
+#        
+#    print n.calc_output([0, 0])
+#    print n.calc_output([0, 1])
+#    print n.calc_output([1, 0])
+#    print n.calc_output([1, 1])
+#    
+    samples = np.zeros(10, dtype=[('input', float, 20), ('output', float, 10)])
+    examples = DataFile("data/digit_shape.txt", 0)
+
+    
+    network = MLP(20, 5, 10)
     network.reset()
-    begin_weight = copy.deepcopy(network.weights)
-    print begin_weight
-    samples[0] = (0, 0), 0
-    samples[1] = (1, 0), 1
-    samples[2] = (0, 1), 1
-    samples[3] = (1, 1), 0
-    learn(network, samples, epochs=10, lrate=0.1, momentum=0.1)
-
-
-    print
-    print begin_weight[0]
-    print begin_weight[1]
-    print 
     
-    n = MultilayerNetwork(2, 2, 1, grid=MultilayerNetwork.R0to1, learning_rate=0.1, momentum=0.1)
-    n.outputNeurons[0].weights = begin_weight[1]
-    n.hiddenNeurons[0].weights[0] = begin_weight[0][0][0]
-    n.hiddenNeurons[0].weights[1] = begin_weight[0][1][0]
-    n.hiddenNeurons[0].bias = begin_weight[0][2][0]
-    
-    n.hiddenNeurons[1].weights[0] = begin_weight[0][0][1]
-    n.hiddenNeurons[1].weights[1] = begin_weight[0][1][1]
-    n.hiddenNeurons[1].bias = begin_weight[0][2][1]
-    
-    
-    for epoch in range(10):
-        n.train([0, 0], [0])
-        n.train([1, 0], [1])
-        n.train([0, 1], [1])
-        n.train([1, 1], [0])
+    for i in range(10):
+        for j in range(20):
+            samples[i][0][j] = examples.inputs[i][j]
+        samples[i][1][i] = 1
         
-    print n.calc_output([0, 0])
-    print n.calc_output([0, 1])
-    print n.calc_output([1, 0])
-    print n.calc_output([1, 1])
+    print(samples)
+    print
     
-    # Example 4 : Learning sin(x)
-    # -------------------------------------------------------------------------
-#    print "Learning the sin function"
-#    network = MLP(1, 10, 1)
-#    samples = np.zeros(500, dtype=[('x', float, 1), ('y', float, 1)])
-#    samples['x'] = np.linspace(0, 1, 500)
-#    samples['y'] = np.sin(samples['x'] * np.pi)
-#
-#    for i in range(10000):
-#        n = np.random.randint(samples.size)
-#        network.propagate_forward(samples['x'][n])
-#        network.propagate_backward(samples['y'][n])
-#
-#    plt.figure(figsize=(10, 5))
-#    # Draw real function
-#    x, y = samples['x'], samples['y']
-#    plt.plot(x, y, color='b', lw=1)
-#    # Draw network approximated function
-#    for i in range(samples.shape[0]):
-#        y[i] = network.propagate_forward(x[i])
-#    plt.plot(x, y, color='r', lw=3)
-#    plt.axis([0, 1, 0, 1])
-#    plt.show()
-#    
-#    
-#    
-#    
-    
-    
-    
+    print (network.propagate_forward(samples['input'][0]))
+    print
+
+    learn(network, samples, epochs=1000 * 10, lrate=0.1, momentum=0.9)

@@ -5,7 +5,7 @@ Created on 14 fevr. 2012
 @author: matthieu637
 '''
 
-import numpy as np
+from random import random
 
 def findMax(l):
     '''
@@ -17,10 +17,8 @@ def findMax(l):
             m = i
     return m
 
-
-def RMS(l):
+def randmm(vmin, vmax):
     '''
-    returns the RMS(Root Mean Square) for the values in the list l
+    returns a float between [vmin, vmax[
     '''
-    a = np.array(l)
-    return np.sqrt(np.mean(a ** 2))
+    return vmin + random() * abs(vmax - vmin)
