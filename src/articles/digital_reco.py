@@ -16,13 +16,16 @@ from data import DataFile
 from functools import reduce
 
 if __name__ == '__main__':
-    mode = MultilayerNetwork.R0to1
-    nbr_network = 10
+    mode = MultilayerNetwork.R1to1
+    nbr_network = 1
     momentum = 0.5
     
-    mn = [MultilayerNetwork(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode) for _ in range(nbr_network)]
+    mn = [MultilayerNetwork(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode) for _ in range(nbr_network)]    
     mn2 = [MultilayerNetwork(100, 100, 2, learning_rate=0.1, momentum=momentum, grid=mode) for _ in range(nbr_network)]
     mn3 = [MultilayerNetwork(100, 100, 2, learning_rate=10e-7, momentum=momentum, grid=mode) for _ in range(nbr_network)]
+    for n in mn + mn2 + mn3:
+        n.init_random_weights(-1,1)
+
 
     #create example
     examples = DataFile("../data/digital_shape.txt", mode)
@@ -42,30 +45,30 @@ if __name__ == '__main__':
             l_exx = range(10)
             shuffle(list(l_exx))
             for ex in l_exx:
-                cell=[0,0]
+                cell = [0, 0]
                 if findMax(mn[network].calc_output(examples.inputs[ex])) == findMax(examples.outputs[ex]):
-                    cell=[mode,1]
+                    cell = [mode, 1]
                 else:
-                    cell=[1,mode]
+                    cell = [1, mode]  
                 
                 rms = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
                     mn[network].calc_output(examples.inputs[ex]), examples.outputs[ex]))
-                sum_rms += sqrt(rms/10)
+                sum_rms += sqrt(rms / 10)
                 
                 rms2 = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
                     mn2[network].calc_output(mn[network].stateHiddenNeurons), cell))
-                sum_rms2 += sqrt(rms2/2)
+                sum_rms2 += sqrt(rms2 / 2)
                 
                 rms3 = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
                     mn3[network].calc_output(mn[network].stateHiddenNeurons), cell))
-                sum_rms3 += sqrt(rms3/2)
-    
-                mn[network].train(examples.inputs[ex], examples.outputs[ex])
+                sum_rms3 += sqrt(rms3 / 2)
                 
                 mn2[network].train(mn[network].stateHiddenNeurons, cell)
                 mn3[network].train(mn[network].stateHiddenNeurons, cell)
+                
+                mn[network].train(examples.inputs[ex], examples.outputs[ex])
 
-            
+
         y[0].append(sum_rms)
         y[1].append(sum_rms2)
         y[2].append(sum_rms3)
@@ -75,8 +78,8 @@ if __name__ == '__main__':
     y[2] = list(map(lambda x : x / max(y[2]), y[2]))
     
     plt.plot(range(201)[6::5] , y[0][6::5], label="first-order network")
-    plt.plot(range(201)[6::5] ,y[1][6::5], label="high-order network (high learning rate)")
-    plt.plot(range(201)[6::5] ,y[2][6::5], label="high-order network (low learning rate)")
+    plt.plot(range(201)[6::5] , y[1][6::5], label="high-order network (high learning rate)")
+    plt.plot(range(201)[6::5] , y[2][6::5], label="high-order network (low learning rate)")
     plt.ylabel('ERROR')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))

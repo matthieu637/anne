@@ -5,7 +5,7 @@ Created on 14 fevr. 2012
 @author: matthieu637
 '''
 
-import numpy as np
+from random import random
 
 def findMax(l):
     '''
@@ -16,3 +16,9 @@ def findMax(l):
         if (l[i] > l[m]):
             m = i
     return m
+
+def randmm(vmin, vmax):
+    '''
+    returns a float between [vmin, vmax[
+    '''
+    return vmin + random() * abs(vmax - vmin)
