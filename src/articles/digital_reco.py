@@ -32,7 +32,7 @@ if __name__ == '__main__':
 
 
     nbEpoch = 201
-    y = [[] for _ in range(3)]
+    y_plot = [[] for _ in range(3)]
 
     #learning
     for epoch in range(nbEpoch):
@@ -51,15 +51,15 @@ if __name__ == '__main__':
                 else:
                     cell = [1, mode]  
                 
-                rms = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
+                rms = reduce(lambda x, y_plot:x + y_plot, map(lambda x, y_plot: pow(x - y_plot, 2), \
                     mn[network].calc_output(examples.inputs[ex]), examples.outputs[ex]))
                 sum_rms += sqrt(rms / 10)
                 
-                rms2 = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
+                rms2 = reduce(lambda x, y_plot:x + y_plot, map(lambda x, y_plot: pow(x - y_plot, 2), \
                     mn2[network].calc_output(mn[network].stateHiddenNeurons), cell))
                 sum_rms2 += sqrt(rms2 / 2)
                 
-                rms3 = reduce(lambda x, y:x + y, map(lambda x, y: pow(x - y, 2), \
+                rms3 = reduce(lambda x, y_plot:x + y_plot, map(lambda x, y_plot: pow(x - y_plot, 2), \
                     mn3[network].calc_output(mn[network].stateHiddenNeurons), cell))
                 sum_rms3 += sqrt(rms3 / 2)
                 
@@ -69,17 +69,17 @@ if __name__ == '__main__':
                 mn[network].train(examples.inputs[ex], examples.outputs[ex])
 
 
-        y[0].append(sum_rms)
-        y[1].append(sum_rms2)
-        y[2].append(sum_rms3)
+        y_plot[0].append(sum_rms)
+        y_plot[1].append(sum_rms2)
+        y_plot[2].append(sum_rms3)
         
-    y[0] = list(map(lambda x : x / max(y[0]), y[0]))
-    y[1] = list(map(lambda x : x / max(y[1]), y[1]))
-    y[2] = list(map(lambda x : x / max(y[2]), y[2]))
+    y_plot[0] = list(map(lambda x : x / max(y_plot[0]), y_plot[0]))
+    y_plot[1] = list(map(lambda x : x / max(y_plot[1]), y_plot[1]))
+    y_plot[2] = list(map(lambda x : x / max(y_plot[2]), y_plot[2]))
     
-    plt.plot(range(201)[6::5] , y[0][6::5], label="first-order network")
-    plt.plot(range(201)[6::5] , y[1][6::5], label="high-order network (high learning rate)")
-    plt.plot(range(201)[6::5] , y[2][6::5], label="high-order network (low learning rate)")
+    plt.plot(range(201)[6::5] , y_plot[0][6::5], label="first-order network")
+    plt.plot(range(201)[6::5] , y_plot[1][6::5], label="high-order network (high learning rate)")
+    plt.plot(range(201)[6::5] , y_plot[2][6::5], label="high-order network (low learning rate)")
     plt.ylabel('ERROR')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))

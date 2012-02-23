@@ -90,7 +90,7 @@ class MultilayerNetwork:
         
         s = 0.
         for i in range(len(outputs)):
-            s += (self.outputNeurons[i] - outputs[i]) ** 2
+            s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
         return sqrt(s / len(outputs))
         
     def train(self, inputs, outputs):
