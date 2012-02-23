@@ -5,6 +5,7 @@ Created on 21 fevr. 2012
 @author: matthieu637
 
 Article test
+$<img src="../../datadoc/digital_reco.png" />$
 '''
 
 from network import MultilayerNetwork
@@ -15,7 +16,7 @@ from data import DataFile
 
 if __name__ == '__main__':
     mode = MultilayerNetwork.R0to1
-    nbr_network = 1
+    nbr_network = 10
     momentum = 0.5
     nbEpoch = 201
     display_interval = range(nbEpoch)[6::5]
@@ -34,9 +35,9 @@ if __name__ == '__main__':
 
     for network in networks:
         for k in network.keys():
-                network[k].init_random_weights(-1,1)
+                network[k].init_random_weights(-.6, .6)
 
-#    plt.title("  0.70 0")
+    plt.title("Error of first-order and higher-order networks")
     #create example
     examples = DataFile("../data/digital_shape.txt", mode)
 
@@ -107,10 +108,18 @@ if __name__ == '__main__':
     plt.legend()
     plt.show()
     
-
+    
     #testing
     for ex in range(10):
         for network in networks:
             print(examples.inputs[ex])
             print(network['first_order'].calc_output(examples.inputs[ex]))
             print(findMax(network['first_order'].calc_output(examples.inputs[ex])))
+
+    '''
+    result
+    $<img src="../../results/digital_reco.png" />$
+    
+    curves of the article
+    $<img src="../../results/digital_reco_article.png" />$
+    '''
