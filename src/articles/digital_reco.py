@@ -64,8 +64,6 @@ if __name__ == '__main__':
                         if findMax(network['first_order'].stateOutputNeurons) == findMax(examples.outputs[ex]) \
                         else [1, mode]
                 
-#                convert = list(map(lambda x:, network['first_order'].stateHiddenNeurons))
-                
                 sum_rms['high_order_h'] += network['high_order_h'].calc_RMS(
                                             network['first_order'].stateHiddenNeurons,
                                              cell)

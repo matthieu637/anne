@@ -189,7 +189,7 @@ class NeuronN0to1(Neuron):
         raise NotImplemented
     def calc_error_propagation(self, wanted):
         '''
-        train now follow the Hebb's rule ( with a possible momentum ) 
+        train now follow the Hebb's rule
         '''
         return wanted - self.state
 

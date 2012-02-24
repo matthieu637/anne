@@ -68,14 +68,14 @@ class MultilayerNetwork:
         
         #determine the state of hidden neurons
         stateHidden = []
-        for i in range(len(self.hiddenNeurons)) :
-            stateHidden.append(self.hiddenNeurons[i].calc_output(inputs))
+        for neuron in self.hiddenNeurons :
+            stateHidden.append(neuron.calc_output(inputs))
         self.stateHiddenNeurons = stateHidden
         
         #then the output layer
         stateOutputs = []
-        for i in range(len(self.outputNeurons)) :
-            stateOutputs.append(self.outputNeurons[i].calc_output(stateHidden))
+        for neuron in self.outputNeurons :
+            stateOutputs.append(neuron.calc_output(stateHidden))
         self.stateOutputNeurons = stateOutputs
         return stateOutputs
     
