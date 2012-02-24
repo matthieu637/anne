@@ -150,7 +150,7 @@ class Neuron:
         '''
         return (exp(self.gradient * x) - 1) / (1 + exp(self.gradient * x))
     def _derivated_sigmoid (self, x):
-        return (2 * exp(x)) / ((exp(x) + 1) ** 2)
+        return (2 * self.gradient * exp(self.gradient * x)) / ((exp(x * self.gradient) + 1) ** 2)
 
 class NeuronR0to1(Neuron):
     '''
@@ -164,7 +164,7 @@ class NeuronR0to1(Neuron):
         '''
         return 1 / (1 + exp(-self.gradient * x))
     def _derivated_sigmoid (self, x):
-        return self._sigmoid(x) * (1 - self._sigmoid(x))
+        return self._sigmoid(x) * (1 - self._sigmoid(x)) * self.gradient
 
 
 class NeuronN0to1(Neuron):
