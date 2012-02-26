@@ -4,18 +4,25 @@ Created on 20 fevr. 2012
 
 @author: matthieu637
 '''
+from utils import randmm
+
+default_file_rules = {'x':(False, 1),
+                    '.': (False, 0)}
 
 class DataFile():
     '''
     classdocs
     '''
-    def __init__(self, name, bound=0):
+    def __init__(self, name, bound=0, rules=default_file_rules):
         '''
         Constructor
         '''
+        if(rules == default_file_rules):
+            default_file_rules['.'] = (False, bound)
+        
         self.inputs = []
         self.outputs = []
-        self.bound = bound
+        self.rules = rules
         self._read_data(name)
         
     def _read_data(self, name):
@@ -41,9 +48,17 @@ class DataFile():
         rfile.close()
         
     def _line_to_list(self, line):
-        lstring = list(line.replace(" ", "").replace("\n", "").replace(".", "0").replace("x", "1"))
-        lint = [int(i) for i in lstring]
-        return [ 1 if i == 1 else self.bound for i in lint]
+        lstring = list(line.replace(" ", "").replace("\n", ""))
+                       
+        result = []
+        for sym in lstring:
+            for key in self.rules:
+                if(sym == key):
+                    if(not self.rules[key][0]):
+                        result += [self.rules[key][1]]
+                    else:
+                        result += [randmm(self.rules[key][1], self.rules[key][2])]
+        return result
     
     def _add_list(self, llist, pos, data):
         if(len(llist) <= pos):
@@ -55,11 +70,18 @@ if __name__ == '__main__':
     #Some examples :
     #
     
-    
-    df = DataFile("data/digital_shape.txt", -1)
+    df = DataFile("data/digital_shape.txt", 0)
     print (df.inputs)
     print (df.outputs)
 
 
     #[[0, 0, 1, 0, 0, 1, 0], [0, 0, 1, 0, 0, 1, 0], ...
     #[[1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0, 0], ...
+    
+    r = {'x':(True, 0, 1),
+         '.': (False, 0),
+         '?': (True, 0, 0.02),
+         '!': (False, 1)}
+    df = DataFile("data/blindslight.txt", rules=r)
+    print (df.inputs[0])
+    print (df.outputs[0])

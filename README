@@ -1,16 +1,21 @@
-####################################################
-####################################################
-#    			ANNE                       #
-#             Artificial Neural NEtworks           #
-####################################################
-####################################################
+######################################################
+######################################################
+#    			ANNE                         #
+#              Artificial Neural NEtworks            #
+######################################################
+######################################################
 
 This project contains :
 - an example of implementation for the article
-Consciousness and metarepresentaion : A computational
-sketch [ Axel Cleeremans, Bert Timmermans, Antoine
+Consciousness and metarepresentation : A computational 
+sketch [ Axel Cleeremans, Bert Timmermans, Antoine 
 Pasquali] using feedforward backpropagation networks
+- src/articles/digit_reco.py
+- src/articles/digital_reco.py
 
+
+You should use http://matthieu637.github.com/anne/ to
+display the source : it is more readable with mathjax
 
 The entire code is written with python.
 
