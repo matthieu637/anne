@@ -52,10 +52,8 @@ if __name__ == '__main__':
                    'high_order_h' : 0.,
                    'high_order_l': 0.}
         for network in networks:
-#            for ex in range(10):
-#            for ex in np.random.randint(0, 10, 10):
-            l_exx = range(10)
-            shuffle(list(l_exx))
+            l_exx = list(range(10))
+            shuffle(l_exx)
             for ex in l_exx:
                 sum_rms['first_order'] += network['first_order'].calc_RMS(
                                             examples.inputs[ex],
@@ -90,7 +88,7 @@ if __name__ == '__main__':
     max_err = (max(y_plot['first_order']),
                max(y_plot['high_order_h']),
                max(y_plot['high_order_l']))
-    m = max(y_plot['first_order'])
+
     for i in range(nbEpoch):
         y_plot['first_order'][i] /= max_err[0]
         y_plot['high_order_h'][i] /= max_err[1]
