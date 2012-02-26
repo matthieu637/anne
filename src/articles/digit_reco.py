@@ -94,13 +94,13 @@ if __name__ == '__main__':
         y_plot['high_order_5'][i] /= max_err[2]
     
     #displays
-    plt.plot(display_interval, [y_plot['first_order'][i] for i in display_interval], 
+    plt.plot(display_interval, [y_plot['first_order'][i] for i in display_interval],
              label="first-order network")
     
-    plt.plot(display_interval, [y_plot['high_order_10'][i] for i in display_interval], 
+    plt.plot(display_interval, [y_plot['high_order_10'][i] for i in display_interval],
              label="high-order network (10 hidden units)")
     
-    plt.plot(display_interval, [y_plot['high_order_5'][i] for i in display_interval], 
+    plt.plot(display_interval, [y_plot['high_order_5'][i] for i in display_interval],
              label="high-order network (5 hidden units)")
     
     plt.title('Error proportion of first-order and high-order networks')
@@ -113,4 +113,7 @@ if __name__ == '__main__':
     '''
     result
     $<img src="../../results/digit_reco.png" />$
+    
+    curves of the article
+    $<img src="../../results/digit_reco_article.png" />$
     '''
