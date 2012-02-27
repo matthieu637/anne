@@ -12,7 +12,7 @@ from network import MultilayerNetwork
 from random import shuffle
 import matplotlib.pyplot as plt
 from data import DataFile
-from utils import findMax
+from utils import index_max
 
 if __name__ == '__main__':
     mode = MultilayerNetwork.R0to1
@@ -91,11 +91,11 @@ if __name__ == '__main__':
                                             entire_first_order, 25, 35)
                 
                 #error
-                if(findMax(network['first_order'].stateOutputNeurons) != findMax(examples.outputs[ex])):
+                if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
                     err_one_network['first_order'] += 1
-                if(findMax(network['high_order_5'].stateOutputNeurons[25:35]) != findMax(examples.outputs[ex])):
+                if(index_max(network['high_order_5'].stateOutputNeurons[25:35]) != index_max(examples.outputs[ex])):
                     err_one_network['high_order_5'] += 1
-                if(findMax(network['high_order_10'].stateOutputNeurons[25:35]) != findMax(examples.outputs[ex])):
+                if(index_max(network['high_order_10'].stateOutputNeurons[25:35]) != index_max(examples.outputs[ex])):
                     err_one_network['high_order_10'] += 1
 
                 #learn

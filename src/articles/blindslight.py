@@ -9,7 +9,7 @@ from data import DataFile
 from random import shuffle
 from network import MultilayerNetwork
 from neuron import Neuron, NeuronR0to1
-from utils import findMax
+from utils import index_max
 
 if __name__ == '__main__':
     r = {'x':(0, 1),
@@ -36,12 +36,12 @@ if __name__ == '__main__':
             for i in range(100):
                 compara.append(samples.inputs[ex][i] - first_order.stateOutputNeurons[i])
             
-            i = findMax(first_order.stateOutputNeurons)
-            j = findMax(samples.inputs[ex])
+            i = index_max(first_order.stateOutputNeurons)
+            j = index_max(samples.inputs[ex])
             if ((first_order.stateOutputNeurons[i] > 0.5 and samples.inputs[ex][j] > 0.5 and i == j) \
                 or(first_order.stateOutputNeurons[i] <= 0.5 and samples.inputs[ex][i] <= 0.5)) :
-#            i = findMax(samples.outputs[ex])
-#            j = findMax(samples.inputs[ex])
+#            i = index_max(samples.outputs[ex])
+#            j = index_max(samples.inputs[ex])
 #            if ((samples.outputs[ex][i] > 0.5 and samples.inputs[ex][j] > 0.5 and i == j) \
 #                    or(samples.outputs[ex][i] <= 0.5 and samples.inputs[ex][i] <= 0.5)) :
                 high_order[0].train(compara, 1)
@@ -71,21 +71,21 @@ if __name__ == '__main__':
         res = [high_order[i].calc_output(compara)
                     for i in range(2)]
             
-        i = findMax(first_order.stateOutputNeurons)
-        j = findMax(samples.inputs[ex])
+        i = index_max(first_order.stateOutputNeurons)
+        j = index_max(samples.inputs[ex])
         if ((first_order.stateOutputNeurons[i] > 0.5 and samples.inputs[ex][j] > 0.5 and i == j) \
                 or(first_order.stateOutputNeurons[i] <= 0.5 and samples.inputs[ex][j] <= 0.5)) :
 #        
-#        i = findMax(samples.outputs[ex])
-#        j = findMax(samples.inputs[ex])
+#        i = index_max(samples.outputs[ex])
+#        j = index_max(samples.inputs[ex])
 #        if ((samples.outputs[ex][i] > 0.5 and samples.inputs[ex][j] > 0.5 and i == j) \
 #                or(samples.outputs[ex][i] <= 0.5 and samples.inputs[ex][i] <= 0.5)) :
-            if findMax(res) == 0:
+            if index_max(res) == 0:
                 pourc['hg_co'] += 1
             else:
                 pourc['lw_in'] += 1
         else:
-            if findMax(res) == 1:
+            if index_max(res) == 1:
                 pourc['lw_co'] += 1
             else:
                 pourc['hg_in'] += 1
@@ -98,7 +98,7 @@ if __name__ == '__main__':
     #add +0.0012
     print(samples.inputs[0])
     for input in samples.inputs:
-        i_fix = findMax(input)
+        i_fix = index_max(input)
         for i in range(len(input)):
             if(i != i_fix):
                 input[i]+= 0.0012 
@@ -120,21 +120,21 @@ if __name__ == '__main__':
         res = [high_order[i].calc_output(compara)
                     for i in range(2)]
             
-        i = findMax(first_order.stateOutputNeurons)
-        j = findMax(samples.inputs[ex])
+        i = index_max(first_order.stateOutputNeurons)
+        j = index_max(samples.inputs[ex])
         if ((first_order.stateOutputNeurons[i] > 0.5 and samples.inputs[ex][j] > 0.5 and i == j) \
                 or(first_order.stateOutputNeurons[i] <= 0.5 and samples.inputs[ex][j] <= 0.5)) :
         
-#        i = findMax(samples.outputs[ex])
-#        j = findMax(samples.inputs[ex])
+#        i = index_max(samples.outputs[ex])
+#        j = index_max(samples.inputs[ex])
 #        if ((samples.outputs[ex][i] > 0.5 and samples.inputs[ex][j] > 0.5 and i == j) \
 #                or(samples.outputs[ex][i] <= 0.5 and samples.inputs[ex][i] <= 0.5)) :
-            if findMax(res) == 0:
+            if index_max(res) == 0:
                 pourc['hg_co'] += 1
             else:
                 pourc['lw_in'] += 1
         else:
-            if findMax(res) == 0:
+            if index_max(res) == 0:
                 pourc['hg_in'] += 1
             else:
                 pourc['lw_co'] += 1

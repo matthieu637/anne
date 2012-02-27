@@ -9,7 +9,7 @@ $<img src="../../datadoc/digital_reco.png" />$
 '''
 
 from network import MultilayerNetwork
-from utils import findMax
+from utils import index_max
 from random import shuffle
 import matplotlib.pyplot as plt
 from data import DataFile
@@ -59,7 +59,7 @@ if __name__ == '__main__':
                                             examples.inputs[ex],
                                             examples.outputs[ex])
                 cell = [mode, 1] \
-                        if findMax(network['first_order'].stateOutputNeurons) == findMax(examples.outputs[ex]) \
+                        if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]) \
                         else [1, mode]
                 
                 sum_rms['high_order_h'] += network['high_order_h'].calc_RMS(
@@ -110,7 +110,7 @@ if __name__ == '__main__':
         for network in networks:
             print(examples.inputs[ex])
             print(network['first_order'].calc_output(examples.inputs[ex]))
-            print(findMax(network['first_order'].calc_output(examples.inputs[ex])))
+            print(index_max(network['first_order'].calc_output(examples.inputs[ex])))
 
     '''
     result

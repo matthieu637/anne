@@ -7,7 +7,7 @@ Created on 14 fevr. 2012
 
 from random import random
 
-def findMax(l):
+def index_max(l):
     '''
     returns the index of the max value in the list l
     '''
