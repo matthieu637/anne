@@ -81,6 +81,12 @@ class MultilayerNetwork:
     
     def calc_RMS(self, inputs, outputs):
         '''
+        returns the RMS ( Root Mean Square ) for the entire output layer
+        '''
+        return self.calc_RMS_range(inputs, outputs, 0, len(outputs))
+    
+    def calc_RMS_range(self, inputs, outputs, imin, imax):
+        '''
         returns the RMS ( Root Mean Square ) according to the formula :
         $ \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{n} ( o_{i} - d_{i} )^2 } $
         $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\ o : values\ obtained \\ d : values\ desired \end{array} \right.$
@@ -89,9 +95,9 @@ class MultilayerNetwork:
         self.calc_output(inputs)
         
         s = 0.
-        for i in range(len(outputs)):
+        for i in range(imin, imax):
             s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
-        return sqrt(s / len(outputs))
+        return sqrt(s / (imax - imin))
         
     def train(self, inputs, outputs):
         '''
