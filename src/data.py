@@ -6,16 +6,23 @@ Created on 20 fevr. 2012
 '''
 from utils import randmm
 
-default_file_rules = {'x':(False, 1),
-                    '.': (False, 0)}
+#see DataFile.__init__()
+default_file_rules = {'x':(1,),
+                    '.': (0,)}
 
 class DataFile():
     '''
-    classdocs
+    Tool to read data from files 
     '''
-    def __init__(self, name, bound=0, rules=default_file_rules):
+    def __init__(self, path, bound=0, rules=default_file_rules):
         '''
-        Constructor
+        reads data from a file and allow you to use inputs / outputs lists
+        path : path to the file 
+        rules : dictionary to define the grammar of the file
+        defines like :
+          key            values
+        symbol -> (fixed value,)
+        symbol -> (min random value, max random value)
         '''
         if(rules == default_file_rules):
             default_file_rules['.'] = (False, bound)
@@ -23,7 +30,7 @@ class DataFile():
         self.inputs = []
         self.outputs = []
         self.rules = rules
-        self._read_data(name)
+        self._read_data(path)
         
     def _read_data(self, name):
         rfile = open(name, "r")
@@ -54,10 +61,10 @@ class DataFile():
         for sym in lstring:
             for key in self.rules:
                 if(sym == key):
-                    if(not self.rules[key][0]):
-                        result += [self.rules[key][1]]
+                    if(len( self.rules[key]) == 1):
+                        result += [self.rules[key][0]]
                     else:
-                        result += [randmm(self.rules[key][1], self.rules[key][2])]
+                        result += [randmm(self.rules[key][0], self.rules[key][1])]
         return result
     
     def _add_list(self, llist, pos, data):
@@ -78,10 +85,10 @@ if __name__ == '__main__':
     #[[0, 0, 1, 0, 0, 1, 0], [0, 0, 1, 0, 0, 1, 0], ...
     #[[1, 0, 0, 0, 0, 0, 0, 0, 0, 0], [0, 1, 0, 0, 0, 0, 0, 0, 0, 0], ...
     
-    r = {'x':(True, 0, 1),
-         '.': (False, 0),
-         '?': (True, 0, 0.02),
-         '!': (False, 1)}
+    r = {'x':(0, 1),
+         '.': (0,),
+         '?': (0, 0.02),
+         '!': (1,)}
     df = DataFile("data/blindslight.txt", rules=r)
     print (df.inputs[0])
     print (df.outputs[0])

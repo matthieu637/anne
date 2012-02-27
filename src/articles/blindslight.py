@@ -12,10 +12,10 @@ from neuron import Neuron
 from utils import findMax
 
 if __name__ == '__main__':
-    r = {'x':(True, 0, 1),
-         '.': (False, 0),
-         '?': (True, 0, 0.02),
-         '!': (False, 1)}
+    r = {'x':(0, 1),
+         '.': (0,),
+         '?': (0, 0.02),
+         '!': (1,)}
     samples = DataFile("../data/blindslight.txt", rules=r)
     
     first_order = MultilayerNetwork(100, 60, 100, 0, 0.9, 0, 1., False, True)
