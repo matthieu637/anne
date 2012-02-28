@@ -3,3 +3,4 @@
 .pydevproject
 **/*.pyc
 src/__pycache__
+**/*~

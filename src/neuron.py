@@ -17,7 +17,7 @@ class Neuron:
     (Hidden, Output) = range(2)
     
     def __init__(self, nbr_input, learning_rate=0.1, momentum=0.,
-                 gradient=1., ntype=Output, random=True, enableBias=True):
+                 temperature=1., ntype=Output, random=True, enableBias=True):
         '''
         initialize a single perceptron with nbr_input random weights
         nType can be Neuron.Hidden or Neuron.Output it specifies the layer of neuron 
@@ -26,7 +26,7 @@ class Neuron:
         self.nbr_input = nbr_input
         self.learning_rate = learning_rate
         self.momentum = momentum
-        self.gradient = gradient
+        self.temperature = temperature
         self.ntype = ntype
         self.enableBias = enableBias
         
@@ -148,9 +148,9 @@ class Neuron:
         returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
         returned values are in [-1 ; 1]
         '''
-        return (exp(self.gradient * x) - 1) / (1 + exp(self.gradient * x))
+        return (exp(self.temperature * x) - 1) / (1 + exp(self.temperature * x))
     def _derivated_sigmoid (self, x):
-        return (2 * self.gradient * exp(self.gradient * x)) / ((exp(x * self.gradient) + 1) ** 2)
+        return (2 * self.temperature * exp(self.temperature * x)) / ((exp(x * self.temperature) + 1) ** 2)
 
 class NeuronR0to1(Neuron):
     '''
@@ -159,12 +159,12 @@ class NeuronR0to1(Neuron):
     '''
     def _sigmoid (self, x):
         '''
-        returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
+        returns $\frac{ 1}{1 + e^{ - \theta x}}$
         returned values are in [0 ; 1]
         '''
-        return 1 / (1 + exp(-self.gradient * x))
+        return 1 / (1 + exp(-self.temperature * x))
     def _derivated_sigmoid (self, x):
-        return self._sigmoid(x) * (1 - self._sigmoid(x)) * self.gradient
+        return self._sigmoid(x) * (1 - self._sigmoid(x)) * self.temperature
 
 
 class NeuronN0to1(Neuron):
@@ -177,7 +177,7 @@ class NeuronN0to1(Neuron):
         notice that :
         - enableBias ( the last weight ) is mandatory and corresponds to the threshold
         - this type of neuron cannot be in hidden layout ( backpropagation don't work on {0,1} ) 
-        - gradient has no meaning ( there isn't anymore sigmoid )
+        - temperature has no meaning ( there isn't anymore sigmoid )
         '''
         Neuron.__init__(self, nbr_input, learning_rate, momemtum, Neuron.Output, random, enableBias=True)
     def _sigmoid (self, x):
