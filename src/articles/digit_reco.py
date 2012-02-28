@@ -5,7 +5,6 @@ Created on 13 fevr. 2012
 @author: matthieu637
 
 Article implementation
-$<img src="../../datadoc/digit_reco.png" />$
 '''
 
 from network import MultilayerNetwork
@@ -16,12 +15,12 @@ from utils import index_max
 
 if __name__ == '__main__':
     mode = MultilayerNetwork.R0to1
-    nbr_network = 1
+    nbr_network = 5
     momentum = 0.9
     lrate = 0.1
     nbEpoch = 1000
     display_interval = [0, 25, 50, 100, 200, 500, 999]
-    display_interval2 = range(nbEpoch)[::3]
+    display_interval2 = range(nbEpoch)[::4]
     
     
     #create all networks
@@ -115,9 +114,9 @@ if __name__ == '__main__':
         rms_oo_plot['high_order_10'].append(sum_oo_rms['high_order_10'])
         rms_oo_plot['high_order_5'].append(sum_oo_rms['high_order_5'])
         
-        err_plot['first_order'].append(err_one_network['first_order']/(10*nbr_network))
-        err_plot['high_order_10'].append(err_one_network['high_order_10']/(10*nbr_network))
-        err_plot['high_order_5'].append(err_one_network['high_order_5']/(10*nbr_network))
+        err_plot['first_order'].append(err_one_network['first_order'] / (10 * nbr_network))
+        err_plot['high_order_10'].append(err_one_network['high_order_10'] / (10 * nbr_network))
+        err_plot['high_order_5'].append(err_one_network['high_order_5'] / (10 * nbr_network))
         
 #        print(err_plot['first_order'])
 
@@ -187,11 +186,3 @@ if __name__ == '__main__':
     plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
     plt.show()
-    
-    '''
-    result
-    $<img src="../../results/digit_reco.png" />$
-    
-    curves of the article
-    $<img src="../../results/digit_reco_article.png" />$
-    '''
