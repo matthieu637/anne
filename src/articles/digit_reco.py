@@ -46,8 +46,6 @@ if __name__ == '__main__':
     err_plot = {'first_order' : [] ,
               'high_order_10' : [],
               'high_order_5': []}
-    rms_oo_plot = {'high_order_10' : [],
-                   'high_order_5': []}
 
     #learning
     for epoch in range(nbEpoch):
@@ -57,8 +55,6 @@ if __name__ == '__main__':
         err_one_network = {'first_order' : 0. ,
                            'high_order_10' : 0.,
                            'high_order_5': 0.}
-        sum_oo_rms = {'high_order_10' : 0.,
-                   'high_order_5': 0.}
         
         for network in networks:
             l_exx = list(range(10))
@@ -80,14 +76,6 @@ if __name__ == '__main__':
                 sum_rms['high_order_5'] += network['high_order_5'].calc_RMS(
                                             network['first_order'].stateHiddenNeurons,
                                             entire_first_order)
-                #RMS outputs only
-                sum_oo_rms['high_order_10'] += network['high_order_10'].calc_RMS_range(
-                                            network['first_order'].stateHiddenNeurons,
-                                             entire_first_order, 25, 35)
-
-                sum_oo_rms['high_order_5'] += network['high_order_5'].calc_RMS_range(
-                                            network['first_order'].stateHiddenNeurons,
-                                            entire_first_order, 25, 35)
                 
                 #error
                 if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
@@ -110,10 +98,7 @@ if __name__ == '__main__':
         rms_plot['first_order'].append(sum_rms['first_order'])
         rms_plot['high_order_10'].append(sum_rms['high_order_10'])
         rms_plot['high_order_5'].append(sum_rms['high_order_5'])
-        
-        rms_oo_plot['high_order_10'].append(sum_oo_rms['high_order_10'])
-        rms_oo_plot['high_order_5'].append(sum_oo_rms['high_order_5'])
-        
+
         err_plot['first_order'].append(err_one_network['first_order'] / (10 * nbr_network))
         err_plot['high_order_10'].append(err_one_network['high_order_10'] / (10 * nbr_network))
         err_plot['high_order_5'].append(err_one_network['high_order_5'] / (10 * nbr_network))
@@ -128,12 +113,6 @@ if __name__ == '__main__':
         rms_plot['first_order'][i] /= max_err[0]
         rms_plot['high_order_10'][i] /= max_err[1]
         rms_plot['high_order_5'][i] /= max_err[2]
-        
-    max_err_oo = (max(rms_oo_plot['high_order_10']),
-               max(rms_oo_plot['high_order_5']))
-    for i in range(nbEpoch):
-        rms_oo_plot['high_order_10'][i] /= max_err_oo[0]
-        rms_oo_plot['high_order_5'][i] /= max_err_oo[1]
     
     #displays rms
     plt.plot(display_interval, [rms_plot['first_order'][i] for i in display_interval],
@@ -143,24 +122,6 @@ if __name__ == '__main__':
              label="high-order network (10 hidden units)")
     
     plt.plot(display_interval, [rms_plot['high_order_5'][i] for i in display_interval],
-             label="high-order network (5 hidden units)")
-    
-    plt.title('Error proportion (RMS) of first-order and high-order networks')
-    plt.ylabel('ERROR RMS')
-    plt.xlabel("EPOCHS")
-    plt.axis((0, nbEpoch, 0, 1.))
-    plt.legend(loc='best', frameon=False)
-    plt.show()
-    
-    
-    #displays rms oo
-    plt.plot(display_interval, [rms_plot['first_order'][i] for i in display_interval],
-             label="first-order network")
-    
-    plt.plot(display_interval, [rms_oo_plot['high_order_10'][i] for i in display_interval],
-             label="high-order network (10 hidden units)")
-    
-    plt.plot(display_interval, [rms_oo_plot['high_order_5'][i] for i in display_interval],
              label="high-order network (5 hidden units)")
     
     plt.title('Error proportion (RMS) of first-order and high-order networks')
