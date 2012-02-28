@@ -159,7 +159,7 @@ class NeuronR0to1(Neuron):
     '''
     def _sigmoid (self, x):
         '''
-        returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$
+        returns $\frac{ 1}{1 + e^{ - \theta x}}$
         returned values are in [0 ; 1]
         '''
         return 1 / (1 + exp(-self.temperature * x))
