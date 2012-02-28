@@ -25,7 +25,7 @@ class DataFile():
         symbol -> (min random value, max random value)
         '''
         if(rules == default_file_rules):
-            default_file_rules['.'] = (False, bound)
+            rules['.'] = (bound,)
         
         self.inputs = []
         self.outputs = []
