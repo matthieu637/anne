@@ -17,7 +17,7 @@ class MultilayerNetwork:
     (R1to1, R0to1) = (-1, 0)
 
     def __init__(self, nbr_input, nbr_hidden, nbr_output, grid=R1to1, learning_rate=0.1,
-                  momentum=0., gradient=1., random=True, enableBias=True):
+                  momentum=0., temperature=1., random=True, enableBias=True):
         '''
         builds a neural network with 2 layers
         nbr_input is the number of inputs to the neurons in the hidden layer
@@ -25,17 +25,17 @@ class MultilayerNetwork:
         '''
         if grid == MultilayerNetwork.R1to1:
             self.hiddenNeurons = \
-                [Neuron(nbr_input, learning_rate, momentum, gradient, Neuron.Hidden, random, enableBias) \
+                [Neuron(nbr_input, learning_rate, momentum, temperature, Neuron.Hidden, random, enableBias) \
                                   for _ in range(nbr_hidden)]
             self.outputNeurons = \
-                [Neuron(nbr_hidden, learning_rate, momentum, gradient, Neuron.Output, random, enableBias) \
+                [Neuron(nbr_hidden, learning_rate, momentum, temperature, Neuron.Output, random, enableBias) \
                                   for _ in range(nbr_output)]
         elif grid == MultilayerNetwork.R0to1:
             self.hiddenNeurons = \
-                [NeuronR0to1(nbr_input, learning_rate, momentum, gradient, Neuron.Hidden, random, enableBias) \
+                [NeuronR0to1(nbr_input, learning_rate, momentum, temperature, Neuron.Hidden, random, enableBias) \
                                   for _ in range(nbr_hidden)]
             self.outputNeurons = \
-                [NeuronR0to1(nbr_hidden, learning_rate, momentum, gradient, Neuron.Output, random, enableBias) \
+                [NeuronR0to1(nbr_hidden, learning_rate, momentum, temperature, Neuron.Output, random, enableBias) \
                                   for _ in range(nbr_output)]
         self.stateOutputNeurons = []
         self.stateHiddenNeurons = []
@@ -81,6 +81,12 @@ class MultilayerNetwork:
     
     def calc_RMS(self, inputs, outputs):
         '''
+        returns the RMS ( Root Mean Square ) for the entire output layer
+        '''
+        return self.calc_RMS_range(inputs, outputs, 0, len(outputs))
+    
+    def calc_RMS_range(self, inputs, outputs, imin, imax):
+        '''
         returns the RMS ( Root Mean Square ) according to the formula :
         $ \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{n} ( o_{i} - d_{i} )^2 } $
         $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\ o : values\ obtained \\ d : values\ desired \end{array} \right.$
@@ -89,9 +95,9 @@ class MultilayerNetwork:
         self.calc_output(inputs)
         
         s = 0.
-        for i in range(len(outputs)):
+        for i in range(imin, imax):
             s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
-        return sqrt(s / len(outputs))
+        return sqrt(s / (imax - imin))
         
     def train(self, inputs, outputs):
         '''

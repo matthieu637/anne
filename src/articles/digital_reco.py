@@ -9,14 +9,14 @@ $<img src="../../datadoc/digital_reco.png" />$
 '''
 
 from network import MultilayerNetwork
-from utils import findMax
+from utils import index_max
 from random import shuffle
 import matplotlib.pyplot as plt
 from data import DataFile
 
 if __name__ == '__main__':
     mode = MultilayerNetwork.R0to1
-    nbr_network = 3
+    nbr_network = 1
     momentum = 0.5
     nbEpoch = 201
     display_interval = range(nbEpoch)[6::5]
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = MultilayerNetwork(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode, gradient=0.9)
+        first_order = MultilayerNetwork(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode, temperature=0.9)
         high_order_h = MultilayerNetwork(100, 100, 2, learning_rate=0.1, momentum=momentum, grid=mode)
         high_order_l = MultilayerNetwork(100, 100, 2, learning_rate=10e-7, momentum=momentum, grid=mode)
         
@@ -69,7 +69,7 @@ if __name__ == '__main__':
                                             examples.inputs[ex],
                                             examples.outputs[ex])
                 cell = [mode, 1] \
-                        if findMax(network['first_order'].stateOutputNeurons) == findMax(examples.outputs[ex]) \
+                        if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]) \
                         else [1, mode]
                 
                 sum_rms['high_order_h'] += network['high_order_h'].calc_RMS(
@@ -79,11 +79,11 @@ if __name__ == '__main__':
                 sum_rms['high_order_l'] += network['high_order_l'].calc_RMS(
                                             network['first_order'].stateHiddenNeurons,
                                             cell)
-                if(findMax(network['first_order'].stateOutputNeurons) == findMax(examples.outputs[ex])):
+                if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo_i['first_order'] += 1
-                if(findMax(network['high_order_h'].stateOutputNeurons) == findMax(cell)):
+                if(index_max(network['high_order_h'].stateOutputNeurons) == index_max(cell)):
                     perfo_i['high_order_h'] += 1
-                if(findMax(network['high_order_l'].stateOutputNeurons) == findMax(cell)):
+                if(index_max(network['high_order_l'].stateOutputNeurons) == index_max(cell)):
                     perfo_i['high_order_l'] += 1
                 
                 #learn
@@ -143,7 +143,7 @@ if __name__ == '__main__':
         for network in networks:
             print(examples.inputs[ex])
             print(network['first_order'].calc_output(examples.inputs[ex]))
-            print(findMax(network['first_order'].calc_output(examples.inputs[ex])))
+            print(index_max(network['first_order'].calc_output(examples.inputs[ex])))
 
     '''
     result
