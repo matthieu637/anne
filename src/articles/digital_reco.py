@@ -4,8 +4,6 @@ Created on 21 fevr. 2012
 
 @author: matthieu637
 
-Article test
-$<img src="../../datadoc/digital_reco.png" />$
 '''
 
 from network import MultilayerNetwork
@@ -16,7 +14,7 @@ from data import DataFile
 
 if __name__ == '__main__':
     mode = MultilayerNetwork.R0to1
-    nbr_network = 1
+    nbr_network = 10
     momentum = 0.5
     nbEpoch = 201
     display_interval = range(nbEpoch)[6::5]
@@ -26,8 +24,8 @@ if __name__ == '__main__':
     
     for i in range(nbr_network):
         first_order = MultilayerNetwork(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode, temperature=0.9)
-        high_order_h = MultilayerNetwork(100, 100, 2, learning_rate=0.1, momentum=momentum, grid=mode)
-        high_order_l = MultilayerNetwork(100, 100, 2, learning_rate=10e-7, momentum=momentum, grid=mode)
+        high_order_h = MultilayerNetwork(100, 100, 2, learning_rate=0.1, momentum=momentum, grid=mode, temperature=0.9)
+        high_order_l = MultilayerNetwork(100, 100, 2, learning_rate=10e-7, momentum=momentum, grid=mode, temperature=0.9)
         
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h,
@@ -35,7 +33,6 @@ if __name__ == '__main__':
 
     for network in networks:
         for k in network.keys():
-            if(k == 'first_order'):
                 network[k].init_random_weights(-.6, .6)
 
     #create example
@@ -145,10 +142,3 @@ if __name__ == '__main__':
             print(network['first_order'].calc_output(examples.inputs[ex]))
             print(index_max(network['first_order'].calc_output(examples.inputs[ex])))
 
-    '''
-    result
-    $<img src="../../results/digital_reco.png" />$
-    
-    curves of the article
-    $<img src="../../results/digital_reco_article.png" />$
-    '''
