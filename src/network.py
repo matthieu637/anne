@@ -23,20 +23,23 @@ class MultilayerNetwork:
         nbr_input is the number of inputs to the neurons in the hidden layer
         see Neuron.__init__() for more information about other parameters
         '''
-        if grid == MultilayerNetwork.R1to1:
+        if grid == self.R1to1:
             self.hiddenNeurons = \
                 [Neuron(nbr_input, learning_rate, momentum, temperature, Neuron.Hidden, random, enableBias) \
                                   for _ in range(nbr_hidden)]
             self.outputNeurons = \
                 [Neuron(nbr_hidden, learning_rate, momentum, temperature, Neuron.Output, random, enableBias) \
                                   for _ in range(nbr_output)]
-        elif grid == MultilayerNetwork.R0to1:
+        elif grid == self.R0to1:
             self.hiddenNeurons = \
                 [NeuronR0to1(nbr_input, learning_rate, momentum, temperature, Neuron.Hidden, random, enableBias) \
                                   for _ in range(nbr_hidden)]
             self.outputNeurons = \
                 [NeuronR0to1(nbr_hidden, learning_rate, momentum, temperature, Neuron.Output, random, enableBias) \
                                   for _ in range(nbr_output)]
+        else:
+            raise Exception("%d : unknown grid. Please use : %d or %d" % (grid, self.R1to1, self.R0to1))
+                
         self.stateOutputNeurons = []
         self.stateHiddenNeurons = []
         self.last_inputs = []

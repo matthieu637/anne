@@ -32,6 +32,9 @@ class Neuron:
         
         if(random):
             self.init_random_weights()
+            
+        if(ntype != self.Hidden and ntype != self.Output):
+            raise Exception("%d : unknown neuron type (ntype param)" % ntype)
         
         #these fields are here simply to avoid unnecessary computations
         self.weightsUpdated = True
@@ -106,10 +109,8 @@ class Neuron:
         
         if self.ntype == Neuron.Output:
             return  self._derivated_sigmoid(self.a) * (wanted - self.state)
-        elif self.ntype == Neuron.Hidden:
+        else: # self.ntype == Neuron.Hidden:
             return self._derivated_sigmoid(self.a) * wanted
-        else :
-            raise Exception("%d : unknown neuron type (ntype param)" % self.ntype)
         
     def update_weights(self, error, inputs):
         '''
