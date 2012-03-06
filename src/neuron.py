@@ -51,6 +51,7 @@ class Neuron:
             self.bias = randmm(vmin, vmax)
         self.last_weights = list(self.weights) #last_weights is used by the momentum algo
         self.last_bias = self.bias
+        self.weightsUpdated = True
         
     def init_weights(self, val):
         '''

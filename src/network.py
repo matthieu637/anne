@@ -51,6 +51,7 @@ class MultilayerNetwork:
         '''
         for neuron in self.hiddenNeurons + self.outputNeurons:
             neuron.init_random_weights(vmin, vmax)
+        self.networkUpdated = True
        
     def init_weights(self, val):
         '''
