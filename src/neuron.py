@@ -32,6 +32,9 @@ class Neuron:
         
         if(random):
             self.init_random_weights()
+            
+        if(ntype != self.Hidden and ntype != self.Output):
+            raise Exception("%d : unknown neuron type (ntype param)" % ntype)
         
         #these fields are here simply to avoid unnecessary computations
         self.weightsUpdated = True
@@ -48,6 +51,7 @@ class Neuron:
             self.bias = randmm(vmin, vmax)
         self.last_weights = list(self.weights) #last_weights is used by the momentum algo
         self.last_bias = self.bias
+        self.weightsUpdated = True
         
     def init_weights(self, val):
         '''
@@ -106,10 +110,8 @@ class Neuron:
         
         if self.ntype == Neuron.Output:
             return  self._derivated_sigmoid(self.a) * (wanted - self.state)
-        elif self.ntype == Neuron.Hidden:
+        else: # self.ntype == Neuron.Hidden:
             return self._derivated_sigmoid(self.a) * wanted
-        else :
-            raise Exception("%d : unknown neuron type (ntype param)" % self.ntype)
         
     def update_weights(self, error, inputs):
         '''
@@ -172,14 +174,14 @@ class NeuronN0to1(Neuron):
     this class of neuron can be used on a grid {0, 1} ( unlike parent on [-1, 1] )
     the train method is also different and use Hebb's rule
     '''
-    def __init__(self, nbr_input, learning_rate=0.1, momemtum=0., random=True):
+    def __init__(self, nbr_input, learning_rate=0.1, momentum=0., random=True):
         '''
         notice that :
         - enableBias ( the last weight ) is mandatory and corresponds to the threshold
         - this type of neuron cannot be in hidden layout ( backpropagation don't work on {0,1} ) 
         - temperature has no meaning ( there isn't anymore sigmoid )
         '''
-        Neuron.__init__(self, nbr_input, learning_rate, momemtum, Neuron.Output, random, enableBias=True)
+        Neuron.__init__(self, nbr_input, learning_rate, momentum, 0., Neuron.Output, random, True)
     def _sigmoid (self, x):
         '''
         this function is not anymore a sigmoid but a Heaviside function
@@ -189,7 +191,7 @@ class NeuronN0to1(Neuron):
         raise NotImplemented
     def calc_error_propagation(self, wanted):
         '''
-        train now follow the Hebb's rule
+        train now follow the Perceptron learning rule
         '''
         return wanted - self.state
 
