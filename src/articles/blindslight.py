@@ -19,15 +19,14 @@ if __name__ == '__main__':
          '?': (0, 0.02),
          '!': (1,)}
     samples = DataFile("../data/blindslight.txt", rules=r)
-#    samples.inputs = samples.inputs[0:100]
     
     
     first_order = MultilayerNetwork(100, 60, 100, 0, 0.9, 0., 2, False, True)
     first_order.init_random_weights(-0.6, 0.6)
     
     
-    high_order = [NeuronR0to1(100, 0.1, 0., 2., Neuron.Output, False, True) for _ in range(2)]
-#    high_order = [NeuronN0to1(100, 0.1, 0., False) for _ in range(2)]
+#    high_order = [NeuronR0to1(100, 0.1, 0., 1., Neuron.Output, False, True) for _ in range(2)]
+    high_order = [NeuronN0to1(100, 0.1, 0., False) for _ in range(2)]
     high_order[0].init_random_weights(0., 0.1)
     high_order[1].init_random_weights(0., 0.1)
 
@@ -44,7 +43,6 @@ if __name__ == '__main__':
         rms_ss = 0.
         rms_ss2 = 0.
         for ex in l_exx:
-#            first_order.train(samples.inputs[ex], samples.outputs[ex])
             first_order.calc_output(samples.inputs[ex])
         
             #compara
@@ -70,7 +68,7 @@ if __name__ == '__main__':
                     rms_ss +=1
                     
                 high_order[0].train(compara, 1.)
-                high_order[1].train(compara, -1.)
+                high_order[1].train(compara, 0.)
             else:
                 the += 1
                 
@@ -80,7 +78,7 @@ if __name__ == '__main__':
                 if(index_max(res) == 1):
                     rms_ss +=1
                     
-                high_order[0].train(compara, -1.)
+                high_order[0].train(compara, 0.)
                 high_order[1].train(compara, 1.)
 
             first_order.train(samples.inputs[ex], samples.outputs[ex])
@@ -149,7 +147,7 @@ if __name__ == '__main__':
         i_fix = index_max(inpts)
         for i in range(len(inpts)):
             if(i != i_fix):
-                inpts[i]+= 0.0012 
+                inpts[i]+= 0.0024
         
     print(samples.inputs[0])
     
