@@ -1,15 +1,15 @@
 '''
-Created on 6 mars 2012
+Created on 6 March 2012
 
-@author: matthieu637
+@author: Matthieu Zimmer
 
 Artificial Grammar Learning
 '''
 
 from data import DataFile
 from random import shuffle
-from network import MultilayerNetwork
-from neuron import Neuron, NeuronN0to1, NeuronR0to1
+from multilayerp import MultilayerPerceptron
+from perceptron import Perceptron, PerceptronN0to1, PerceptronR0to1
 from utils import index_max
 from random import randint
 import matplotlib.pyplot as plt
@@ -49,14 +49,14 @@ if __name__ == '__main__':
 #    print(pattern_to_list(ptrain_pattern[0][0]))
 #    exit()
     
-    first_order = MultilayerNetwork(48, 40, 48, 0, 0.4, 0.5, 1., False, True)
-    first_order.init_random_weights(-1, 1)
+    first_order = MultilayerPerceptron(48, 40, 48, 0, 0.4, 0.5, 1., False, True)
+    first_order.init_weights_randomly(-1, 1)
     
     
-    high_order = [NeuronR0to1(48, 0.4, 0.5, 1., Neuron.Output, False, True) for _ in range(2)]
-#    high_order = [NeuronN0to1(48, 0.4, 0.5, False) for _ in range(2)]
-    high_order[0].init_random_weights(0., 0.1)
-    high_order[1].init_random_weights(0., 0.1)
+    high_order = [PerceptronR0to1(48, 0.4, 0.5, 1., Perceptron.OUTPUT, False, True) for _ in range(2)]
+#    high_order = [PerceptronN0to1(48, 0.4, 0.5, False) for _ in range(2)]
+    high_order[0].init_weights_randomly(0., 0.1)
+    high_order[1].init_weights_randomly(0., 0.1)
 
 
     print("pre-training")
@@ -123,7 +123,7 @@ if __name__ == '__main__':
         err = 0.
         the = 0.
 
-    first_order.init_random_weights(-1, 1)
+    first_order.init_weights_randomly(-1, 1)
 
     ptrain_pattern = [random_pattern() for _ in range(45)]
     

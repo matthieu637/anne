@@ -1,12 +1,12 @@
 '''
-Created on 7 mars 2012
+Created on 7 March 2012
 
-@author: matthieu637
+@author: Matthieu Zimmer
 
 Iowa Gambling Task
 '''
 
-from network import MultilayerNetwork
+from multilayerp import MultilayerPerceptron
 from random import random
 from utils import index_max, randmm
 import matplotlib.pyplot as plt
@@ -21,7 +21,7 @@ def deck(nbr):
 if __name__ == '__main__':
     
     plt.title("low")
-    grid = MultilayerNetwork.R0to1
+    grid = MultilayerPerceptron.R0to1
     nbr_network = 30
     nbr_epoch = 200
     nbr_trial = 10
@@ -29,13 +29,13 @@ if __name__ == '__main__':
     first_order = []
     high_order = []
     for _ in range(nbr_network):
-        fo = MultilayerNetwork(5, 40, 4, grid, 0.002, 0., 1., False, True)
-        fo.init_random_weights(-1, 1)
+        fo = MultilayerPerceptron(5, 40, 4, grid, 0.002, 0., 1., False, True)
+        fo.init_weights_randomly(-1, 1)
         first_order.append(fo)
         
         #0.0003 or 0.015
-        ho = MultilayerNetwork(40, 40, 2, grid, 0.0003, 0., 1., False, True)
-        ho.init_random_weights(-1, 1)
+        ho = MultilayerPerceptron(40, 40, 2, grid, 0.0003, 0., 1., False, True)
+        ho.init_weights_randomly(-1, 1)
         high_order.append(ho)
     
     
@@ -61,7 +61,7 @@ if __name__ == '__main__':
                 
                 win = deck(bet)
                 
-                if((win[0] and wager == 0) ):
+                if((win[0] and wager == 0)):
                         nbr_gwager += 1
                 
                 if(win[0]):                    

@@ -1,14 +1,14 @@
 # -*- coding: UTF-8 -*-
 '''
-Created on 13 fevr. 2012
+Created on 13 February 2012
 
-@author: matthieu637
+@author: Matthieu Zimmer
 '''
 
 from math import sqrt
-from neuron import Neuron, NeuronR0to1
+from perceptron import Perceptron, PerceptronR0to1
 
-class MultilayerNetwork:
+class MultilayerPerceptron:
     '''
     describes a neural network with 2 layers ( hidden and output )
     '''
@@ -17,41 +17,46 @@ class MultilayerNetwork:
     (R1to1, R0to1) = (-1, 0)
 
     def __init__(self, nbr_input, nbr_hidden, nbr_output, grid=R1to1, learning_rate=0.1,
-                  momentum=0., temperature=1., random=True, enableBias=True):
+                  momentum=0., temperature=1., random=True, enable_bias=True):
         '''
         builds a neural network with 2 layers
         nbr_input is the number of inputs to the neurons in the hidden layer
-        see Neuron.__init__() for more information about other parameters
+        see Perceptron.__init__() for more information about other parameters
         '''
-        if grid == self.R1to1:
-            self.hiddenNeurons = \
-                [Neuron(nbr_input, learning_rate, momentum, temperature, Neuron.Hidden, random, enableBias) \
-                                  for _ in range(nbr_hidden)]
-            self.outputNeurons = \
-                [Neuron(nbr_hidden, learning_rate, momentum, temperature, Neuron.Output, random, enableBias) \
-                                  for _ in range(nbr_output)]
-        elif grid == self.R0to1:
-            self.hiddenNeurons = \
-                [NeuronR0to1(nbr_input, learning_rate, momentum, temperature, Neuron.Hidden, random, enableBias) \
-                                  for _ in range(nbr_hidden)]
-            self.outputNeurons = \
-                [NeuronR0to1(nbr_hidden, learning_rate, momentum, temperature, Neuron.Output, random, enableBias) \
-                                  for _ in range(nbr_output)]
-        else:
+        
+        if(grid != self.R1to1 and grid != self.R0to1):
             raise Exception("%d : unknown grid. Please use : %d or %d" % (grid, self.R1to1, self.R0to1))
+        
+        self.hiddenNeurons = []
+        self.outputNeurons = []
+        
+    
+        for _ in range(nbr_hidden):
+            if grid == self.R1to1:
+                ph = Perceptron(nbr_input, learning_rate, momentum, temperature, Perceptron.HIDDEN, random, enable_bias)
+            else:
+                ph = PerceptronR0to1(nbr_input, learning_rate, momentum, temperature, Perceptron.HIDDEN, random, enable_bias)
+            self.hiddenNeurons.append(ph)
+            
+        for _ in range(nbr_output):
+            if grid == self.R1to1:
+                po = Perceptron(nbr_hidden, learning_rate, momentum, temperature, Perceptron.OUTPUT, random, enable_bias)
+            else:
+                po = PerceptronR0to1(nbr_hidden, learning_rate, momentum, temperature, Perceptron.OUTPUT, random, enable_bias)
+            self.outputNeurons.append(po)
                 
         self.stateOutputNeurons = []
         self.stateHiddenNeurons = []
-        self.last_inputs = []
-        self.networkUpdated = True
+        self._last_inputs = []
+        self._network_updated = True
 
-    def init_random_weights(self, vmin= -0.25, vmax=0.25):
+    def init_weights_randomly(self, vmin= -0.25, vmax=0.25):
         '''
         assigns a random value between [ vmin, vmax [ to all the weights of the network 
         '''
         for neuron in self.hiddenNeurons + self.outputNeurons:
-            neuron.init_random_weights(vmin, vmax)
-        self.networkUpdated = True
+            neuron.init_weights_randomly(vmin, vmax)
+        self._network_updated = True
        
     def init_weights(self, val):
         '''
@@ -65,10 +70,10 @@ class MultilayerNetwork:
         returns the responses list of the output neurons to these data inputs
         '''
         #avoids unnecessary computations
-        if(not self.networkUpdated and self.last_inputs == inputs):
+        if(not self._network_updated and self._last_inputs == inputs):
             return self.stateOutputNeurons
-        self.networkUpdated = False
-        self.last_inputs = inputs
+        self._network_updated = False
+        self._last_inputs = inputs
         
         #determine the state of hidden neurons
         stateHidden = []
@@ -128,12 +133,12 @@ class MultilayerNetwork:
         for i in range(len(self.outputNeurons)) :
             self.outputNeurons[i].update_weights(y[i] , self.stateHiddenNeurons)
             
-        self.networkUpdated = True
+        self._network_updated = True
         
 if __name__ == '__main__':
     #XOR test on [-1, 1]
-    n = MultilayerNetwork(2, 3, 1, grid=MultilayerNetwork.R1to1)
-    n.init_random_weights(-1, 1)
+    n = MultilayerPerceptron(2, 3, 1, grid=MultilayerPerceptron.R1to1)
+    n.init_weights_randomly(-1, 1)
     
     for epoch in range(700):
         n.train([-1, -1], [-1])
@@ -154,9 +159,9 @@ if __name__ == '__main__':
     print
     
     #XOR test on [0, 1]
-    n = MultilayerNetwork(2, 3, 1, grid=MultilayerNetwork.R0to1, momentum=0.9)
+    n = MultilayerPerceptron(2, 3, 1, grid=MultilayerPerceptron.R0to1, momentum=0.2)
     
-    for epoch in range(2000):
+    for epoch in range(1000):
         n.train([0, 0], [0])
         n.train([0, 1], [1])
         n.train([1, 0], [1])

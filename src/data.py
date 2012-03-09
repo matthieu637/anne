@@ -1,8 +1,8 @@
 # -*- coding: UTF-8 -*-
 '''
-Created on 20 fevr. 2012
+Created on 20 February 2012
 
-@author: matthieu637
+@author: Matthieu Zimmer
 '''
 from utils import randmm
 
@@ -29,7 +29,7 @@ class DataFile():
         
         self.inputs = []
         self.outputs = []
-        self.rules = rules
+        self._rules = rules
         self._read_data(path)
         
     def _read_data(self, name):
@@ -59,12 +59,12 @@ class DataFile():
                        
         result = []
         for sym in lstring:
-            for key in self.rules:
+            for key in self._rules:
                 if(sym == key):
-                    if(len( self.rules[key]) == 1):
-                        result += [self.rules[key][0]]
+                    if(len(self._rules[key]) == 1):
+                        result += [self._rules[key][0]]
                     else:
-                        result += [randmm(self.rules[key][0], self.rules[key][1])]
+                        result += [randmm(self._rules[key][0], self._rules[key][1])]
         return result
     
     def _add_list(self, llist, pos, data):
