@@ -1,8 +1,10 @@
 # -*- coding: UTF-8 -*-
 '''
-Created on 14 fevr. 2012
+Created on 14 February 2012
 
-@author: matthieu637
+@author: Matthieu Zimmer
+
+Provides some basics functions
 '''
 
 from random import random

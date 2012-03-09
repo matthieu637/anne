@@ -1,15 +1,15 @@
 '''
-Created on 6 mars 2012
+Created on 6 March 2012
 
-@author: matthieu637
+@author: Matthieu Zimmer
 
 Artificial Grammar Learning
 '''
 
 from data import DataFile
 from random import shuffle
-from network import MultilayerNetwork
-from neuron import Neuron, NeuronN0to1, NeuronR0to1
+from multilayerp import MultilayerPerceptron
+from perceptron import Perceptron, PerceptronN0to1, PerceptronR0to1
 from utils import index_max
 from random import randint
 import matplotlib.pyplot as plt
@@ -17,11 +17,11 @@ import matplotlib.pyplot as plt
 
 
 def random_pattern():
-    result=[]
-    nb_letter = randint(3,8)
+    result = []
+    nb_letter = randint(3, 8)
     for i in range(8):
         if(i < nb_letter):
-            letter = randint(1,5)
+            letter = randint(1, 5)
             for k in range(6):
                 if(k == letter):
                     result.append(1.)
@@ -38,7 +38,7 @@ def random_pattern():
 def pattern_to_list(pat):
     res = []
     for i in range(8):
-        res.append(index_max(pat[i*6:i*6+6]))
+        res.append(index_max(pat[i * 6:i * 6 + 6]))
     return res
 
 if __name__ == '__main__':
@@ -49,14 +49,14 @@ if __name__ == '__main__':
 #    print(pattern_to_list(ptrain_pattern[0][0]))
 #    exit()
     
-    first_order = MultilayerNetwork(48, 40, 48, 0, 0.4, 0.5, 1., False, True)
-    first_order.init_random_weights(-1, 1)
+    first_order = MultilayerPerceptron(48, 40, 48, 0, 0.4, 0.5, 1., False, True)
+    first_order.init_weights_randomly(-1, 1)
     
     
-    high_order = [NeuronR0to1(48, 0.4, 0.5, 1., Neuron.Output, False, True) for _ in range(2)]
-#    high_order = [NeuronN0to1(48, 0.1, 0., False) for _ in range(2)]
-    high_order[0].init_random_weights(0., 0.1)
-    high_order[1].init_random_weights(0., 0.1)
+    high_order = [PerceptronR0to1(48, 0.4, 0.5, 1., Perceptron.OUTPUT, False, True) for _ in range(2)]
+#    high_order = [PerceptronN0to1(48, 0.4, 0.5, False) for _ in range(2)]
+    high_order[0].init_weights_randomly(0., 0.1)
+    high_order[1].init_weights_randomly(0., 0.1)
 
 
     print("pre-training")
@@ -78,15 +78,14 @@ if __name__ == '__main__':
         rms_ss = 0.
         rms_ss2 = 0.
         for ex in l_exx:
-#            first_order.train(samples.inputs[ex], samples.outputs[ex])
             first_order.calc_output(ptrain_pattern[ex][0])
         
             #compara
-            compara=[]
+            compara = []
             for i in range(48):
                 compara.append(ptrain_pattern[ex][0][i] - first_order.stateOutputNeurons[i])
 
-            res2 = [high_order[i].calc_output(list(compara))
+            res2 = [high_order[i].calc_output(compara)
                     for i in range(2)]
             if(index_max(res2) == 0):
                 err += 1
@@ -97,7 +96,7 @@ if __name__ == '__main__':
                     for i in range(2)]
             
                 if(index_max(res) == 0):
-                    rms_ss +=1
+                    rms_ss += 1
                     
                 high_order[0].train(compara, 1.)
                 high_order[1].train(compara, 0.)
@@ -108,7 +107,7 @@ if __name__ == '__main__':
                     for i in range(2)]
             
                 if(index_max(res) == 1):
-                    rms_ss +=1
+                    rms_ss += 1
                     
                 high_order[0].train(compara, 0.)
                 high_order[1].train(compara, 1.)
@@ -116,32 +115,31 @@ if __name__ == '__main__':
             if(ex in ptrain_pattern_l):
                 first_order.train(ptrain_pattern[ex][0], ptrain_pattern[ex][1])
             
-        rms.append(rms_ss/80)
-        rms2.append((80-the)/80)
+        rms.append(rms_ss / 80)
+        rms2.append((80 - the) / 80)
 
             
-        print(epoch, "perf 1st : ", (80 - the), " | perf 2nd : ",  rms_ss, " | high wag %d" % err)
+        print(epoch, "perf 1st : ", (80 - the), " | perf 2nd : ", rms_ss, " | high wag %d" % err)
         err = 0.
         the = 0.
 
-    first_order.init_random_weights(-1, 1)
+    first_order.init_weights_randomly(-1, 1)
 
-    ptrain_pattern = [random_pattern() for _ in range(60)]
+    ptrain_pattern = [random_pattern() for _ in range(45)]
     
     print("training")
     nbEpoch = 12
     #training
     for epoch in range(nbEpoch):
-        l_exx = list(range(60))
+        l_exx = list(range(45))
         shuffle(l_exx)
         rms_ss = 0.
         rms_ss2 = 0.
         for ex in l_exx:
-#            first_order.train(samples.inputs[ex], samples.outputs[ex])
             first_order.calc_output(ptrain_pattern[ex][0])
         
             #compara
-            compara=[]
+            compara = []
             for i in range(48):
                 compara.append(ptrain_pattern[ex][0][i] - first_order.stateOutputNeurons[i])
 
@@ -156,10 +154,8 @@ if __name__ == '__main__':
                     for i in range(2)]
             
                 if(index_max(res) == 0):
-                    rms_ss +=1
-                    
-#                high_order[0].train(compara, 1.)
-#                high_order[1].train(compara, 0.)
+                    rms_ss += 1
+
             else:
                 the += 1
                 
@@ -167,18 +163,15 @@ if __name__ == '__main__':
                     for i in range(2)]
             
                 if(index_max(res) == 1):
-                    rms_ss +=1
-                    
-#                high_order[0].train(compara, 0.)
-#                high_order[1].train(compara, 1.)
+                    rms_ss += 1
 
             first_order.train(ptrain_pattern[ex][0], ptrain_pattern[ex][1])
             
-        rms.append(rms_ss/60)
-        rms2.append((80-the)/80)
+        rms.append(rms_ss / 45)
+        rms2.append((45 - the) / 45)
 
             
-        print(epoch, "perf 1st : ", (60 - the), " | perf 2nd : ",  rms_ss, " | high wag %d" % err)
+        print(epoch, "perf 1st : ", (45 - the), " | perf 2nd : ", rms_ss, " | high wag %d" % err)
         err = 0.
         the = 0.
 
@@ -189,7 +182,7 @@ if __name__ == '__main__':
              label="high-order network")
     plt.plot(rms2,
              label="first-order network")
-    plt.axis((0, 60+nbEpoch, 0, 1.))
+    plt.axis((0, 60 + nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
     plt.show()
     
@@ -203,11 +196,54 @@ if __name__ == '__main__':
              'co': 0,
              'in': 0}
     
-    for ex in range(60):
+    l_ex = list(range(45))
+    shuffle(l_ex)
+    for ex in l_ex[0:30]:
         first_order.calc_output(ptrain_pattern[ex][0])
         
         #compara
-        compara=[]
+        compara = []
+        for i in range(48):
+            compara.append(ptrain_pattern[ex][0][i] - first_order.stateOutputNeurons[i])
+
+        res33 = [high_order[i].calc_output(compara) for i in range(2)]
+        
+        if (pattern_to_list(first_order.stateOutputNeurons) == pattern_to_list(ptrain_pattern[ex][1])) :
+            pourc['co'] += 1
+            if index_max(res33) == 0:#high wager
+                pourc['hg_co'] += 1
+            else:
+                pourc['lw_co'] += 1
+        else:
+            pourc['in'] += 1
+            if index_max(res33) == 0:#high wager
+                pourc['hg_in'] += 1
+            else:
+                pourc['lw_in'] += 1
+    
+    for key in pourc.keys():
+        pourc[key] /= 0.30
+    
+    print(pourc, pourc['lw_co'], pourc['lw_in'])
+    
+    
+    
+    
+    
+    ptrain_pattern = [random_pattern() for _ in range(30)]
+    
+    pourc = {'hg_co' : 0,
+             'hg_in' : 0,
+             'lw_co' : 0,
+             'lw_in' : 0,
+             'co': 0,
+             'in': 0}
+    
+    for ex in range(30):
+        first_order.calc_output(ptrain_pattern[ex][0])
+        
+        #compara
+        compara = []
         for i in range(48):
             compara.append(ptrain_pattern[ex][0][i] - first_order.stateOutputNeurons[i])
 
@@ -226,5 +262,8 @@ if __name__ == '__main__':
             else:
                 pourc['lw_in'] += 1
             
+    for key in pourc.keys():
+        pourc[key] /= 0.30
+    
     print(pourc, pourc['lw_co'], pourc['lw_in'])
     

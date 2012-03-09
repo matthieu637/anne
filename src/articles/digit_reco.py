@@ -1,20 +1,20 @@
 # -*- coding: UTF-8 -*-
 '''
-Created on 13 fevr. 2012
+Created on 13 February 2012
 
-@author: matthieu637
+@author: Matthieu Zimmer
 
 Article implementation
 '''
 
-from network import MultilayerNetwork
+from multilayerp import MultilayerPerceptron
 from random import shuffle
 import matplotlib.pyplot as plt
 from data import DataFile
 from utils import index_max
 
 if __name__ == '__main__':
-    mode = MultilayerNetwork.R0to1
+    mode = MultilayerPerceptron.R0to1
     nbr_network = 5
     momentum = 0.9
     lrate = 0.1
@@ -27,9 +27,9 @@ if __name__ == '__main__':
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = MultilayerNetwork(20, 5, 10, learning_rate=lrate, momentum=momentum, grid=mode)
-        high_order_10 = MultilayerNetwork(5, 10, 35, learning_rate=lrate, momentum=momentum, grid=mode)
-        high_order_5 = MultilayerNetwork(5, 5, 35, learning_rate=lrate, momentum=momentum, grid=mode)
+        first_order = MultilayerPerceptron(20, 5, 10, learning_rate=lrate, momentum=momentum, grid=mode)
+        high_order_10 = MultilayerPerceptron(5, 10, 35, learning_rate=lrate, momentum=momentum, grid=mode)
+        high_order_5 = MultilayerPerceptron(5, 5, 35, learning_rate=lrate, momentum=momentum, grid=mode)
         
         networks[i] = {'first_order' : first_order,
                         'high_order_10' : high_order_10,
