@@ -107,7 +107,12 @@ class MultilayerPerceptron:
         for i in range(imin, imax):
             s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
         return sqrt(s / (imax - imin))
-        
+    def calc_sum_dw(self):
+        s = 0.
+        for neuron in self.hiddenNeurons + self.outputNeurons:
+            s += neuron.calc_sum_dw()
+        return s
+    
     def train(self, inputs, outputs):
         '''
         trains the network to associate inputs to outputs ( by using the backpropagation algorithm )
