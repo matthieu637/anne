@@ -14,7 +14,7 @@ from data import DataFile
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 10
+    nbr_network = 20
     momentum = 0.5
     nbEpoch = 201
     display_interval = range(nbEpoch)[6::5]
@@ -22,10 +22,11 @@ if __name__ == '__main__':
     #create all networks
     networks = [{} for _ in range(nbr_network)]
     
+    
     for i in range(nbr_network):
-        first_order = MultilayerPerceptron(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode, temperature=0.9)
-        high_order_h = MultilayerPerceptron(100, 100, 2, learning_rate=0.1, momentum=momentum, grid=mode, temperature=0.9)
-        high_order_l = MultilayerPerceptron(100, 100, 2, learning_rate=10e-7, momentum=momentum, grid=mode, temperature=0.9)
+        first_order = MultilayerPerceptron(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode )
+        high_order_h = MultilayerPerceptron(100, 100, 2, learning_rate=0.1, momentum=0, grid=mode )
+        high_order_l = MultilayerPerceptron(100, 100, 2, learning_rate=10e-7, momentum=0, grid=mode)
         
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h,
@@ -33,7 +34,7 @@ if __name__ == '__main__':
 
     for network in networks:
         for k in network.keys():
-                network[k].init_weights_randomly(-.6, .6)
+            network[k].init_weights_randomly(-1, 1)
 
     #create example
     examples = DataFile("../data/digital_shape.txt", mode)
@@ -103,6 +104,8 @@ if __name__ == '__main__':
         y_plot['high_order_h'].append(sum_rms['high_order_h'])
         y_plot['high_order_l'].append(sum_rms['high_order_l'])
         
+        print(epoch)
+        
     # divided by the maximum error
     max_err = (max(y_plot['first_order']),
                max(y_plot['high_order_h']),
@@ -114,11 +117,11 @@ if __name__ == '__main__':
         y_plot['high_order_l'][i] /= max_err[2]
     
     #displays
-    plt.title("Error of first-order and higher-order networks")
+    plt.title("Square error of first-order and higher-order networks")
     plt.plot(display_interval , y_plot['first_order'][6::5], label="first-order network")
     plt.plot(display_interval , y_plot['high_order_h'][6::5], label="high-order network (high learning rate)")
     plt.plot(display_interval , y_plot['high_order_l'][6::5], label="high-order network (low learning rate)")
-    plt.ylabel('ERROR')
+    plt.ylabel('MEAN SQUARE ERROR')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
@@ -129,7 +132,7 @@ if __name__ == '__main__':
     plt.plot(display_interval , y_perfo['first_order'][6::5], label="first-order network")
     plt.plot(display_interval , y_perfo['high_order_h'][6::5], label="high-order network (high learning rate)")
     plt.plot(display_interval , y_perfo['high_order_l'][6::5], label="high-order network (low learning rate)")
-    plt.ylabel('ERROR')
+    plt.ylabel('SUCCESS')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)

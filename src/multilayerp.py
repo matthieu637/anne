@@ -101,12 +101,15 @@ class MultilayerPerceptron:
         $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\ o : values\ obtained \\ d : values\ desired \end{array} \right.$
         (it is used to determine the total error of the network)
         '''
+        return sqrt(self.calc_MS_range(inputs, outputs, imin, imax))
+                    
+    def calc_MS_range(self, inputs, outputs, imin, imax):
         self.calc_output(inputs)
         
         s = 0.
         for i in range(imin, imax):
             s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
-        return sqrt(s / (imax - imin))
+        return (s / (imax - imin))
     def calc_sum_dw(self):
         s = 0.
         for neuron in self.hiddenNeurons + self.outputNeurons:
