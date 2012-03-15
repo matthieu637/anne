@@ -102,7 +102,10 @@ class MultilayerPerceptron:
         (it is used to determine the total error of the network)
         '''
         return sqrt(self.calc_MS_range(inputs, outputs, imin, imax))
-                    
+             
+    def calc_MS(self, inputs, outputs):
+        return self.calc_MS_range(inputs, outputs, 0, len(outputs))
+        
     def calc_MS_range(self, inputs, outputs, imin, imax):
         self.calc_output(inputs)
         

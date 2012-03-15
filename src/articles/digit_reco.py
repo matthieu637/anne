@@ -80,9 +80,9 @@ if __name__ == '__main__':
                 #error
                 if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
                     err_one_network['first_order'] += 1
-                if(index_max(network['high_order_5'].stateOutputNeurons[25:35]) != index_max(examples.outputs[ex])):
+                if(index_max(network['high_order_5'].stateOutputNeurons[25:35]) != index_max(network['first_order'].stateOutputNeurons)):
                     err_one_network['high_order_5'] += 1
-                if(index_max(network['high_order_10'].stateOutputNeurons[25:35]) != index_max(examples.outputs[ex])):
+                if(index_max(network['high_order_10'].stateOutputNeurons[25:35]) != index_max(network['first_order'].stateOutputNeurons)):
                     err_one_network['high_order_10'] += 1
 
                 #learn
@@ -141,8 +141,8 @@ if __name__ == '__main__':
     plt.plot(display_interval2, [err_plot['high_order_5'][i] for i in display_interval2],
              label="high-order network (5 hidden units)")
     
-    plt.title('Error proportion of first-order and high-order networks')
-    plt.ylabel('ERROR')
+    plt.title('Error ratio of first-order and high-order networks')
+    plt.ylabel('ERROR RATIO')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
