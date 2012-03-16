@@ -24,3 +24,10 @@ def randmm(vmin, vmax):
     returns a float between [vmin, vmax[
     '''
     return vmin + random() * abs(vmax - vmin)
+
+def compare(list_model, list_test, threshold=0.5):
+    for i in range(len(list_model)):
+        if(list_model[i] == 0 and list_test[i] > threshold) or \
+            (list_model[i] == 1 and list_test[i] < threshold):
+            return 0
+    return 1

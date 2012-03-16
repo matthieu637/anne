@@ -107,15 +107,44 @@ class MultilayerPerceptron:
         return self.calc_MS_range(inputs, outputs, 0, len(outputs))
         
     def calc_MS_range(self, inputs, outputs, imin, imax):
+        return (self.calc_SE_range(inputs, outputs, imin, imax) / (imax - imin))
+    
+    def calc_SE(self, inputs, outputs):
+        return self.calc_SE_range(inputs, outputs, 0, len(outputs))
+        
+    def calc_SE_range(self, inputs, outputs, imin, imax):
         self.calc_output(inputs)
         
         s = 0.
         for i in range(imin, imax):
             s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
-        return (s / (imax - imin))
-    def calc_sum_dw(self):
+        return s
+    def calc_ME(self, inputs, outputs):
+        return self.calc_ME_range(inputs, outputs, 0, len(outputs))
+    
+    def calc_ME_range(self, inputs, outputs, imin, imax):
+        return (self.calc_E_range(inputs, outputs, imin, imax) / (imax - imin))
+    
+    def calc_E(self, inputs, outputs):
+        return self.calc_E_range(inputs, outputs, 0, len(outputs))
+    
+    def calc_E_range(self, inputs, outputs, imin, imax):
+        self.calc_output(inputs)
+        
         s = 0.
-        for neuron in self.hiddenNeurons + self.outputNeurons:
+        for i in range(imin, imax):
+            s += abs(self.stateOutputNeurons[i] - outputs[i])
+        return s
+    
+    def calc_sum_dw_hidden(self):
+        s = 0.
+        for neuron in self.hiddenNeurons:
+            s += neuron.calc_sum_dw()
+        return s
+    
+    def calc_sum_dw_outputs(self):
+        s = 0.
+        for neuron in self.outputNeurons:
             s += neuron.calc_sum_dw()
         return s
     

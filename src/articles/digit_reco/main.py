@@ -20,7 +20,7 @@ if __name__ == '__main__':
     lrate = 0.1
     nbEpoch = 1000
     display_interval = [0, 25, 50, 100, 200, 500, 999]
-    display_interval2 = range(nbEpoch)[::4]
+    display_interval2 = range(nbEpoch)[::7]
     
     
     #create all networks
@@ -36,7 +36,7 @@ if __name__ == '__main__':
                         'high_order_5' : high_order_5}
 
     #create inputs/outputs to learn
-    examples = DataFile("../data/digit_shape.txt", mode)
+    examples = DataFile("digit_shape.txt", mode)
 
 
     #3 curves
@@ -59,7 +59,7 @@ if __name__ == '__main__':
         for network in networks:
             l_exx = list(range(10))
             shuffle(l_exx)
-            for ex in l_exx:              
+            for ex in l_exx:
                 #RMS
                 sum_rms['first_order'] += network['first_order'].calc_RMS(
                                             examples.inputs[ex],
@@ -103,7 +103,7 @@ if __name__ == '__main__':
         err_plot['high_order_10'].append(err_one_network['high_order_10'] / (10 * nbr_network))
         err_plot['high_order_5'].append(err_one_network['high_order_5'] / (10 * nbr_network))
         
-#        print(err_plot['first_order'])
+        print(epoch)
 
     # divided by the maximum error
     max_err = (max(rms_plot['first_order']),
@@ -147,3 +147,4 @@ if __name__ == '__main__':
     plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
     plt.show()
+    
