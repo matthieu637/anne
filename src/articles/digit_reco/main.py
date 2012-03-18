@@ -20,7 +20,7 @@ if __name__ == '__main__':
     lrate = 0.1
     nbEpoch = 1000
     display_interval = [0, 25, 50, 100, 200, 500, 999]
-    display_interval2 = range(nbEpoch)[::4]
+    display_interval2 = range(nbEpoch)[::7]
     
     
     #create all networks
@@ -36,7 +36,7 @@ if __name__ == '__main__':
                         'high_order_5' : high_order_5}
 
     #create inputs/outputs to learn
-    examples = DataFile("../data/digit_shape.txt", mode)
+    examples = DataFile("digit_shape.txt", mode)
 
 
     #3 curves
@@ -59,7 +59,7 @@ if __name__ == '__main__':
         for network in networks:
             l_exx = list(range(10))
             shuffle(l_exx)
-            for ex in l_exx:              
+            for ex in l_exx:
                 #RMS
                 sum_rms['first_order'] += network['first_order'].calc_RMS(
                                             examples.inputs[ex],
@@ -80,9 +80,9 @@ if __name__ == '__main__':
                 #error
                 if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
                     err_one_network['first_order'] += 1
-                if(index_max(network['high_order_5'].stateOutputNeurons[25:35]) != index_max(examples.outputs[ex])):
+                if(index_max(network['high_order_5'].stateOutputNeurons[25:35]) != index_max(network['first_order'].stateOutputNeurons)):
                     err_one_network['high_order_5'] += 1
-                if(index_max(network['high_order_10'].stateOutputNeurons[25:35]) != index_max(examples.outputs[ex])):
+                if(index_max(network['high_order_10'].stateOutputNeurons[25:35]) != index_max(network['first_order'].stateOutputNeurons)):
                     err_one_network['high_order_10'] += 1
 
                 #learn
@@ -103,7 +103,7 @@ if __name__ == '__main__':
         err_plot['high_order_10'].append(err_one_network['high_order_10'] / (10 * nbr_network))
         err_plot['high_order_5'].append(err_one_network['high_order_5'] / (10 * nbr_network))
         
-#        print(err_plot['first_order'])
+        print(epoch)
 
     # divided by the maximum error
     max_err = (max(rms_plot['first_order']),
@@ -141,9 +141,10 @@ if __name__ == '__main__':
     plt.plot(display_interval2, [err_plot['high_order_5'][i] for i in display_interval2],
              label="high-order network (5 hidden units)")
     
-    plt.title('Error proportion of first-order and high-order networks')
-    plt.ylabel('ERROR')
+    plt.title('Error ratio of first-order and high-order networks')
+    plt.ylabel('ERROR RATIO')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
     plt.show()
+    

@@ -152,6 +152,11 @@ class Perceptron:
         
         self.calc_output(inputs)
         self.update_weights(self.calc_error_propagation(ouputs), inputs)
+    def calc_sum_dw(self):
+        s = 0.
+        for i in range(len(self.weights)):
+            s += abs(self.weights[i] - self._last_weights[i])
+        return s
     def _sigmoid (self, x):
         '''
         returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$

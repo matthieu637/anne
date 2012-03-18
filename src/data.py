@@ -5,6 +5,7 @@ Created on 20 February 2012
 @author: Matthieu Zimmer
 '''
 from utils import randmm
+from os import path as p
 
 #see DataFile.__init__()
 default_file_rules = {'x':(1,),
@@ -30,7 +31,7 @@ class DataFile():
         self.inputs = []
         self.outputs = []
         self._rules = rules
-        self._read_data(path)
+        self._read_data(p.dirname(__file__) + "/../data/" + path)
         
     def _read_data(self, name):
         rfile = open(name, "r")
