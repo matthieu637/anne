@@ -11,7 +11,7 @@ from multilayerp import MultilayerPerceptron
 from random import shuffle
 import matplotlib.pyplot as plt
 from data import DataFile
-from utils import index_max, compare
+from utils import index_max, compare, compare_f
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
@@ -20,8 +20,7 @@ if __name__ == '__main__':
     lrate = 0.1
     nbShape = 10
     nbEpoch = 1000
-    display_interval = [0, 25, 50, 100, 200, 500, 999]
-    display_interval2 = range(nbEpoch)[::6]
+    display_interval = range(nbEpoch)[::6]
     
     
     #create all networks
@@ -95,10 +94,8 @@ if __name__ == '__main__':
                     err_one_network['first_order'] += 1
                 if(index_max(network['high_order_10'].stateOutputNeurons[25:35]) != index_max(network['first_order'].stateOutputNeurons)):
                     err_one_network['high_order_10'] += 1
-
-                err_one_network['high_order_5'] += network['high_order_10'].calc_ME_range(network['first_order'].stateHiddenNeurons, 
-                                                                                          entire_first_order,
-                                                                                          20, 25)
+                err_one_network['high_order_5'] += 1 - compare_f(network['first_order'].stateHiddenNeurons, 
+                                                                 network['high_order_10'].stateOutputNeurons[20:25], 0.1)
                 err_one_network['high_order_20'] += 1 - compare(examples.inputs[ex], network['high_order_10'].stateOutputNeurons[0:20])
                 
 
@@ -124,66 +121,47 @@ if __name__ == '__main__':
         
         
         print(epoch)
-        
-    # divided by the maximum error 
-    mh5 = max(rms_plot['high_order_5'])
-    mh10 = max(rms_plot['high_order_10'])
-    mh20 = max(rms_plot['high_order_20'])
-    mf = max(rms_plot['first_order'])
-    mh = max(rms_plot['high_order'])
-    
-#    for i in range(nbEpoch):
-##        rms_plot['first_order'][i] /= 10
-#        rms_plot['high_order_10'][i] *= 10/35
-#        rms_plot['high_order_5'][i] *= 5/35
-#        rms_plot['high_order_20'][i] *= 20/35
-##        rms_plot['high_order'][i] /= 10
     
     #displays rms
-    plt.plot(display_interval2, [rms_plot['first_order'][i] for i in display_interval2],
+    plt.plot(display_interval, [rms_plot['first_order'][i] for i in display_interval],
              label="first-order network",
              linewidth=2)
     
-    plt.plot(display_interval2, [rms_plot['high_order_10'][i] for i in display_interval2],
+    plt.plot(display_interval, [rms_plot['high_order_10'][i] for i in display_interval],
              label="10 outputs")
     
-    plt.plot(display_interval2, [rms_plot['high_order_5'][i] for i in display_interval2],
+    plt.plot(display_interval, [rms_plot['high_order_5'][i] for i in display_interval],
              label="5 hidden")
     
-    plt.plot(display_interval2, [rms_plot['high_order_20'][i] for i in display_interval2],
+    plt.plot(display_interval, [rms_plot['high_order_20'][i] for i in display_interval],
              label="20 inputs")
     
-    plt.plot(display_interval2, [rms_plot['high_order'][i] for i in display_interval2],
+    plt.plot(display_interval, [rms_plot['high_order'][i] for i in display_interval],
              label="high-order network (10 hidden units)",
              linewidth=2)
     
-    plt.title('Sum square error of first-order and high-order networks')
-    plt.ylabel('SQUARE ERROR')
+    plt.title('Mean error of one neuron')
+    plt.ylabel('MEAN ERROR')
     plt.xlabel("EPOCHS")
-#    plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
     plt.show()
     
     
-    
-    
-    plt.plot(display_interval2, [err_plot['first_order'][i] for i in display_interval2],
+    plt.plot(display_interval, [err_plot['first_order'][i] for i in display_interval],
              label="first-order network",
              linewidth=2)
     
-    plt.plot(display_interval2, [err_plot['high_order_10'][i] for i in display_interval2],
-             label="10 outputs")
+    plt.plot(display_interval, [err_plot['high_order_10'][i] for i in display_interval],
+             label="10 outputs ( winner take all )")
     
-    plt.plot(display_interval2, [err_plot['high_order_5'][i] for i in display_interval2],
-             label="5 hidden")
+    plt.plot(display_interval, [err_plot['high_order_5'][i] for i in display_interval],
+             label="5 hidden  ( | x - o | <= 0.1 )")
     
-    plt.plot(display_interval2, [err_plot['high_order_20'][i] for i in display_interval2],
-             label="20 inputs")
-
+    plt.plot(display_interval, [err_plot['high_order_20'][i] for i in display_interval],
+             label="20 inputs ( x > 0.5 => activation  )")
     
-    
-    plt.title('Sum square error of first-order and high-order networks')
-    plt.ylabel('SQUARE ERROR')
+    plt.title('Error ratio of first-order and high-order networks')
+    plt.ylabel('ERROR RATIO')
     plt.xlabel("EPOCHS")
 #    plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)

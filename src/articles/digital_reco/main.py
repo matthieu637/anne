@@ -14,7 +14,7 @@ from data import DataFile
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 15
+    nbr_network = 5
     momentum = 0.5
     nbEpoch = 201
     display_interval = range(nbEpoch)[3::5]
@@ -38,7 +38,7 @@ if __name__ == '__main__':
                 network[k].init_weights_randomly(-1, 1)
 
     #create example
-    examples = DataFile("../data/digital_shape.txt", mode)
+    examples = DataFile("digital_shape.txt", mode)
 
     #3 curves
     y_plot = {'first_order' : [] ,
@@ -124,7 +124,6 @@ if __name__ == '__main__':
     plt.plot(display_interval , y_plot['high_order_l'][3::5], label="high-order network (low learning rate)")
     plt.ylabel('MEAN SQUARE ERROR')
     plt.xlabel("EPOCHS")
-    plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
     plt.show()
     

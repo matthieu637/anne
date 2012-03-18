@@ -19,6 +19,14 @@ def index_max(l):
             m = i
     return m
 
+def index_max_nth(l, n):
+    #TODO: may be improve
+    cl = list(l)
+    for _ in range(n):
+        imax = index_max(cl)
+        cl[imax] = min(cl)
+    return index_max(cl)
+
 def randmm(vmin, vmax):
     '''
     returns a float between [vmin, vmax[
@@ -31,3 +39,10 @@ def compare(list_model, list_test, threshold=0.5):
             (list_model[i] == 1 and list_test[i] < threshold):
             return 0
     return 1
+
+def compare_f(list_model, list_test, threshold=0.05):
+    for i in range(len(list_model)):
+        if(abs(list_model[i] - list_test[i]) > threshold):
+            return 0
+    return 1
+
