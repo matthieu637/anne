@@ -15,11 +15,11 @@ from utils import index_max, compare, compare_f
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 1
+    nbr_network = 3
     momentum = 0.9
     lrate = 0.1
     nbEpoch = 201
-    nbTry = 200
+    nbTry = 50
     display_interval = range(nbEpoch)[::6]
     
     
@@ -36,24 +36,6 @@ if __name__ == '__main__':
     #create inputs/outputs to learn
     examples = DataFile("digit_handwritten_16.txt", mode)
 
-#    print(len(examples.inputs[0]), len(examples.inputs))
-#    print(len(examples.outputs[0]), len(examples.outputs))
-#    
-#    l_ex = list(range(len(examples.inputs)))
-#    shuffle(l_ex)
-#    n_inp=[]
-#    n_out=[]
-#    for ex in l_ex[0:500]:
-#        n_inp.append(examples.inputs[ex])
-#        n_out.append(examples.outputs[ex])
-#    
-#    examples.inputs = n_inp
-#    examples.outputs = n_out
-    
-    print(len(examples.inputs[0]), len(examples.inputs))
-    print(len(examples.outputs[0]), len(examples.outputs))
-    
-    
     #3 curves
     rms_plot = {'first_order' : [] ,
               'high_order_10' : [],
@@ -153,7 +135,7 @@ if __name__ == '__main__':
              label="output layer of high-order")
     
     plt.title('Mean error of first-order and high-order networks')
-    plt.ylabel('ERROR RMS')
+    plt.ylabel('MEAN ERROR')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
