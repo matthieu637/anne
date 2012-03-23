@@ -148,6 +148,10 @@ class MultilayerPerceptron:
             s += neuron.calc_sum_dw()
         return s
     
+    def set_learning_rate(self, nlr):
+        for neuron in self.outputNeurons + self.hiddenNeurons:
+            neuron.learning_rate = nlr
+    
     def train(self, inputs, outputs):
         '''
         trains the network to associate inputs to outputs ( by using the backpropagation algorithm )

@@ -25,7 +25,7 @@ class AdHock(MultilayerPerceptron):
             self.hiddenNeurons.append(ph)
             
         for _ in range(nbr_output):
-            po = PerceptronR0to1(nbr_hidden + 2, learning_rate, momentum, temperature, Perceptron.OUTPUT, random, enable_bias)
+            po = PerceptronR0to1(nbr_hidden + 18, learning_rate, momentum, temperature, Perceptron.OUTPUT, random, enable_bias)
             self.outputNeurons.append(po)
                 
         self.stateOutputNeurons = []
@@ -66,14 +66,21 @@ class AdHock(MultilayerPerceptron):
             self.hiddenNeurons[i].update_weights(yy[i] , inputs)
  
         for i in range(len(self.outputNeurons)) :
-            self.outputNeurons[i].update_weights(y[i] , self.stateHiddenNeurons+ addition)
+            self.outputNeurons[i].update_weights(y[i] , self.stateHiddenNeurons + addition)
             
         self._network_updated = True
         
+def ampli(l, n):
+    ll = [0 for _ in range(n)]
+    for i in range(n // 2):
+        ll[i] = 1 if index_max(l) == 0 else 0
+    for i in range(n // 2, n):
+        ll[i] = 1 if index_max(l) == 1 else 0
+    return ll
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 3
+    nbr_network = 20
     momentum = 0.5
     nbEpoch = 201
     nbTry = 50
@@ -83,8 +90,8 @@ if __name__ == '__main__':
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = AdHock(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum)
-        high_order_h = MultilayerPerceptron(100, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
+        first_order = AdHock(16 * 16, 16 * 4, 10, learning_rate=0.15, momentum=momentum)
+        high_order_h = MultilayerPerceptron(16 * 4, 16 * 4 * 2, 2, learning_rate=0.1, momentum=0., grid=mode)
         
         first_order.init_weights_randomly(-1, 1)
 #        high_order_h.init_weights_randomly(-1, 1)
@@ -113,7 +120,7 @@ if __name__ == '__main__':
             for ex in l_exx[0:nbTry]:
                 network['first_order'].calc_hidden(examples.inputs[ex])
                 network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
-                network['first_order'].calc_output([0, 0])
+                network['first_order'].calc_output([0] * 18)
                 
                 cell = [0, 1] \
                         if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]) \
@@ -128,17 +135,17 @@ if __name__ == '__main__':
                     perfo['wager_proportion'] += 1
                     
                 
-                network['first_order'].calc_output(network['high_order_h'].stateOutputNeurons)
+                network['first_order'].calc_output(ampli(network['high_order_h'].stateOutputNeurons, 18))
                 if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo['feedback'] += 1
                 
                 #learn
                 tmp = list(network['first_order'].stateHiddenNeurons)
                 network['first_order'].train(examples.inputs[ex],
-                             examples.outputs[ex], network['high_order_h'].stateOutputNeurons)
+                             examples.outputs[ex], ampli(network['high_order_h'].stateOutputNeurons, 18))
                 
                 
-                network['high_order_h'].train(tmp,  cell)
+                network['high_order_h'].train(tmp, cell)
 
         
         for k in y_perfo.keys():

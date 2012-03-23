@@ -27,7 +27,7 @@ if __name__ == '__main__':
     for i in range(nbr_network):
         first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
         high_order_h = MultilayerPerceptron(100, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
-        feedback = [PerceptronN0to1(12, 0.1, 0., True) for _ in range(10)]
+        feedback = [PerceptronN0to1(12, 0.4, 0.4, True) for _ in range(10)]
         
         first_order.init_weights_randomly(-1, 1)
 
