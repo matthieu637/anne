@@ -33,7 +33,7 @@ def discretis(ll):
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
+    nbr_network = 1
     momentum = 0.9
     lrate = 0.1
     nbShape = 10
