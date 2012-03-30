@@ -57,6 +57,7 @@ if __name__ == '__main__':
 
     #3 curves
     dis = [[0 for _ in range(nbEpoch)] for _ in range(nbShape)]
+    dis2 = [[0 for _ in range(nbEpoch)] for _ in range(nbShape)]
     div = [[0 for _ in range(nbEpoch)] for _ in range(nbShape)]
     valid = [[] for _ in range(10)]
 
@@ -67,21 +68,18 @@ if __name__ == '__main__':
             shuffle(l_exx)
             for ex in l_exx:              
                 #RMS
-                network['first_order'].calc_ME(
-                                            examples.inputs[ex],
-                                            examples.outputs[ex])
+                network['first_order'].calc_output(examples.inputs[ex])
                 
                 entire_first_order = examples.inputs[ex] + \
                                      network['first_order'].stateHiddenNeurons + \
                                      network['first_order'].stateOutputNeurons
                 
-                network['high_order_10'].calc_ME_range(
-                                            network['first_order'].stateHiddenNeurons,
-                                             entire_first_order, 25, 35)
+                network['high_order_10'].calc_output(network['first_order'].stateHiddenNeurons)
 
                 im = index_max(examples.outputs[ex])
                 div[im][epoch] += 1
                 dis[im][epoch] += discretis(network['first_order'].stateHiddenNeurons)
+                dis2[im][epoch] += index_max(network['first_order'].stateOutputNeurons)
                 
                 if(len(valid[im]) == 0):
                     valid[im].append(epoch)
@@ -101,12 +99,12 @@ if __name__ == '__main__':
         for j in range(nbEpoch):
             if(div[i][j] != 0):
                 dis[i][j] /= div[i][j]
+                dis2[i][j] /= div[i][j]
+    
+    colors =[(0.2, 0.8, 0.88), 'b', 'g', 'r', 'c', 'm', 'y', 'k', (0.8,0.1,0.8), (0.8,0.2,0.5)]
     
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    
-    colors =[(0.2, 0.8, 0.88), 'b', 'g', 'r', 'c', 'm', 'y', 'k', (0.8,0.1,0.8), (0.8,0.2,0.5)]
-    #displays
     for j in range(10):
         ax.scatter([dis[j][k] for k in valid[j]], [j] * len(valid[j]), valid[j], color=colors[j], marker='x')
 
@@ -126,4 +124,18 @@ if __name__ == '__main__':
         plt.plot(valid[j], [dis[j][k] for k in valid[j]], '.', color=colors[j])
 
     plt.show()
+    
+    
+
+    plt.title('Discretize hidden layer')
+    plt.ylabel('DISCRETIZED VALUE')
+    plt.xlabel("EPOCHS")
+    
+    for j in range(nbShape):
+        plt.title('shape :%d' % j)
+        plt.plot(valid[j], [dis[j][k] for k in valid[j]],  '.', label="hidden")
+        plt.plot(valid[j], [dis2[j][k]*102.4 for k in valid[j]], '.', label="output")
+        
+        plt.legend(loc='best', frameon=False)
+        plt.show()
     

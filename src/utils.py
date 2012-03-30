@@ -30,11 +30,13 @@ def index_min(l):
     return m
 
 def index_max_nth(l, n):
-    #TODO: may be improve
     cl = list(l)
+    vmin = min(cl) - 1
+#    - 1
     for _ in range(n):
         imax = index_max(cl)
-        cl[imax] = min(cl)
+        cl[imax] = vmin
+#        print(i, cl)
     return index_max(cl)
 
 def randmm(vmin, vmax):

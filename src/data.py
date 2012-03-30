@@ -31,7 +31,15 @@ class DataFile():
         self.inputs = []
         self.outputs = []
         self._rules = rules
-        self._read_data(p.dirname(__file__) + "/../data/" + path)
+
+        if(p.dirname(__file__) == ''):
+            self._read_data(p.dirname(__file__) + "../data/" + path)
+        else:
+            self._read_data(p.dirname(__file__) + "/../data/" + path)
+        
+        if(len(self.inputs) != len(self.outputs)):
+            print(self.inputs)
+            raise Exception(path + " wrong data file")
         
     def _read_data(self, name):
         rfile = open(name, "r")
@@ -57,7 +65,7 @@ class DataFile():
         
     def _line_to_list(self, line):
         lstring = list(line.replace(" ", "").replace("\n", ""))
-                       
+                     
         result = []
         for sym in lstring:
             for key in self._rules:
@@ -73,12 +81,20 @@ class DataFile():
             llist.append([])
         llist[pos].extend(data)
 
+class DataFileR(DataFile):
+    def _line_to_list(self, line):
+        lfloat = []
+        lstring = line.replace("\n", "").split(" ")
+        for s in lstring:
+            lfloat.append(float(s))
+        return lfloat
+
 if __name__ == '__main__':
     #
     #Some examples :
     #
     
-    df = DataFile("data/digital_shape.txt", 0)
+    df = DataFile("digital_shape.txt", 0)
     print (df.inputs)
     print (df.outputs)
 
@@ -90,6 +106,12 @@ if __name__ == '__main__':
          '.': (0,),
          '?': (0, 0.02),
          '!': (1,)}
-    df = DataFile("data/blindslight.txt", rules=r)
+    df = DataFile("blindslight.txt", rules=r)
     print (df.inputs[0])
     print (df.outputs[0])
+    
+    
+    df = DataFileR("iris.txt")
+    print (df.inputs[10])
+    print (df.outputs[10])
+    

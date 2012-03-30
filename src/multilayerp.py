@@ -151,6 +151,10 @@ class MultilayerPerceptron:
     def set_learning_rate(self, nlr):
         for neuron in self.outputNeurons + self.hiddenNeurons:
             neuron.learning_rate = nlr
+            
+    def set_momentum(self, nm):
+        for neuron in self.outputNeurons + self.hiddenNeurons:
+            neuron.momentum = nm
     
     def train(self, inputs, outputs):
         '''

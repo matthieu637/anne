@@ -14,7 +14,7 @@ from data import DataFile
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 20
+    nbr_network = 5
     momentum = 0.5
     nbEpoch = 201
     nbTry = 50

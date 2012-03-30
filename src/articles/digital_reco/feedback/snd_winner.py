@@ -7,10 +7,9 @@ Created on 18 March 2012
 '''
 
 from multilayerp import MultilayerPerceptron
-from utils import index_max, index_max_nth, index_min
+from utils import index_max, index_max_nth
 from random import shuffle
 import matplotlib.pyplot as plt
-import matplotlib.pylab as plb
 from data import DataFile
 
 
@@ -31,11 +30,11 @@ if __name__ == '__main__':
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = MultilayerPerceptron(16 * 16, 16 * 4, 10, learning_rate=0.15, momentum=momentum, grid=mode)
-        high_order_h = MultilayerPerceptron(16 * 4, 16 * 4 * 2, 2, learning_rate=0.1, momentum=0.5, grid=mode)
+        first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
+        high_order_h = MultilayerPerceptron(100, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
         
         first_order.init_weights_randomly(-1, 1)
-        high_order_h.init_weights_randomly(-1, 1)
+#        high_order_h.init_weights_randomly(-1, 1)
         
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h}
@@ -51,8 +50,8 @@ if __name__ == '__main__':
               'wager_proportion': [],
               'feedback' : []}
     
-    pp = [[i, j, 0] for i in range(10) for j in range(10)]
-    print(pp)
+#    pp = [[i, j, 0] for i in range(10) for j in range(10)]
+#    print(pp)
     
     #learning
     for epoch in range(nbEpoch):
@@ -81,13 +80,11 @@ if __name__ == '__main__':
                     if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                         perfo['feedback'] += 1
                 else :
-                    print('donne :', index_max(network['first_order'].stateOutputNeurons), 
-                              'vers : ', index_min(network['first_order'].stateOutputNeurons), 
-                              'correct : ', index_max(examples.outputs[ex]), 
-                              network['first_order'].stateOutputNeurons)
-#                    if(index_max_nth(network['first_order'].stateOutputNeurons, 1) == index_max(examples.outputs[ex])):
-
-                    if(index_min(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
+#                    print('donne :', index_max(network['first_order'].stateOutputNeurons), 
+#                              'vers : ', index_min(network['first_order'].stateOutputNeurons), 
+#                              'correct : ', index_max(examples.outputs[ex]), 
+#                              network['first_order'].stateOutputNeurons)
+                    if(index_max_nth(network['first_order'].stateOutputNeurons, 1) == index_max(examples.outputs[ex])):
                         perfo['feedback'] += 1
 #                        upme(pp, index_max(network['first_order'].stateOutputNeurons), index_max(examples.outputs[ex]))
                         
@@ -116,10 +113,3 @@ if __name__ == '__main__':
     plt.legend(loc='best', frameon=False)
     plt.show()
     
-    
-    
-    
-    print(pp)
-    
-    plb.hist
-    plb.show()

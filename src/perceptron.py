@@ -176,7 +176,18 @@ class PerceptronR0to1(Perceptron):
         returns $\frac{ 1}{1 + e^{ - \theta x}}$
         returned values are in [0 ; 1]
         '''
-        return 1 / (1 + exp(-self.temperature * x))
+        try:
+            return 1 / (1 + exp(-self.temperature * x))
+        except OverflowError:
+            if (-self.temperature * x) <= -300 :
+                return 1
+            elif (-self.temperature * x) >= 300:
+                return 0
+            else:
+                print('temperature :', self.temperature)
+                print('x :', x)
+                print('exp(-self.temperature * x) :', exp(-self.temperature * x))
+                exit()
     def _derivated_sigmoid (self, x):
         return self._sigmoid(x) * (1 - self._sigmoid(x)) * self.temperature
 
