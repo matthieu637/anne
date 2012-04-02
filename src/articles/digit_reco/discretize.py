@@ -14,21 +14,19 @@ from data import DataFile
 from mpl_toolkits.mplot3d import Axes3D
 from utils import index_max
 
+nbDiscre = 4
 
-def nbdis(nb):
-    if(nb <= 0.25):
-        return 0
-    elif(nb <= 0.5):
-        return 1
-    elif(nb <= 0.75):
-        return 2
-    else:
-        return 3
+def nbdis(nb, nbDiscretized):
+    for i in range(nbDiscretized):
+        if(nb <= i/nbDiscretized):
+            return i
+    return nbDiscretized-1
+
     
-def discretis(ll):
+def discretis(ll, nbDiscretized=nbDiscre):
     s = 0
-    for i in range(5):
-        s += (4**i)*nbdis(ll[i])
+    for i in range(len(ll)):
+        s += (nbDiscretized**i)*nbdis(ll[i], nbDiscretized)
     return s
 
 if __name__ == '__main__':
@@ -101,12 +99,23 @@ if __name__ == '__main__':
                 dis[i][j] /= div[i][j]
                 dis2[i][j] /= div[i][j]
     
-    colors =[(0.2, 0.8, 0.88), 'b', 'g', 'r', 'c', 'm', 'y', 'k', (0.8,0.1,0.8), (0.8,0.2,0.5)]
+    colors =[(0.2, 0.8, 0.88), 'b', 'g', 'r', 'c', 'm', 'y', 'k', (0.8,0.1,0.8), (0.,0.2,0.5)]
     
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
     for j in range(10):
         ax.scatter([dis[j][k] for k in valid[j]], [j] * len(valid[j]), valid[j], color=colors[j], marker='x')
+
+    ax.set_xlabel('DISCRETIZED VALUE')
+    ax.set_ylabel('SHAPE')
+    ax.set_zlabel('EPOCH')
+    plt.show()
+
+
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    for j in range(10):
+        ax.scatter([dis2[j][k] for k in valid[j]], [j] * len(valid[j]), valid[j], color=colors[j], marker='x')
 
     ax.set_xlabel('DISCRETIZED VALUE')
     ax.set_ylabel('SHAPE')
@@ -134,7 +143,7 @@ if __name__ == '__main__':
     for j in range(nbShape):
         plt.title('shape :%d' % j)
         plt.plot(valid[j], [dis[j][k] for k in valid[j]],  '.', label="hidden")
-        plt.plot(valid[j], [dis2[j][k]*102.4 for k in valid[j]], '.', label="output")
+        plt.plot(valid[j], [dis2[j][k]*(nbDiscre**5)/10 for k in valid[j]], '.', label="output")
         
         plt.legend(loc='best', frameon=False)
         plt.show()

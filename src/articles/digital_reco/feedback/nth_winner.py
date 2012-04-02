@@ -16,7 +16,7 @@ from perceptron import PerceptronR0to1, Perceptron
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 1
+    nbr_network = 5
     momentum = 0.5
     nbEpoch = 200
     nbTry = 50
@@ -137,10 +137,10 @@ if __name__ == '__main__':
         print(i , ' -> ', t / (len(stats) - iu))
 
     plt.title("Performance of first-order and higher-order networks with feedback ( nth W-T-A )")
-#    plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
+    plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
     plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
     plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
-#    plt.plot(display_interval , y_perfo['feedback'][3::5], label="feedback", linewidth=2)
+    plt.plot(display_interval , y_perfo['feedback'][3::5], label="feedback", linewidth=2)
     plt.ylabel('SUCCESS RATIO')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))

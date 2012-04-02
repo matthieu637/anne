@@ -16,9 +16,9 @@ from copy import deepcopy
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 1
+    nbr_network = 5
     momentum = 0.5
-    nbEpoch = 1000
+    nbEpoch = 201
     nbTry = 50
     display_interval = range(nbEpoch)[3::5]
     
@@ -28,7 +28,7 @@ if __name__ == '__main__':
     for i in range(nbr_network):
         first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
         first_order.init_weights_randomly(-1, 1)
-        high_order_h = MultilayerPerceptron(100, 20 , 2, learning_rate=0.1, momentum=0.9, grid=mode)
+        high_order_h = MultilayerPerceptron(100, 20 , 2, learning_rate=0.1, momentum=0., grid=mode)
         
         control = deepcopy(first_order)
         
@@ -80,24 +80,22 @@ if __name__ == '__main__':
                     perfo['wager_proportion'] += 1
                 
                 #learn
-#                network['control'].train(examples.inputs[ex],
-#                                         examples.outputs[ex])
+                network['control'].train(examples.inputs[ex],
+                                         examples.outputs[ex])
                 
                 tmp = list(network['high_order_h'].stateOutputNeurons)
                 network['high_order_h'].train(network['first_order'].stateHiddenNeurons,
                                                cell)
                 
                 if(index_max(tmp) == 0):
-#                    network['first_order'].set_learning_rate(0.15)
-#                    network['first_order'].set_momentum(0.5)
-                    network['first_order'].train(examples.inputs[ex],
-                                         examples.outputs[ex])
-                    score += 1
-#                else:
-#                    network['first_order'].set_learning_rate(0.05)
-#                    network['first_order'].set_momentum(0.1)
-#                    epoch += -1
+                    network['first_order'].set_learning_rate(0.15)
+                    network['first_order'].set_momentum(0.5)
+                else:
+                    network['first_order'].set_learning_rate(0.05)
+                    network['first_order'].set_momentum(0.15)
 
+                network['first_order'].train(examples.inputs[ex],
+                                         examples.outputs[ex])
                 
         
         for k in y_perfo.keys():

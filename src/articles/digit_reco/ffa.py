@@ -96,7 +96,7 @@ if __name__ == '__main__':
                 if(index_max(network['high_order_10'].stateOutputNeurons[25:35]) != index_max(network['first_order'].stateOutputNeurons)):
                     err_one_network['high_order_10'] += 1
                 
-                if(discretis(network['high_order_10'].stateOutputNeurons[20:25]) != discretis(network['first_order'].stateHiddenNeurons)):
+                if(discretis(network['high_order_10'].stateOutputNeurons[20:25], 4) != discretis(network['first_order'].stateHiddenNeurons, 4)):
                     err_one_network['high_order_5'] += 1
                 err_one_network['high_order_20'] += 1 - compare(examples.inputs[ex], network['high_order_10'].stateOutputNeurons[0:20])
                 

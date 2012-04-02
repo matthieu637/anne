@@ -22,6 +22,7 @@ if __name__ == '__main__':
     lrate = 0.1
     nbEpoch = 1000
     nbTry = 10
+    nbDiscre = 2
     
     
     #create all networks
@@ -38,6 +39,7 @@ if __name__ == '__main__':
     examples = DataFile("digit_handwritten_16.txt", mode)
 
     dis = [[0 for _ in range(nbEpoch)] for _ in range(10)]
+    dis2 = [[0 for _ in range(nbEpoch)] for _ in range(10)]
     div = [[0 for _ in range(nbEpoch)] for _ in range(10)]
     valid = [[] for _ in range(10)]
 
@@ -61,7 +63,8 @@ if __name__ == '__main__':
 
                 im = index_max(examples.outputs[ex])
                 div[im][epoch] += 1
-                dis[im][epoch] += discretis(network['first_order'].stateHiddenNeurons)
+                dis[im][epoch] += discretis(network['first_order'].stateHiddenNeurons, nbDiscre)
+                dis2[im][epoch] += index_max(network['first_order'].stateOutputNeurons)
                 
                 if(len(valid[im]) == 0):
                     valid[im].append(epoch)
@@ -108,3 +111,17 @@ if __name__ == '__main__':
         plt.plot(valid[j], [dis[j][k] for k in valid[j]], '.', color=colors[j])
 
     plt.show()
+    
+    
+    
+    plt.title('Discretize hidden layer')
+    plt.ylabel('DISCRETIZED VALUE')
+    plt.xlabel("EPOCHS")
+    
+    for j in range(10):
+        plt.title('shape :%d' % j)
+        plt.plot(valid[j], [dis[j][k] for k in valid[j]],  '.', label="hidden")
+        plt.plot(valid[j], [dis2[j][k]*(nbDiscre**(16*4))/10 for k in valid[j]], '.', label="output")
+        
+        plt.legend(loc='best', frameon=False)
+        plt.show()
