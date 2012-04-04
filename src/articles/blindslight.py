@@ -25,7 +25,7 @@ if __name__ == '__main__':
     first_order.init_weights_randomly(-0.6, 0.6)
     
     
-#    high_order = [PerceptronR0to1(100, 0.1, 0., 1., Perceptron.Output, False, True) for _ in range(2)]
+#    high_order = [PerceptronR0to1(100, 0.1, 0., 1., Perceptron.OUTPUT, False, True) for _ in range(2)]
     high_order = [PerceptronN0to1(100, 0.1, 0., False) for _ in range(2)]
     high_order[0].init_weights_randomly(0., 0.1)
     high_order[1].init_weights_randomly(0., 0.1)

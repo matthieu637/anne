@@ -24,8 +24,8 @@ if __name__ == '__main__':
     
     
     for i in range(nbr_network):
-        first_order = MultilayerPerceptron(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode )
-        high_order_h = MultilayerPerceptron(100, 100, 2, learning_rate=0.1, momentum=0, grid=mode )
+        first_order = MultilayerPerceptron(7, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
+        high_order_h = MultilayerPerceptron(100, 100, 2, learning_rate=0.1, momentum=0, grid=mode)
         high_order_l = MultilayerPerceptron(100, 100, 2, learning_rate=10e-7, momentum=0, grid=mode)
         
         networks[i] = {'first_order' : first_order,
@@ -34,7 +34,7 @@ if __name__ == '__main__':
     
     for network in networks:
         for k in network.keys():
-            if(k =='first_order'):
+            if(k == 'first_order'):
                 network[k].init_weights_randomly(-1, 1)
 
     #create example

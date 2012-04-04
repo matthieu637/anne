@@ -143,7 +143,7 @@ class Perceptron:
         self._last_weights = tmp_weights
         self._weights_updated = True
         
-    def train(self, inputs, ouputs): 
+    def train(self, inputs, output): 
         '''
         only to use with single perceptron ( not with multilayer network )
         '''
@@ -151,7 +151,7 @@ class Perceptron:
             raise Exception("Perceptron.train is only for single perceptron")
         
         self.calc_output(inputs)
-        self.update_weights(self.calc_error_propagation(ouputs), inputs)
+        self.update_weights(output - self._state, inputs)
     def calc_sum_dw(self):
         s = 0.
         for i in range(len(self.weights)):
@@ -176,7 +176,18 @@ class PerceptronR0to1(Perceptron):
         returns $\frac{ 1}{1 + e^{ - \theta x}}$
         returned values are in [0 ; 1]
         '''
-        return 1 / (1 + exp(-self.temperature * x))
+        try:
+            return 1 / (1 + exp(-self.temperature * x))
+        except OverflowError:
+            if (-self.temperature * x) <= -300 :
+                return 1
+            elif (-self.temperature * x) >= 300:
+                return 0
+            else:
+                print('temperature :', self.temperature)
+                print('x :', x)
+                print('exp(-self.temperature * x) :', exp(-self.temperature * x))
+                exit()
     def _derivated_sigmoid (self, x):
         return self._sigmoid(x) * (1 - self._sigmoid(x)) * self.temperature
 
@@ -214,7 +225,7 @@ if __name__ == '__main__':
     
     #AND example on [-1, 1]
     n = Perceptron(2)
-    for epoch in range(200):
+    for epoch in range(50):
         n.train([-1, -1], -1)
         n.train([-1, 1], -1)
         n.train([1, -1], -1)
@@ -229,11 +240,11 @@ if __name__ == '__main__':
     #-0.877244822514
     #0.877681922152
     
-    print
+    print()
     
     #AND example on [0,1]
     n = PerceptronR0to1(2)
-    for epoch in range(500):
+    for epoch in range(200):
         n.train([0, 0], 0)
         n.train([0, 1], 0)
         n.train([1, 0], 0)
@@ -248,7 +259,7 @@ if __name__ == '__main__':
     #0.187850888618
     #0.776676205452
 
-    print
+    print()
     
     #OR example without training
     n = PerceptronN0to1(2, random=False)
@@ -264,11 +275,11 @@ if __name__ == '__main__':
     #1
     #1
     
-    print
+    print()
     
     #OR example on {0, 1} with training
     n = PerceptronN0to1(2)
-    for epoch in range(500):
+    for epoch in range(100):
         n.train([0, 0], 0)
         n.train([0, 1], 1)
         n.train([1, 0], 1)

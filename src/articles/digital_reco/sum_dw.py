@@ -14,10 +14,10 @@ from data import DataFile
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
+    nbr_network = 20
     momentum = 0.5
     nbEpoch = 201
-    display_interval = range(nbEpoch)[3::5]
+    display_interval = range(nbEpoch)[1::15]
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
