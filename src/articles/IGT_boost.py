@@ -8,23 +8,24 @@ Iowa Gambling Task
 
 from multilayerp import MultilayerPerceptron
 from random import random
-from utils import index_max, randmm
+from utils import index_max
 import matplotlib.pyplot as plt
 
 
 def deck(nbr):
     if(nbr in (0, 2)):
-        return (True, random() < 0.7)
+        return (True, random() < 0.8)
     else: 
-        return (False, random() < 0.3)
+        return (False, random() < 0.2)
 
 if __name__ == '__main__':
     
-    plt.title("low")
+    
     grid = MultilayerPerceptron.R0to1
-    nbr_network = 30
+    nbr_network = 50
     nbr_epoch = 200
     nbr_trial = 10
+    displays = range(nbr_epoch)[::5]
     
     first_order = []
     high_order = []
@@ -34,7 +35,7 @@ if __name__ == '__main__':
         first_order.append(fo)
         
         #0.0003 or 0.015
-        ho = MultilayerPerceptron(40, 40, 2, grid, 0.0003, 0., 1., False, True)
+        ho = MultilayerPerceptron(40, 40, 2, grid, 0.015, 0., 1., False, True)
         ho.init_weights_randomly(-1, 1)
         high_order.append(ho)
     
@@ -61,7 +62,7 @@ if __name__ == '__main__':
                 
                 win = deck(bet)
                 
-                if((win[1] and wager == 0) or (not win[1] and wager == 1)):
+                if((win[1] and wager == 0) or ((not win[1]) and wager == 1)):
                     nbr_gwager += 1
                 
                 if(win[1]):
@@ -88,9 +89,13 @@ if __name__ == '__main__':
         wins.append(nbr_win / (nbr_network * nbr_trial))
         wagers.append(nbr_gwager / (nbr_network * nbr_trial))
 
-    plt.plot(wins,
+    plt.title("Performance of first-order and higher-order networks")
+    plt.ylabel('SUCCESS RATIO')
+    plt.xlabel("EPOCHS")
+    plt.plot(displays,[.8 for _ in displays], label="best chance")
+    plt.plot(displays,[wins[i] for i in displays],
              label="first-order network")
-    plt.plot(wagers,
+    plt.plot(displays,[wagers[i] for i in displays],
              label="high-order network")
     plt.axis((0, nbr_epoch, 0, 1.))
     plt.legend(loc='best', frameon=False)

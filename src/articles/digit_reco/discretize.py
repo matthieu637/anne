@@ -53,6 +53,8 @@ if __name__ == '__main__':
     examples = DataFile("digit_shape.txt", mode)
 
 
+    learned = [[0 for _ in range(10)] for _ in range(nbDiscre**5)]
+
     #3 curves
     dis = [[0 for _ in range(nbEpoch)] for _ in range(nbShape)]
     dis2 = [[0 for _ in range(nbEpoch)] for _ in range(nbShape)]
@@ -73,6 +75,8 @@ if __name__ == '__main__':
                                      network['first_order'].stateOutputNeurons
                 
                 network['high_order_10'].calc_output(network['first_order'].stateHiddenNeurons)
+                
+                learned[discretis(network['first_order'].stateHiddenNeurons)][ex] += 1
 
                 im = index_max(examples.outputs[ex])
                 div[im][epoch] += 1
@@ -147,4 +151,15 @@ if __name__ == '__main__':
         
         plt.legend(loc='best', frameon=False)
         plt.show()
+    
+    stade = 0
+    for i in range(len(learned)):
+        r = max(learned[i])
+        if(r > 10):
+            cl = list(learned[i])
+            cl.remove(r)
+            if(max(cl) > 10):       
+                stade += 1
+                plt.bar(range(stade*12+10)[stade*12::], learned[i])
+    plt.show()
     

@@ -46,6 +46,8 @@ if __name__ == '__main__':
               'feedback' : [], 
               'diff' : []}
     
+    corrections = [[0 for _ in range(10)] for _ in range(10)]
+    
     #learning
     for epoch in range(nbEpoch):
         perfo = {'first_order' : 0. ,
@@ -74,6 +76,8 @@ if __name__ == '__main__':
                                                            ampli(network['high_order_h'].stateOutputNeurons, 8)) for i in range(10)]
                 if(index_max(res) == index_max(examples.outputs[ex])):
                     perfo['feedback'] += 1
+                    if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
+                        corrections[index_max(network['first_order'].stateOutputNeurons)][index_max(res)] += 1
                     
                 if(index_max(network['high_order_h'].stateOutputNeurons) == 1):
                     perfo['wager_proportion'] += 1
@@ -96,6 +100,7 @@ if __name__ == '__main__':
         print(epoch)
     
     print("score : ", sum(y_perfo['diff']) / len(y_perfo['diff']))
+    print(corrections)
 
     plt.title("Feedback with a third perceptron network ( on hidden layer )")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
@@ -106,5 +111,18 @@ if __name__ == '__main__':
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
     plt.legend(loc='best', frameon=False)
+    plt.show()
+    
+    
+    colors =[(0.2, 0.8, 0.88), 'b', 'g', 'r', 'c', 'm', 'y', 'w', (0.8,0.1,0.8), (0.,0.2,0.5)]
+
+    for i in range(10)[0::]:
+        plt.bar(range(i*12+10)[i*12::], corrections[i], color=colors[i])
+    
+    plt.ylabel("Number of corrections")
+    plt.xlabel("Number to correct")
+    plt.title("Distribution corrections")
+    plt.xticks([5+i*12 for i in range(10)], range(10))
+    
     plt.show()
     

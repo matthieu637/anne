@@ -121,7 +121,7 @@ if __name__ == '__main__':
     for j in range(10):
         plt.title('shape :%d' % j)
         plt.plot(valid[j], [dis[j][k] for k in valid[j]],  '.', label="hidden")
-        plt.plot(valid[j], [dis2[j][k]*(nbDiscre**(16*4))/10 for k in valid[j]], '.', label="output")
+#        plt.plot(valid[j], [dis2[j][k]*(nbDiscre**(16*4))/10 for k in valid[j]], '.', label="output")
         
         plt.legend(loc='best', frameon=False)
         plt.show()

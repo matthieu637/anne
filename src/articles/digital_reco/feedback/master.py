@@ -28,13 +28,15 @@ if __name__ == '__main__':
     for i in range(nbr_network):
         first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
         first_order.init_weights_randomly(-1, 1)
-        high_order_h = MultilayerPerceptron(100, 20 , 2, learning_rate=0.1, momentum=0., grid=mode)
+        high_order_h = MultilayerPerceptron(100, 100 , 2, learning_rate=0.1, momentum=0.9, grid=mode)
+#        high_order_h.init_weights_randomly(-1, 1)
         
         control = deepcopy(first_order)
         
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h,
-                    'control':control}
+                    'control':control,
+                    'ticket':0}
         
 
 
@@ -48,7 +50,6 @@ if __name__ == '__main__':
               'control' : []}
     
     #learning
-    score = 0
     for epoch in range(nbEpoch):
         perfo = {'first_order' : 0. ,
                  'high_order_h' : 0.,
@@ -88,11 +89,20 @@ if __name__ == '__main__':
                                                cell)
                 
                 if(index_max(tmp) == 0):
+                    while(network['ticket'] > 0):
+                        network['first_order'].set_learning_rate((0.15 - 0.025))
+                        network['first_order'].set_momentum((0.5 - 0.075))
+                        network['ticket'] -= 1
+                        
+                        network['first_order'].train(examples.inputs[ex],
+                                     examples.outputs[ex])
+                    
                     network['first_order'].set_learning_rate(0.15)
                     network['first_order'].set_momentum(0.5)
                 else:
-                    network['first_order'].set_learning_rate(0.05)
-                    network['first_order'].set_momentum(0.15)
+                    network['first_order'].set_learning_rate(0.025)
+                    network['first_order'].set_momentum(0.075)
+                    network['ticket'] += 1
 
                 network['first_order'].train(examples.inputs[ex],
                                          examples.outputs[ex])
@@ -101,11 +111,10 @@ if __name__ == '__main__':
         for k in y_perfo.keys():
             y_perfo[k].append(perfo[k] / (nbTry * nbr_network))
 
-        print(epoch, score)
-        
-    print(score)
+        print(epoch, network['ticket'])
 
-    plt.title("Performance of first-order and higher-order networks with feedback ( Master )")
+
+    plt.title("Performance of first-order and higher-order networks with feedback ( Master while )")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
     plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
     plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
