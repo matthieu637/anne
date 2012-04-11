@@ -4,3 +4,4 @@
 **/*.swp
 **/*.kate-swp
 **/.directory
+**/*.cpython-32.pyc
