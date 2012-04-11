@@ -19,10 +19,9 @@ if __name__ == '__main__':
     nbr_network = 5
     momentum = 0.9
     lrate = 0.1
-    nbEpoch = 1000
-    nbTry = 10
+    nbEpoch = 201
+    nbTry = 50
     display_interval = range(nbEpoch)[::6]
-    display_interval2 = [0, 25, 50, 100, 200, 500, 999]
     
     
     #create all networks
@@ -119,13 +118,13 @@ if __name__ == '__main__':
         rms_plot['high_order_5'][i] /= max_err[2]
     
     #displays rms
-    plt.plot(display_interval2, [rms_plot['first_order'][i] for i in display_interval2],
+    plt.plot(display_interval, [rms_plot['first_order'][i] for i in display_interval],
              label="first-order network")
     
-    plt.plot(display_interval2, [rms_plot['high_order_10'][i] for i in display_interval2],
+    plt.plot(display_interval, [rms_plot['high_order_10'][i] for i in display_interval],
              label="high-order network (128 hidden units)")
     
-    plt.plot(display_interval2, [rms_plot['high_order_5'][i] for i in display_interval2],
+    plt.plot(display_interval, [rms_plot['high_order_5'][i] for i in display_interval],
              label="high-order network (64 hidden units)")
 
     plt.title('Error proportion (RMS) of first-order and high-order networks')
