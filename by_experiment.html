@@ -1,0 +1,35 @@
+<head>
+ <style>
+  pre { background: #444444; color: #63e363; padding: 8px;}
+</style>
+</head>
+<body>
+Cleermans 2007
+<ul>
+	<li><a href="exp/cleeremans_2007/digit_reco/exp.pdf" >reconnaissance de chiffres</a></li>
+	<li><a href="exp/cleeremans_2007/digital_reco/exp.pdf" >reconnaissance de chiffres digitaux</a></li>
+</ul>
+Pasquali 2010
+<ul>
+        <li><a href="exp/pasquali_2010/blindslight/exp.pdf" >vision aveugle</a></li>
+<li><a href="exp/pasquali_2010/AGL/exp.pdf" >apprentissage de grammaires</a></li>
+	<li><a href="exp/pasquali_2010/IGT/exp.pdf" >iowa gambling task</a></li>
+</ul>
+
+
+
+<br />
+<div style="position: absolute;bottom: 0;font-size:0.9em">
+<h4>Modifier rapidement un journal sans compte github:</h4>
+<pre>ssh-add rsa_anne
+git clone git@github.com:matthieu637/anne.git
+cd anne
+git checkout gh-pages
+</pre>
+modifier un .odt contenu dans le dossier exp/ et exporter le pdf sur un existant
+<pre>git add --all
+git commit -m 'un message' --author='Your Name < you@loria.fr >
+git push origin gh-pages
+</pre>
+</div>
+</body>

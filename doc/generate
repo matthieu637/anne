@@ -1,0 +1,157 @@
+#!/bin/bash
+
+source_dir="../src/"
+source_dir_regex='..\/src\/'
+
+
+
+echo "clearing old files ..."
+for dir in $(find . -type d -exec ls -d {} \; ) ; do
+     if [ ! "$dir" == "." ]; then
+     	rm $dir/*.html
+	rm -rf $dir
+     fi
+done
+
+rm -r *.html
+
+if [ "$1" == "clean" ]; then
+	exit 0
+fi
+
+echo '<fieldset>
+<legend>log experiments (FR)</legend>
+<li>by date</li>
+<li><a href="../by_experiment.html" target="classFrame">by experiment</a></li>
+</fieldset>
+<fieldset>
+<legend>source</legend>' > pages.html
+tmp=`mktemp`
+
+#python files src
+for file in $(find $source_dir -name '*.py' | grep -v '__init__.py' ); do
+	filename=`echo $file | sed -e "s/$source_dir_regex//"`
+	realfilename=`echo $filename | sed -e 's/articles\///'`
+	if [ ! "$filename" == "$realfilename" ] ; then
+	  continue
+	fi
+
+	dir=`echo $filename | sed -e 's/[^/]*[.]py//'`
+
+	if [ ! "$dir" == "" ] ; then
+	  mkdir -p $dir
+	fi
+
+	echo "<li><a href='$filename.html' target='classFrame'>$realfilename</a></li>" >> pages.html
+
+	source-highlight -s python -f html -i $file -o $filename.html
+
+	#rm <pre> </pre>
+	cat $filename.html | sed -e 's/\(<pre>\|<\/pre>\)//' > $tmp
+	cp $tmp $filename.html
+
+	#add <br/>
+	cat $filename.html | sed -e 's/^\(.*\)$/\1<br\/>/' > $tmp
+	cp $tmp $filename.html
+
+	cat $filename.html | sed -e 's/\(^\|>\) /\1\&nbsp;/' > $tmp
+	cp $tmp $filename.html
+
+	cat $filename.html | sed '1,4 d' > $tmp
+	cp $tmp $filename.html
+
+	#<img
+	cat $filename.html | sed -e 's/$&lt;\([^&]*\)&gt;\$/<\1>/g' > $tmp
+	cp $tmp $filename.html
+
+	#space
+	while [ `cat $filename.html | grep -e 'nbsp; ' | wc -l` -ne 0  ] ; do
+		cat $filename.html | sed -e 's/&nbsp; /\&nbsp;\&nbsp;/' > $tmp
+		cp $tmp $filename.html
+	done
+
+	cat head.tpl > $tmp
+	cat $filename.html >> $tmp
+	echo '</body>' >> $tmp
+	cp $tmp $filename.html
+	echo "$file --> $filename.html done"
+done
+
+echo '</fieldset>
+<fieldset>
+<legend>source experiments</legend>' >> pages.html
+
+#python files articles
+for file in $(find $source_dir -name '*.py' | grep -v '__init__.py' ); do
+	filename=`echo $file | sed -e "s/$source_dir_regex//"`
+	realfilename=`echo $filename | sed -e 's/articles\///'`
+	if [ "$filename" == "$realfilename" ] ; then
+	  continue
+	fi
+
+	dir=`echo $filename | sed -e 's/[^/]*[.]py//'`
+
+	if [ ! "$dir" == "" ] ; then
+	  mkdir -p $dir
+	fi
+
+	echo "<li><a href='$filename.html' target='classFrame'>$realfilename</a></li>" >> pages.html
+
+	source-highlight -s python -f html -i $file -o $filename.html
+
+	#rm <pre> </pre>
+	cat $filename.html | sed -e 's/\(<pre>\|<\/pre>\)//' > $tmp
+	cp $tmp $filename.html
+
+	#add <br/>
+	cat $filename.html | sed -e 's/^\(.*\)$/\1<br\/>/' > $tmp
+	cp $tmp $filename.html
+
+	cat $filename.html | sed -e 's/\(^\|>\) /\1\&nbsp;/' > $tmp
+	cp $tmp $filename.html
+
+	cat $filename.html | sed '1,4 d' > $tmp
+	cp $tmp $filename.html
+
+	#<img
+	cat $filename.html | sed -e 's/$&lt;\([^&]*\)&gt;\$/<\1>/g' > $tmp
+	cp $tmp $filename.html
+
+	#space
+	while [ `cat $filename.html | grep -e 'nbsp; ' | wc -l` -ne 0  ] ; do
+		cat $filename.html | sed -e 's/&nbsp; /\&nbsp;\&nbsp;/' > $tmp
+		cp $tmp $filename.html
+	done
+
+	cat head.tpl > $tmp
+	cat $filename.html >> $tmp
+	echo '</body>' >> $tmp
+	cp $tmp $filename.html
+	echo "$file --> $filename.html done"
+done
+
+echo '</fieldset>
+<fieldset>
+<legend>data</legend>' >> pages.html
+
+#.txt files
+for file in $(find ../data -name '*.txt'); do
+	filename=`echo $file | sed -e "s/..\/data\///"`
+	realfilename=`echo $filename | sed -e 's/data\///'`
+
+	dir=`echo $filename | sed -e 's/[^/]*[.]txt//'`
+
+	if [ ! "$dir" == "" ] ; then
+	  mkdir -p $dir
+	fi
+
+	echo "<li><a href='$filename.html' target='classFrame'>$realfilename</a></li>" >> pages.html
+
+	source-highlight -s txt -f html -i $file -o $filename.html
+
+	echo "$file --> $filename.html done"
+done
+
+echo '</fieldset>' >> pages.html
+
+rm $tmp

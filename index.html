@@ -1,0 +1,23 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN" "http://www.w3.org/TR/html4/frameset.dtd">
+<HTML>
+<HEAD>
+<META http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<SCRIPT type="text/javascript">
+    targetPage = "" + window.location.search;
+    if (targetPage != "" && targetPage != "undefined")
+       targetPage = targetPage.substring(1);
+    function loadFrames() {
+        if (targetPage != "" && targetPage != "undefined")
+             top.classFrame.location = top.targetPage;
+    }
+</SCRIPT>
+</HEAD>
+<FRAMESET COLS="20%, 80%" onLoad="top.loadFrames()">
+
+<FRAME SRC="doc/pages.html">
+
+<FRAME SRC="by_experiment.html" NAME="classFrame">
+
+</FRAMESET>
+</HTML>

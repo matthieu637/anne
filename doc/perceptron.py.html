@@ -1,0 +1,314 @@
+<html>
+<head>
+  <script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+  </script>
+  <script type="text/javascript" src="mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body style="font-size:1.15em">
+<tt><i><font color="#9A1900"># -*- coding: UTF-8 -*-</font></i><br/>
+<i><font color="#9A1900">'''</font></i><br/>
+<i><font color="#9A1900">Created on 10 February 2012</font></i><br/>
+<br/>
+<i><font color="#9A1900">@author: Matthieu Zimmer</font></i><br/>
+<br/>
+<i><font color="#9A1900">Provides classes to simulate different type of perceptron</font></i><br/>
+<i><font color="#9A1900">'''</font></i><br/>
+<br/>
+<b><font color="#000080">from</font></b>&nbsp;utils <b><font color="#000080">import</font></b> randmm<br/>
+<b><font color="#000080">from</font></b>&nbsp;math <b><font color="#000080">import</font></b> exp<br/>
+<br/>
+<b><font color="#0000FF">class</font></b>&nbsp;Perceptron<font color="#990000">:</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;a single perceptron with a weight list</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;these outputs are reals between -1. and 1.</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#defines neuron type, read __init__ doc</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="#990000">(</font>HIDDEN<font color="#990000">,</font> OUTPUT<font color="#990000">)</font> <font color="#990000">=</font> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">2</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">__init__</font></b><font color="#990000">(</font>self<font color="#990000">,</font> nbr_input<font color="#990000">,</font> learning_rate<font color="#990000">=</font><font color="#993399">0.1</font><font color="#990000">,</font> momentum<font color="#990000">=</font><font color="#993399">0</font><font color="#990000">.,</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temperature<font color="#990000">=</font><font color="#993399">1</font><font color="#990000">.,</font> ntype<font color="#990000">=</font>OUTPUT<font color="#990000">,</font> init_w_randomly<font color="#990000">=</font>True<font color="#990000">,</font> enable_bias<font color="#990000">=</font>True<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialize a single perceptron with nbr_input weights</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- _ntype can be Perceptron.HIDDEN or Perceptron.OUTPUT it specifies the layer of neuron </font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( it is required because train algo is different for each one )</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- temperature : the slope of the sigmoid</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- init_w_randomly : boolean to define the weights randomly between [ -0.25 ; 0.25 ]</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;( if false you should call init_weights_randomly or create your own list )</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- enable_bias : do you want to enable a bias ?</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>nbr_input <font color="#990000">=</font> nbr_input<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>learning_rate <font color="#990000">=</font> learning_rate<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>momentum <font color="#990000">=</font> momentum<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>temperature <font color="#990000">=</font> temperature<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_ntype <font color="#990000">=</font> ntype<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_enable_bias <font color="#990000">=</font> enable_bias<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>init_w_randomly<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font><b><font color="#000000">init_weights_randomly</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>ntype <font color="#990000">!=</font> self<font color="#990000">.</font>HIDDEN <b><font color="#0000FF">and</font></b> ntype <font color="#990000">!=</font> self<font color="#990000">.</font>OUTPUT<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">raise</font></b> <b><font color="#000000">Exception</font></b><font color="#990000">(</font><font color="#FF0000">"%d : unknown neuron type (_ntype param)"</font> <font color="#990000">%</font> ntype<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#these fields are here simply to avoid unnecessary computations</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_weights_updated <font color="#990000">=</font> True<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_inputs <font color="#990000">=</font> <font color="#990000">[]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">init_weights_randomly</font></b><font color="#990000">(</font>self<font color="#990000">,</font> vmin<font color="#990000">=</font> <font color="#990000">-</font><font color="#993399">0.25</font><font color="#990000">,</font> vmax<font color="#990000">=</font><font color="#993399">0.25</font><font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;initialize the perceptron with random weights between [vmin ; vmax]</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns None</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>weights <font color="#990000">=</font> <font color="#990000">[</font><b><font color="#000000">randmm</font></b><font color="#990000">(</font>vmin<font color="#990000">,</font> vmax<font color="#990000">)</font> <b><font color="#0000FF">for</font></b> _ <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>self<font color="#990000">.</font>nbr_input<font color="#990000">)]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>self<font color="#990000">.</font>_enable_bias<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>bias <font color="#990000">=</font> <b><font color="#000000">randmm</font></b><font color="#990000">(</font>vmin<font color="#990000">,</font> vmax<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_weights <font color="#990000">=</font> <b><font color="#000000">list</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">)</font> <i><font color="#9A1900">#_last_weights is used by the momentum algo</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_bias <font color="#990000">=</font> self<font color="#990000">.</font>bias<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_weights_updated <font color="#990000">=</font> True<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">init_weights</font></b><font color="#990000">(</font>self<font color="#990000">,</font> val<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;assigns the value val to all the weights of the perceptron</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns None</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>weights <font color="#990000">=</font> <font color="#990000">[</font>val <b><font color="#0000FF">for</font></b> _ <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>self<font color="#990000">.</font>nbr_input<font color="#990000">)]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>self<font color="#990000">.</font>_enable_bias<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>bias <font color="#990000">=</font> val<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_bias <font color="#990000">=</font> self<font color="#990000">.</font>bias<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_weights <font color="#990000">=</font> <b><font color="#000000">list</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">)</font> <i><font color="#9A1900">#_last_weights is used by the momentum algo</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">calc_output</font></b><font color="#990000">(</font>self<font color="#990000">,</font> inputs<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns the output _state of the neuron to the data inputs according to the formula:</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$output \leftarrow g(a)=g\left( \sum \limits_{i = 0}^{len(weights)} weights_{i}\times inputs_{i}\right)$</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$with \left\lbrace \begin{array}{lll} w : weights\\e : inputs\\ w_{0} : bias\\ e_{0} : 1 \end{array}\right.$</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(The output is a real in [-1, 1]) </font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#avoids unnecessary computations</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b> <b><font color="#0000FF">not</font></b> self<font color="#990000">.</font>_weights_updated <b><font color="#0000FF">and</font></b> self<font color="#990000">.</font>_last_inputs <font color="#990000">==</font> inputs<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> self<font color="#990000">.</font>_state<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_inputs <font color="#990000">=</font> inputs<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_weights_updated <font color="#990000">=</font> False<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#calculates the output</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a <font color="#990000">=</font> <font color="#993399">0</font><font color="#990000">.</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a <font color="#990000">+=</font> inputs<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">*</font> self<font color="#990000">.</font>weights<font color="#990000">[</font>i<font color="#990000">]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b> self<font color="#990000">.</font>_enable_bias<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a <font color="#990000">+=</font> self<font color="#990000">.</font>bias<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_a <font color="#990000">=</font> a<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_state <font color="#990000">=</font> self<font color="#990000">.</font><b><font color="#000000">_sigmoid</font></b><font color="#990000">(</font>a<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> self<font color="#990000">.</font>_state<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">calc_error_propagation</font></b><font color="#990000">(</font>self<font color="#990000">,</font> wanted<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;calculates the error for gradient descent</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In case of hidden neurons, wanted must be :</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$wanted = \sum \limits_{k} w_{k}\times y_{k}$</font></i><br/>
+<br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$with \left\lbrace \begin{array}{lll} w_{k} : weight\ between\ this\ neuron\ and\ k^{th}\ neuron\ in\ output\ layer\\ y_{k} : return\ of\ this\ function\ for\ the\ k^{th}\ neuron\ in\ output\ layer \end{array}\right.$</font></i><br/>
+<br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In case of output neurons, wanted is just the output value to match to the neuron</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns the error to propagate</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$\left \lbrace \begin{array}{lll} 2 \times g'(a) \times (wanted - e_{k}) : for\ ouput\ neurons\\g'(a) \times wanted : for\ hidden\ neurons \end{array}\right.$</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>self<font color="#990000">.</font>_weights_updated<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">raise</font></b> <b><font color="#000000">Exception</font></b><font color="#990000">(</font>"You are trying to calculate the error with an old _state<font color="#990000">,\</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;please call <b><font color="#000000">calc_output</font></b><font color="#990000">(..)</font> first"<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b> self<font color="#990000">.</font>_ntype <font color="#990000">==</font> Perceptron<font color="#990000">.</font>OUTPUT<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b>  self<font color="#990000">.</font><b><font color="#000000">_derivated_sigmoid</font></b><font color="#990000">(</font>self<font color="#990000">.</font>_a<font color="#990000">)</font> <font color="#990000">*</font> <font color="#990000">(</font>wanted <font color="#990000">-</font> self<font color="#990000">.</font>_state<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">else</font></b><font color="#990000">:</font> <i><font color="#9A1900"># self._ntype == Perceptron.HIDDEN:</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> self<font color="#990000">.</font><b><font color="#000000">_derivated_sigmoid</font></b><font color="#990000">(</font>self<font color="#990000">.</font>_a<font color="#990000">)</font> <font color="#990000">*</font> wanted<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">update_weights</font></b><font color="#990000">(</font>self<font color="#990000">,</font> error<font color="#990000">,</font> inputs<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;updates all the weights of the neuron according to the formula :</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;$w_{j} (t+1) = w_{j}(t) + learning\_rate \times error \times inputs_j + momentum \times [w_{j}(t) - w_{j}(t-1) ]$</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns None</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">(</font>inputs<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmp_weights <font color="#990000">=</font> <b><font color="#000000">list</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">)</font><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> j <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dw <font color="#990000">=</font> self<font color="#990000">.</font>weights<font color="#990000">[</font>j<font color="#990000">]</font> <font color="#990000">-</font> self<font color="#990000">.</font>_last_weights<font color="#990000">[</font>j<font color="#990000">]</font> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>weights<font color="#990000">[</font>j<font color="#990000">]</font> <font color="#990000">+=</font> self<font color="#990000">.</font>learning_rate <font color="#990000">*</font> error <font color="#990000">*</font> inputs<font color="#990000">[</font>j<font color="#990000">]</font> <font color="#990000">+</font> self<font color="#990000">.</font>momentum <font color="#990000">*</font> dw<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b> self<font color="#990000">.</font>_enable_bias<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;tmp_bias <font color="#990000">=</font> self<font color="#990000">.</font>bias <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>bias <font color="#990000">+=</font> self<font color="#990000">.</font>learning_rate <font color="#990000">*</font> error <font color="#990000">+</font> self<font color="#990000">.</font>momentum <font color="#990000">*</font> <font color="#990000">(</font>self<font color="#990000">.</font>bias <font color="#990000">-</font> self<font color="#990000">.</font>_last_bias<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_bias <font color="#990000">=</font> tmp_bias<br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_weights <font color="#990000">=</font> tmp_weights<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_weights_updated <font color="#990000">=</font> True<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">train</font></b><font color="#990000">(</font>self<font color="#990000">,</font> inputs<font color="#990000">,</font> output<font color="#990000">):</font> <br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;only to use with single perceptron ( not with multilayer network )</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>self<font color="#990000">.</font>_ntype <font color="#990000">!=</font> Perceptron<font color="#990000">.</font>OUTPUT<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">raise</font></b> <b><font color="#000000">Exception</font></b><font color="#990000">(</font><font color="#FF0000">"Perceptron.train is only for single perceptron"</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">(</font>inputs<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font><b><font color="#000000">update_weights</font></b><font color="#990000">(</font>output <font color="#990000">-</font> self<font color="#990000">.</font>_state<font color="#990000">,</font> inputs<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">calc_sum_dw</font></b><font color="#990000">(</font>self<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s <font color="#990000">=</font> <font color="#993399">0</font><font color="#990000">.</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s <font color="#990000">+=</font> <b><font color="#000000">abs</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">-</font> self<font color="#990000">.</font>_last_weights<font color="#990000">[</font>i<font color="#990000">])</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> s<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">_sigmoid</font></b> <font color="#990000">(</font>self<font color="#990000">,</font> x<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns $\frac{ e^{\theta x} - 1}{1 + e^{ \theta x}}$</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returned values are in [-1 ; 1]</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#990000">(</font><b><font color="#000000">exp</font></b><font color="#990000">(</font>self<font color="#990000">.</font>temperature <font color="#990000">*</font> x<font color="#990000">)</font> <font color="#990000">-</font> <font color="#993399">1</font><font color="#990000">)</font> <font color="#990000">/</font> <font color="#990000">(</font><font color="#993399">1</font> <font color="#990000">+</font> <b><font color="#000000">exp</font></b><font color="#990000">(</font>self<font color="#990000">.</font>temperature <font color="#990000">*</font> x<font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">_derivated_sigmoid</font></b> <font color="#990000">(</font>self<font color="#990000">,</font> x<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#990000">(</font><font color="#993399">2</font> <font color="#990000">*</font> self<font color="#990000">.</font>temperature <font color="#990000">*</font> <b><font color="#000000">exp</font></b><font color="#990000">(</font>self<font color="#990000">.</font>temperature <font color="#990000">*</font> x<font color="#990000">))</font> <font color="#990000">/</font> <font color="#990000">((</font><b><font color="#000000">exp</font></b><font color="#990000">(</font>x <font color="#990000">*</font> self<font color="#990000">.</font>temperature<font color="#990000">)</font> <font color="#990000">+</font> <font color="#993399">1</font><font color="#990000">)</font> <font color="#990000">**</font> <font color="#993399">2</font><font color="#990000">)</font><br/>
+<br/>
+<b><font color="#0000FF">class</font></b>&nbsp;<b><font color="#000000">PerceptronR0to1</font></b><font color="#990000">(</font>Perceptron<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;this class of neuron can be used on a grid [0, 1]</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;to do this we simply must redefine the sigmoid function</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">_sigmoid</font></b> <font color="#990000">(</font>self<font color="#990000">,</font> x<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returns $\frac{ 1}{1 + e^{ - \theta x}}$</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;returned values are in [0 ; 1]</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">try</font></b><font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">1</font> <font color="#990000">/</font> <font color="#990000">(</font><font color="#993399">1</font> <font color="#990000">+</font> <b><font color="#000000">exp</font></b><font color="#990000">(-</font>self<font color="#990000">.</font>temperature <font color="#990000">*</font> x<font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">except</font></b> OverflowError<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b> <font color="#990000">(-</font>self<font color="#990000">.</font>temperature <font color="#990000">*</font> x<font color="#990000">)</font> <font color="#990000">&lt;=</font> <font color="#990000">-</font><font color="#993399">300</font> <font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">elif</font></b> <font color="#990000">(-</font>self<font color="#990000">.</font>temperature <font color="#990000">*</font> x<font color="#990000">)</font> <font color="#990000">&gt;=</font> <font color="#993399">300</font><font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">0</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">else</font></b><font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><font color="#FF0000">'temperature :'</font><font color="#990000">,</font> self<font color="#990000">.</font>temperature<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><font color="#FF0000">'x :'</font><font color="#990000">,</font> x<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><font color="#FF0000">'exp(-self.temperature * x) :'</font><font color="#990000">,</font> <b><font color="#000000">exp</font></b><font color="#990000">(-</font>self<font color="#990000">.</font>temperature <font color="#990000">*</font> x<font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#000000">exit</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">_derivated_sigmoid</font></b> <font color="#990000">(</font>self<font color="#990000">,</font> x<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> self<font color="#990000">.</font><b><font color="#000000">_sigmoid</font></b><font color="#990000">(</font>x<font color="#990000">)</font> <font color="#990000">*</font> <font color="#990000">(</font><font color="#993399">1</font> <font color="#990000">-</font> self<font color="#990000">.</font><b><font color="#000000">_sigmoid</font></b><font color="#990000">(</font>x<font color="#990000">))</font> <font color="#990000">*</font> self<font color="#990000">.</font>temperature<br/>
+<br/>
+<br/>
+<b><font color="#0000FF">class</font></b>&nbsp;<b><font color="#000000">PerceptronN0to1</font></b><font color="#990000">(</font>Perceptron<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;this class of neuron can be used on a grid {0, 1}</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;the train method is also different and the Perceptron learning rule</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">__init__</font></b><font color="#990000">(</font>self<font color="#990000">,</font> nbr_input<font color="#990000">,</font> learning_rate<font color="#990000">=</font><font color="#993399">0.1</font><font color="#990000">,</font> momentum<font color="#990000">=</font><font color="#993399">0</font><font color="#990000">.,</font> random<font color="#990000">=</font>True<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;notice that :</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- _enable_bias ( the last weight ) is mandatory and corresponds to the threshold</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- this type of neuron cannot be in hidden layout ( backpropagation don't work on {0,1} ) </font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- temperature has no meaning ( there isn't anymore sigmoid )</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Perceptron<font color="#990000">.</font><b><font color="#000000">__init__</font></b><font color="#990000">(</font>self<font color="#990000">,</font> nbr_input<font color="#990000">,</font> learning_rate<font color="#990000">,</font> momentum<font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">.,</font> Perceptron<font color="#990000">.</font>OUTPUT<font color="#990000">,</font> random<font color="#990000">,</font> True<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">_sigmoid</font></b> <font color="#990000">(</font>self<font color="#990000">,</font> x<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;this function is not anymore a sigmoid but a Heaviside function</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">1</font> <b><font color="#0000FF">if</font></b> x <font color="#990000">&gt;=</font> <font color="#993399">0</font> <b><font color="#0000FF">else</font></b> <font color="#993399">0</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">_derivated_sigmoid</font></b> <font color="#990000">(</font>self<font color="#990000">,</font> x<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">raise</font></b> NotImplemented<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">calc_error_propagation</font></b><font color="#990000">(</font>self<font color="#990000">,</font> wanted<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;train now follow the Perceptron learning rule</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> wanted <font color="#990000">-</font> self<font color="#990000">.</font>_state<br/>
+<br/>
+<b><font color="#0000FF">if</font></b>&nbsp;__name__ <font color="#990000">==</font> <font color="#FF0000">'__main__'</font><font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#Some examples :</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#AND example on [-1, 1]</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;n <font color="#990000">=</font> <b><font color="#000000">Perceptron</font></b><font color="#990000">(</font><font color="#993399">2</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> epoch <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">50</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([-</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#990000">-</font><font color="#993399">1</font><font color="#990000">],</font> <font color="#990000">-</font><font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([-</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">],</font> <font color="#990000">-</font><font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#990000">-</font><font color="#993399">1</font><font color="#990000">],</font> <font color="#990000">-</font><font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">],</font> <font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([-</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#990000">-</font><font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([-</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#990000">-</font><font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#-0.999440929256</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#-0.876805869893</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#-0.877244822514</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#0.877681922152</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#AND example on [0,1]</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;n <font color="#990000">=</font> <b><font color="#000000">PerceptronR0to1</font></b><font color="#990000">(</font><font color="#993399">2</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> epoch <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">200</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">],</font> <font color="#993399">0</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">],</font> <font color="#993399">0</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">],</font> <font color="#993399">0</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">],</font> <font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#0.0150476832098</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#0.186800858015</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#0.187850888618</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#0.776676205452</font></i><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#OR example without training</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;n <font color="#990000">=</font> <b><font color="#000000">PerceptronN0to1</font></b><font color="#990000">(</font><font color="#993399">2</font><font color="#990000">,</font> random<font color="#990000">=</font>False<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font>weights <font color="#990000">=</font> <font color="#990000">[</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]</font> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font>bias <font color="#990000">=</font> <font color="#990000">-</font><font color="#993399">1</font> <i><font color="#9A1900"># corresponds to the threshold</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#0</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#1</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#1</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#1</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#OR example on {0, 1} with training</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;n <font color="#990000">=</font> <b><font color="#000000">PerceptronN0to1</font></b><font color="#990000">(</font><font color="#993399">2</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> epoch <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">100</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">],</font> <font color="#993399">0</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">],</font> <font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">],</font> <font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">],</font> <font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font>weights <font color="#990000">,</font> n<font color="#990000">.</font>bias<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#0</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#1</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#1</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#1</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#[0.7567742076501507, 0.8121707616454082] 0.687264146396</font></i><br/>
+</tt><br/>
+</body>
