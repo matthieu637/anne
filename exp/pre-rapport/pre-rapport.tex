@@ -4,6 +4,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{graphicx}
 \usepackage{wrapfig}
+\usepackage{algpseudocode}
 
 % Style Page
 \pagestyle{headings}
@@ -66,7 +67,14 @@ accéder et manipuler cette connaissance que la connaissance. Ce savoir ne peut
 Consciousness and metarepresentation : A computational sketch
 [ Alex Cleeremans, Bert Timmermans, Antoine Pasquali . (2007)]
 
+\begin{algorithmic}
 
-\chapter{Introduction}
+\State $result \gets 0$
+\For{$i = 0 \to 5$} 
+\State $result \gets result + 4^{i} \times cutting(hiddenNeuron[i]) $
+\State $i \gets i + 1$
+\EndFor
+\end{algorithmic}
+
 
 \end{document}          
