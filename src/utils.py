@@ -4,10 +4,12 @@ Created on 14 February 2012
 
 @author: Matthieu Zimmer
 
-Provides some basics functions
+Provides some basics functions and constants
 '''
 
 from random import random
+
+NB_CORE = 4
 
 def index_max(l):
     '''
@@ -58,3 +60,27 @@ def compare_f(list_model, list_test, threshold=0.05):
             return 0
     return 1
 
+def multithread_repartition(n, depth=NB_CORE):
+    res = [n // depth] * depth
+    for i in range(n % depth):
+        res[i] += 1
+    return res
+    
+def charge_to_indice(charge):
+    buffer = 0
+    res = []
+    for c in charge:
+        res.append((buffer, buffer + c))
+        buffer += c
+    return res
+    
+if __name__ == '__main__':
+    print(multithread_repartition(42, 4))
+    print(multithread_repartition(41, 5))
+    print(multithread_repartition(41, 1))
+    print(multithread_repartition(45, 5))
+
+    print(charge_to_indice(multithread_repartition(42, 4)))
+    print(charge_to_indice(multithread_repartition(41, 5)))
+    print(charge_to_indice(multithread_repartition(41, 1)))
+    print(charge_to_indice(multithread_repartition(45, 5)))

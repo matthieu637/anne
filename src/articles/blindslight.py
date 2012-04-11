@@ -7,7 +7,7 @@ Created on 24 February 2012
 
 from data import DataFile
 from random import shuffle
-from multilayerp import MultilayerPerceptron
+from multilayerp import MultilayerPerceptronXT
 from perceptron import Perceptron, PerceptronN0to1, PerceptronR0to1
 from utils import index_max
 import matplotlib.pyplot as plt
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     samples = DataFile("../data/blindslight.txt", rules=r)
     
     
-    first_order = MultilayerPerceptron(100, 60, 100, 0, 0.9, 0., 2, False, True)
+    first_order = MultilayerPerceptronXT(100, 60, 100, 0, 0.9, 0., 2, False, True)
     first_order.init_weights_randomly(-0.6, 0.6)
     
     
@@ -58,28 +58,28 @@ if __name__ == '__main__':
             
             i = index_max(first_order.stateOutputNeurons)
             j = index_max(samples.outputs[ex])
-            if ((first_order.stateOutputNeurons[i] > 0.5 and samples.outputs[ex][j] > 0.5 and i == j) \
-                or(first_order.stateOutputNeurons[i] <= 0.5 and samples.outputs[ex][j] <= 0.5)) :
-
-                res = [high_order[i].calc_output(compara)
-                    for i in range(2)]
-            
-                if(index_max(res) == 0):
-                    rms_ss += 1
-                    
-                high_order[0].train(compara, 1.)
-                high_order[1].train(compara, 0.)
-            else:
-                the += 1
-                
-                res = [high_order[i].calc_output(compara)
-                    for i in range(2)]
-            
-                if(index_max(res) == 1):
-                    rms_ss += 1
-                    
-                high_order[0].train(compara, 0.)
-                high_order[1].train(compara, 1.)
+#            if ((first_order.stateOutputNeurons[i] > 0.5 and samples.outputs[ex][j] > 0.5 and i == j) \
+#                or(first_order.stateOutputNeurons[i] <= 0.5 and samples.outputs[ex][j] <= 0.5)) :
+#
+#                res = [high_order[i].calc_output(compara)
+#                    for i in range(2)]
+#            
+#                if(index_max(res) == 0):
+#                    rms_ss += 1
+#                    
+#                high_order[0].train(compara, 1.)
+#                high_order[1].train(compara, 0.)
+#            else:
+#                the += 1
+#                
+#                res = [high_order[i].calc_output(compara)
+#                    for i in range(2)]
+#            
+#                if(index_max(res) == 1):
+#                    rms_ss += 1
+#                    
+#                high_order[0].train(compara, 0.)
+#                high_order[1].train(compara, 1.)
 
             first_order.train(samples.inputs[ex], samples.outputs[ex])
             
