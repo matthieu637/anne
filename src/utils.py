@@ -68,9 +68,11 @@ def multithread_repartition(n, depth=NB_CORE):
     
 def charge_to_indice(charge):
     buffer = 0
+    i = 0
     res = []
     for c in charge:
-        res.append((buffer, buffer + c))
+        res.append((i ,buffer, buffer + c))
+        i += 1
         buffer += c
     return res
     

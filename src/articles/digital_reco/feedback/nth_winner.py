@@ -41,17 +41,21 @@ if __name__ == '__main__':
     y_perfo = {'first_order' : [] ,
               'high_order_h' : [],
               'wager_proportion': [],
-              'feedback' : []}
+              'feedback' : [],
+              'max': []}
     
     stats = []
     stats2 = []
+    max2 = [0 for _ in range(nbEpoch)]
+    div = [0 for _ in range(nbEpoch)]
     
     #learning
     for epoch in range(nbEpoch):
         perfo = {'first_order' : 0. ,
                  'high_order_h' : 0.,
                  'wager_proportion': 0.,
-                 'feedback' : 0.}
+                 'feedback' : 0., 
+                 'max': 0.}
         for network in networks:
             l_exx = list(range(len(examples.inputs)))
             shuffle(l_exx)
@@ -69,6 +73,10 @@ if __name__ == '__main__':
 
                 if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo['first_order'] += 1
+                    max2[epoch] += max(network['first_order'].stateOutputNeurons)
+                    print(max(network['first_order'].stateOutputNeurons))
+                    div[epoch] += 1
+                perfo['max'] += max(network['first_order'].stateOutputNeurons)
 
 #                res = [ network['high_order_h'][i].calc_output(network['first_order'].stateHiddenNeurons) for i in range(10)]
                 res = network['high_order_h'].stateOutputNeurons
@@ -85,9 +93,6 @@ if __name__ == '__main__':
                                 
                 
                 stats.append(index_max(cell))
-                if(epoch >= nbEpoch - 10):
-                    stats2.append(index_max(cell))
-                
                 #learn
                 
 #                for i in range(10):
@@ -125,22 +130,21 @@ if __name__ == '__main__':
         
    
 
-#learning
-    for epoch in range(nbEpoch):
-        for network in networks:
-            for ex in range(len(examples.inputs)):
-                network['first_order'].calc_output(examples.inputs[ex])
-                network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
-                
-                cell = [0 for _ in range(10)]
-                
+    #testing
+    for network in networks:
+        for ex in range(len(examples.inputs)):
+            network['first_order'].calc_output(examples.inputs[ex])
+            network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
+            
+            cell = [0 for _ in range(10)]
+            
 
-                for k in range(10):
-                    if index_max_nth(network['first_order'].stateOutputNeurons, k) == index_max(examples.outputs[ex]):
-                        cell[k] = 1
-                        break
-                    
-                stats2.append(index_max(cell))
+            for k in range(10):
+                if index_max_nth(network['first_order'].stateOutputNeurons, k) == index_max(examples.outputs[ex]):
+                    cell[k] = 1
+                    break
+                
+            stats2.append(index_max(cell))
 
         
     iu = 0
@@ -161,11 +165,18 @@ if __name__ == '__main__':
                 t += 1
         print(i , ' -> ', t / (len(stats2) - iu))
 
+
+    for j in range(nbEpoch):
+        if(div[j] != 0):
+            max2[j] /= div[j]
+
     plt.title("Performance of first-order and higher-order networks with feedback ( nth W-T-A )")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
     plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
     plt.plot(display_interval , y_perfo['feedback'][3::5], label="feedback", linewidth=2)
     plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
+    plt.plot(display_interval , y_perfo['max'][3::5], label="most active neuron", linewidth=2)
+    plt.plot(display_interval , max2[3::5], label="most active neuron (good answer)", linewidth=2)
     plt.ylabel('SUCCESS RATIO')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))

@@ -106,21 +106,20 @@ if __name__ == '__main__':
     corrections2 = [[0 for _ in range(10)] for _ in range(10)]
     
     #testing
-    for epoch in range(nbEpoch):
-        for network in networks:
-            for ex in range(len(examples.inputs)):
-                network['first_order'].calc_output(examples.inputs[ex])
-                cell = [mode, 1] \
-                        if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]) \
-                        else [1, mode]
-                
-                network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
+    for network in networks:
+        for ex in range(len(examples.inputs)):
+            network['first_order'].calc_output(examples.inputs[ex])
+            cell = [mode, 1] \
+                    if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]) \
+                    else [1, mode]
+            
+            network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
 
-                res = [ network['feedback'][i].calc_output(network['first_order'].stateHiddenNeurons + 
-                                                           ampli(network['high_order_h'].stateOutputNeurons, 8)) for i in range(10)]
-                if(index_max(res) == index_max(examples.outputs[ex])):
-                    if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
-                        corrections2[index_max(network['first_order'].stateOutputNeurons)][index_max(res)] += 1
+            res = [ network['feedback'][i].calc_output(network['first_order'].stateHiddenNeurons + 
+                                                       ampli(network['high_order_h'].stateOutputNeurons, 8)) for i in range(10)]
+            if(index_max(res) == index_max(examples.outputs[ex])):
+                if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
+                    corrections2[index_max(network['first_order'].stateOutputNeurons)][index_max(res)] += 1
                     
     plt.title("Feedback with a third perceptron network ( on hidden layer )")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
