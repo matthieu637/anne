@@ -9,3 +9,63 @@ $ rms\ proportion_{e} = \frac{ rms_{e} = \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{
 
 $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\o_{i,e} : value\ obtained\ for\ the\ i^{th}\ neuron\ at\ the\ e^{th}\ epoch\\d_{i} : value\ desired \ for\ the\ i^{th}\ neuron\end{array} \right.$
          
+
+
+
+
+
+\begin{algorithmic}
+
+\Function{discretize}{$hiddenNeuron[], piece$}
+\State $result \gets 0$
+\For{$i = 0 \to hiddenNeuron.length $} 
+\State $result \gets result + piece^{i} \times cutting(hiddenNeuron[i], piece) $
+\State $i \gets i + 1$
+\EndFor
+\State \Return result
+\EndFunction
+
+\end{algorithmic}
+
+
+\begin{algorithmic}
+
+\Function{$train$}{$inputs,\ outputs,\ add$}
+\State $y \gets build\_error\_vector(...)$
+\State $update\_weights\_hidden\_layer( ...)$
+\\
+\For {$i = 0 \to output\_neurons.length$ } 
+\State $output\_neurons[i].update\_weights\_gradient(y[i],\ hidden\_neurons,\ add)$
+\State $output\_neurons[i].update\_weights\_perceptron(outputs[i],\ hidden\_neurons,\ add)$
+\EndFor
+\EndFunction
+
+\end{algorithmic}
+
+
+\begin{algorithmic}
+
+\Function{$update\_weights\_gradient$}{$error,\ intputs,\ add$}
+\State $calc\_output(inputs + add)$
+\\
+\For {$j = 0 \to inputs.length$ } 
+\State $dw \gets weights[j] - last\_weights[j]$
+\State $p \gets error \times inputs[j]$
+\State $weights[j] \gets weights[j] + learning\_rate \times p + momentum \times dw$
+\EndFor
+\EndFunction
+
+\end{algorithmic}
+
+
+
+
+\Function{$update\_weights\_perceptron$}{$goal,\ intputs,\ add$}
+\State $calc\_output(inputs + add)$
+\\
+\For {$j = inputs.length \to inputs.length + add.length$ } 
+\State $dw \gets weights[j] - last\_weights[j]$
+\State $p \gets (goal - state ) \times add[inputs.length - j]$
+\State $weights[j] \gets weights[j] + \frac{learning\_rate \times p + momentum \times dw}{add.length} $
+\EndFor
+\EndFunction

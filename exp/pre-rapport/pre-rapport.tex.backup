@@ -75,7 +75,7 @@ Consciousness and metarepresentation : A computational sketch
 \For {$j = inputs.length \to inputs.length + add.length$ } 
 \State $dw \gets weights[j] - last\_weights[j]$
 \State $p \gets (goal - state ) \times add[inputs.length - j]$
-\State $weights[j] \gets weights[j] + \frac{learning\_rate \times p + momentum \times dw}{add.length} $
+\State $weights[j] \gets weights[j] + learning\_rate \times p + momentum \times dw$
 \EndFor
 \EndFunction
 
