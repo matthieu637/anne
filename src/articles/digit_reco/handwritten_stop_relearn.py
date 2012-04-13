@@ -34,7 +34,7 @@ def newtask3(l):
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 3
+    nbr_network = 2
     momentum = 0.9
     lrate = 0.1
     nbEpoch = 4400

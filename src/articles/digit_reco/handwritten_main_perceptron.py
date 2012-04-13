@@ -12,31 +12,32 @@ from perceptron import PerceptronR0to1
 from random import shuffle
 from utils import index_max
 import matplotlib.pyplot as plt
-from data import DataFile
+from data import DataFile, DataFileR
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
     nbr_network = 5
-    momentum = 0.9
-    lrate = 0.1
-    nbEpoch = 1000
-    nbTry = 10
+    momentum = 0.5
+    lrate = 0.15
+    nbEpoch = 600
+    nbTry = 20
     display_interval = range(nbEpoch)[::6]
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = [PerceptronR0to1(16 * 16, learning_rate=lrate, momentum=momentum, 
-                 temperature=1., init_w_randomly=True, enable_bias=True) for _ in range(10)]
-        high_order_10 = MultilayerPerceptron(16 * 16, 16 * 4, 10, learning_rate=lrate, momentum=momentum, grid=mode)
+        first_order = [PerceptronR0to1(4, learning_rate=lrate, momentum=momentum, 
+                 temperature=1., init_w_randomly=True, enable_bias=True) for _ in range(3)]
+        high_order_10 = MultilayerPerceptron(4, 40, 3, learning_rate=lrate, momentum=momentum, grid=mode)
         
 
         networks[i] = {'first_order' : first_order,
                         'high_order_10' : high_order_10}
 
     #create inputs/outputs to learn
-    examples = DataFile("digit_handwritten_16.txt", mode)
+    examples = DataFileR("iris.txt", mode)
+#    examples = DataFile("digit_handwritten_16.txt", mode)
 
     #3 curves
     err_plot = {'first_order' : [] ,
@@ -52,7 +53,7 @@ if __name__ == '__main__':
             shuffle(l_exx)
             for ex in l_exx[0:nbTry]:
                 resf1 = [network['first_order'][i].calc_output(examples.inputs[ex]) 
-                         for i in range(10)]
+                         for i in range(3)]
                 network['high_order_10'].calc_output(examples.inputs[ex])
                 
 #                ww = []
@@ -77,7 +78,7 @@ if __name__ == '__main__':
 #                    network['high_order_10'][i].train(ww, resf1[i])
                 network['high_order_10'].train(examples.inputs[ex],
                                              examples.outputs[ex])
-                for i in range(10):
+                for i in range(3):
                     network['first_order'][i].train(examples.inputs[ex],
                                              examples.outputs[ex][i])
             

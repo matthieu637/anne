@@ -9,6 +9,7 @@ Created on 30 March 2012
 from multilayerp import MultilayerPerceptron
 from utils import index_max
 from random import shuffle
+from random import seed
 import matplotlib.pyplot as plt
 from data import DataFileR
 
@@ -16,23 +17,27 @@ if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
     nbr_network = 5
     momentum = 0.5
-    nbEpoch = 1000
-    nbTry = 10
-    display_interval = range(nbEpoch)[3::5]
+    nbEpoch = 300
+    nbTry = 20
+    display_interval = range(nbEpoch)[::5]
+    #seed(0)
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = MultilayerPerceptron(4, 100, 3, learning_rate=0.15, momentum=momentum, grid=mode)
-        high_order_h = MultilayerPerceptron(100, 25, 2, learning_rate=0.1, momentum=0.5, grid=mode)
+        first_order = MultilayerPerceptron(4, 10, 3, learning_rate=0.05, momentum=0.3, grid=mode)
+        high_order_h = MultilayerPerceptron(10, 10, 2, learning_rate=0.2, momentum=0.5, grid=mode)
         
         first_order.init_weights_randomly(-1, 1)
+        high_order_h.init_weights_randomly(-1, 1)
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h}
 
     #create example
     examples = DataFileR("iris.txt", mode)
+    
+    print(len(examples.inputs))
 
     #3 curves
     y_plot = {'first_order' : [] ,
@@ -81,9 +86,9 @@ if __name__ == '__main__':
     
 
     plt.title("Performance of first-order and higher-order networks")
-    plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network")
-    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
-    plt.plot(display_interval , y_perfo['high_order_l'][3::5], label="proportion of high wagers")
+    plt.plot(display_interval , y_perfo['first_order'][::5], label="first-order network")
+    plt.plot(display_interval , y_perfo['high_order_h'][::5], label="high-order network (high learning rate)")
+    plt.plot(display_interval , y_perfo['high_order_l'][::5], label="proportion of high wagers")
     plt.ylabel('SUCCESS RATIO')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
