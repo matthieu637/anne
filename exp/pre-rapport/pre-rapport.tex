@@ -67,13 +67,13 @@
 \section{Introduction}
 
 Notre intérêt s'est tourné vers l'article [ Cleeremans, A., et al. Consciousness and 
-metarepresentation : A computational sketch ] et ses deux types de réseaux proposés.
+metarepresentation : A computational sketch ] et ses 2 types de réseaux proposés.
 Dans un premier temps, nous avons cherché à reproduire et expliquer les résultats
-donnés, et ensuite à comment tirer profit des paris réalisés.
+donnés, et ensuite à des solutions pour tirer profit des paris réalisés.
 \newline
 Nous nous sommes également pencher sur [ Pasquali A., Timmermans B., Cleeremans A., Know
 thyself: Metacognitive networks and measures of consciousness ] dont nous avons reproduit
-les expériences mais dont leurs enjeux nous semble encore vagues.
+les expériences, mais leurs enjeux nous semblent encore vagues.
 
 
 \section{Dupliquer le premier réseau}
@@ -83,20 +83,20 @@ Rappelons la structure des réseaux avec le schéma suivant :
 \begin{center}
  \includegraphics[width=240px]{../cleeremans_2007/digit_reco/digit_reco.png}
 \end{center}
-\caption{ \protect \footnotemark[1] Architecture connexionniste avec méta-représentations  }
+\caption{ \protect \footnotemark Architecture connexionniste avec méta-représentations  }
 \end{figure}
-\footnotetext[1]{ Cleeremans, A., et al. Consciousness and 
+\footnotetext{ Cleeremans, A., et al. Consciousness and 
 metarepresentation : A computational sketch }
 
 Nous avons réalisé que le second réseau\,\footnote{high-order network} apprenait 
-plus vite sa tâche que le premier \,\footnote{first-order network}
-seulement parce que les entrées étaient faciles à reproduire. De plus, les entrées
+plus vite sa tâche que le premier\,\footnote{first-order network}
+uniquement parce que les entrées étaient faciles à reproduire. De plus, les entrées
 étant plus nombreuses, elles ont un poids plus élevé dans la formule RMS. Ce qui 
 explique le comportement des courbes de l'article.
 \newline
 Par ailleurs, nous avons remarqué que les neurones de la couche caché du premier
 réseau se stabilisaient très rapidement ( autour de la 50\up{ième} époque ), le tout
-permettant au second d'avoir des entrées très peu variables et favorisant donc son
+permettant au second réseau d'avoir des entrées très peu variables, favorisant donc son
 apprentissage.
 \newline
 Lorsque nous avons 
@@ -132,8 +132,8 @@ en modifiant quelques paramètres. Contrairement à celui de l'article, il ne se
 plus simplement de parier haut à chaque coups ( après 40 époques). Il aura une longueur d'avance
 sur le premier réseau sur toute la durée de l'apprentissage.
 
-A partir de cette différences de performances, nous avons imaginer plusieurs architectures, qui
-améliore plus ou moins les performances sur des chiffres manuscrits:
+À partir de cette différence de performances, nous avons imaginer plusieurs architectures, qui
+améliore plus ou moins les performances de reconnaissance du réseau sur des chiffres manuscrits:
 
 \begin{figure}[h]
  \begin{center}
@@ -150,13 +150,30 @@ tirer des conclusions à partir d'informations sur les 2 premiers.
 
 \begin{figure}[h]
  \begin{center}
+ \includegraphics[width=250px]{../pre-presentation/merging.png}
+\end{center}
+\caption{Architecture par fusion}
+\end{figure}
+
+Ici, nous mélangeons un apprentissage par descente de gradient ( sur le premier et second réseau )
+et un apprentissage perceptron ( entre les 2 couches de sorties ).
+
+\begin{figure}[h]
+ \begin{center}
  \includegraphics[width=300px]{../pre-presentation/nth_wta.png}
 \end{center}
 \caption{Architecture par intuitions}
 \end{figure}
 
 Cette architecture est légèrement différente dans le sens où elle n'enregistre
-plus de pari mais l'indice du n\up{ième} neurone contenant la bonne réponse.
+plus de pari mais l'indice du n\up{ième} neurone le plus actif contenant la bonne réponse.
+Exemple : le réseau supérieur sort 2 -> la réponse est le 3\up{ième} neurone le plus actif 
+de la couche de sortie du premier réseau.
+\newline
+
+Nous avons aussi essayer quelques modèles où le réseau supérieur servait de superviseur
+à l'apprentissage du premier réseau. Par exemple, s'il pari haut, l'apprentissage du premier réseau
+sera faible, sinon il sera accentué.
 
 \section{La suite}
 
