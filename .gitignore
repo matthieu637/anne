@@ -1,7 +1,11 @@
-**/*.pyc
-**/__pycache__
-**/*~
-**/*.swp
-**/*.kate-swp
-**/.directory
-**/*.cpython-32.pyc
+#ignored files
+*.pyc
+__pycache__/
+*~
+*.swp
+*.kate-swp
+.directory/
+*.cpython-32.pyc
+*.log
+*.aux
+*.backup
