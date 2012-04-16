@@ -9,4 +9,5 @@
 **/*.cpython-32.pyc
 **/*.log
 **/*.aux
+**/*.backup
 
