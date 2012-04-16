@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt, twoside]{report}
+\documentclass[a4paper,12pt, twoside]{article}
 \usepackage[utf8x]{inputenc} %commentaire
 \usepackage[francais]{babel}
 \usepackage[T1]{fontenc}
@@ -47,38 +47,28 @@
 
 %\part{Partie}
 
-\chapter{Introduction}
+\newpage
+\section{Test}
 
-Le savoir acquis dans un réseau connexionniste reste toujours 
-de la connaissance dans le réseau plutôt que des connaissances 
-pour le réseau. 
-\newline
-Clark and Karmiloff-Smith's [Clark, A., \& Karmiloff-Smith, A. (1993)]
 
-Lorsqu'on est conscient de quelque chose, on est aussi conscient d'être conscient.
-\newline
-Higher-Order Thought Theory [Rosenthal, D. (1997).]
+%Le savoir acquis dans un réseau connexionniste reste toujours 
+%de la connaissance dans le réseau plutôt que des connaissances 
+%pour le réseau. 
+%\newline
+%Clark and Karmiloff-Smith's [Clark, A., \& Karmiloff-Smith, A. (1993)]
 
-Ces réseaux peuvent devenir extrêmement sensible à des régularités contenues dans 
-leur environnement d'entrée-sortie, mais ils n'exposent jamais la capacité à 
-accéder et manipuler cette connaissance que la connaissance. Ce savoir ne peut
-être qu'exprimé à travers l'exécution de la tâche à laquelle le réseau à était entrainé.
-\newline
-Consciousness and metarepresentation : A computational sketch
-[ Alex Cleeremans, Bert Timmermans, Antoine Pasquali . (2007)]
+%Lorsqu'on est conscient de quelque chose, on est aussi conscient d'être conscient.
+%\newline
+%Higher-Order Thought Theory [Rosenthal, D. (1997).]
 
-\begin{algorithmic}
+%Ces réseaux peuvent devenir extrêmement sensible à des régularités contenues dans 
+%leur environnement d'entrée-sortie, mais ils n'exposent jamais la capacité à 
+%accéder et manipuler cette connaissance que la connaissance. Ce savoir ne peut
+%être qu'exprimé à travers l'exécution de la tâche à laquelle le réseau à était entrainé.
+%\newline
+%Consciousness and metarepresentation : A computational sketch
+%[ Alex Cleeremans, Bert Timmermans, Antoine Pasquali . (2007)]
 
-\Function{$update\_weights\_perceptron$}{$goal,\ intputs,\ add$}
-\State $calc\_output(inputs + add)$
-\\
-\For {$j = inputs.length \to inputs.length + add.length$ } 
-\State $dw \gets weights[j] - last\_weights[j]$
-\State $p \gets (goal - state ) \times add[inputs.length - j]$
-\State $weights[j] \gets weights[j] + \frac{learning\_rate \times p + momentum \times dw}{add.length} $
-\EndFor
-\EndFunction
 
-\end{algorithmic}
 
 \end{document}          

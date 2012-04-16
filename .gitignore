@@ -1,13 +1,14 @@
+#ignored files
 .settings/
 .project
 .pydevproject
-**/*.pyc
-**/__pycache__
-**/*~
-**/*.swp
-**/*.kate-swp
-**/*.cpython-32.pyc
-**/*.log
-**/*.aux
-**/*.backup
+*.pyc
+__pycache__/
+*~
+*.swp
+*.kate-swp
+*.cpython-32.pyc
+*.log
+*.aux
+*.backup
 
