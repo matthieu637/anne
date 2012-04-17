@@ -7,6 +7,8 @@ Created on 13 February 2012
 
 from math import sqrt
 from perceptron import Perceptron, PerceptronR0to1
+from multiprocessing import Process, Array, Queue
+from utils import NB_CORE, multithread_repartition, charge_to_indice
 
 class MultilayerPerceptron:
     '''
@@ -86,7 +88,7 @@ class MultilayerPerceptron:
         for neuron in self.outputNeurons :
             stateOutputs.append(neuron.calc_output(stateHidden))
         self.stateOutputNeurons = stateOutputs
-        return stateOutputs
+        return self.stateOutputNeurons
     
     def calc_RMS(self, inputs, outputs):
         '''
@@ -182,6 +184,77 @@ class MultilayerPerceptron:
             self.outputNeurons[i].update_weights(y[i] , self.stateHiddenNeurons)
             
         self._network_updated = True
+        
+class MultilayerPerceptronXT(MultilayerPerceptron):
+    '''
+    Multi-layer Perceptron Multi Thread
+    Provides some additional methods to use multithreading
+    '''
+    def calc_output(self, inputs):
+        '''
+        returns the responses list of the output neurons to these data inputs
+        '''
+        
+        def _multithread_computations(neurons, imin, imax, array, queue):
+            for i in range(imin, imax):
+                n = neurons[i]
+                tmp = neurons[i].calc_output(inputs)
+                array[i] = tmp
+                queue.put(n)
+        def _multithread_computations2(neurons, imin, imax, array, hidden_inputs, queue):
+            for i in range(imin, imax):
+                n = neurons[i]
+                tmp = neurons[i].calc_output(hidden_inputs)
+                array[i] = tmp
+                queue.put(n)
+                
+        def _queue_to_list(queue):
+            l = []
+            for i in range(NB_CORE):
+                while not queue[i].empty():
+                    l.append(queue[i].get_nowait())
+            return l
+            
+        
+        #avoids unnecessary computations
+        if(not self._network_updated and self._last_inputs == inputs):
+            return self.stateOutputNeurons
+        self._network_updated = False
+        self._last_inputs = inputs
+        
+        new_hidden = [Queue() for _ in range(NB_CORE)]
+        
+        #determine the state of hidden neurons
+        charge_number = multithread_repartition(len(self.hiddenNeurons), NB_CORE)
+        stateHidden = Array('d', [0.] * len(self.hiddenNeurons))
+        pool = [Process(target=_multithread_computations,
+                        args=(self.hiddenNeurons, imin, imax, stateHidden, new_hidden[i])
+                        ) for i, imin, imax in charge_to_indice(charge_number)]
+        [pool[i].start() for i in range(NB_CORE)]
+        [pool[i].join() for i in range(NB_CORE)]
+        self.stateHiddenNeurons = stateHidden
+#        self.hiddenNeurons =  _queue_to_list(new_hidden)
+        
+        
+        new_output = [Queue() for _ in range(NB_CORE)]
+        
+        #then the output layer
+        charge_number = multithread_repartition(len(self.outputNeurons), NB_CORE)
+        stateOutputs = Array('d', [0.] * len(self.outputNeurons))
+        pool = [Process(target=_multithread_computations2,
+                        args=(self.outputNeurons, imin, imax, stateOutputs, stateHidden, new_output[i])
+                        ) for i, imin, imax in charge_to_indice(charge_number)]
+        [pool[i].start() for i in range(NB_CORE)]
+        [pool[i].join() for i in range(NB_CORE)]
+        self.stateOutputNeurons = stateOutputs
+#        self.hiddenNeurons =  _queue_to_list(new_output)
+        
+        
+        print(self.hiddenNeurons[0]._weights_updated)
+        exit()
+        
+        return self.stateOutputNeurons
+    
         
 if __name__ == '__main__':
     #XOR test on [-1, 1]

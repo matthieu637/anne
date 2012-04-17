@@ -7,7 +7,7 @@ Created on 24 February 2012
 
 from data import DataFile
 from random import shuffle
-from multilayerp import MultilayerPerceptron
+from multilayerp import MultilayerPerceptronXT
 from perceptron import Perceptron, PerceptronN0to1, PerceptronR0to1
 from utils import index_max
 import matplotlib.pyplot as plt
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     samples = DataFile("../data/blindslight.txt", rules=r)
     
     
-    first_order = MultilayerPerceptron(100, 60, 100, 0, 0.9, 0., 2, False, True)
+    first_order = MultilayerPerceptronXT(100, 60, 100, 0, 0.9, 0., 2, False, True)
     first_order.init_weights_randomly(-0.6, 0.6)
     
     
