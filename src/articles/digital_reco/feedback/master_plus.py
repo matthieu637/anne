@@ -7,11 +7,13 @@ Created on 12 April 2012
 '''
 
 from multilayerp import MultilayerPerceptron
-from utils import index_max
+from prenforcement import PRenforcement
+from utils import index_max, last_index_max
 from random import shuffle
 import matplotlib.pyplot as plt
 from data import DataFile
 from copy import deepcopy
+from random import seed
 
 
 if __name__ == '__main__':
@@ -21,6 +23,7 @@ if __name__ == '__main__':
     nbEpoch = 201
     nbTry = 50
     display_interval = range(nbEpoch)[3::5]
+    seed(50)
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
@@ -28,8 +31,7 @@ if __name__ == '__main__':
     for i in range(nbr_network):
         first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
         first_order.init_weights_randomly(-1, 1)
-        high_order_h = MultilayerPerceptron(100, 20 , 2, learning_rate=0.1, momentum=0.5, grid=mode)
-        high_order_h.init_weights_randomly(-1, 1)
+        high_order_h = [PRenforcement(100, 0.2, 0.2, 2., True) for _ in range(20)]
         
         control = deepcopy(first_order)
         
@@ -60,34 +62,31 @@ if __name__ == '__main__':
             for ex in l_exx[0:nbTry]:
                 network['first_order'].calc_output(examples.inputs[ex])
                 network['control'].calc_output(examples.inputs[ex])
-                network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
+                res =  [ network['high_order_h'][i].calc_output(network['first_order'].stateHiddenNeurons) 
+                        for i in range(20)]
                 
-                
-                if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]):
-                    cell=[0.025, 0.075]
-                else:
-                    cell=[0.3, 0.5]
-                
+                f_success = False
                 if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo['first_order'] += 1
+                    f_success = True
                     
                 if(index_max(network['control'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo['control'] += 1
                 
-                perfo['wager_proportion'] += network['high_order_h'].stateOutputNeurons[0]
-                
+                perfo['wager_proportion'] += last_index_max(res[0:10])*0.05
+                perfo['high_order_h'] += last_index_max(res[10:20])*0.05
+
                 #learn
-                network['control'].train(examples.inputs[ex],
-                                         examples.outputs[ex])
-                tmp = list(network['high_order_h'].stateOutputNeurons)
-                network['high_order_h'].train(network['first_order'].stateHiddenNeurons, cell)
-                network['first_order'].set_learning_rate(tmp[0])
-                network['first_order'].set_momentum(tmp[1])
+                network['control'].train(examples.inputs[ex], examples.outputs[ex])
+                
+#                for i in range(20):
+#                    [ network['high_order_h'][i].calc_output(network['first_order'].stateHiddenNeurons) for i in range(20) ]
+#                    [ network['high_order_h'][i].train(f_success) for i in range(20)]
+                
+                network['first_order'].set_learning_rate(last_index_max(res[0:10])*0.05)
+                network['first_order'].set_momentum(last_index_max(res[10:20])*0.05)
                 network['first_order'].train(examples.inputs[ex],
                                          examples.outputs[ex])
-                
-                
-                
                 
         
         for k in y_perfo.keys():
@@ -96,9 +95,9 @@ if __name__ == '__main__':
         print(epoch)
 
 
-    plt.title("Performance of first-order and higher-order networks with feedback ( Master )")
+    plt.title("Performance of first-order and higher-order networks with feedback ( Master without)")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
-#    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
+    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="momentum")
     plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="learning rate")
     plt.plot(display_interval , y_perfo['control'][3::5], label="control", linewidth=2)
     plt.ylabel('SUCCESS RATIO')

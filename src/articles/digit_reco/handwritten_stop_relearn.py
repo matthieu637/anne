@@ -9,6 +9,7 @@ Article implementation
 
 from multilayerp import MultilayerPerceptron
 from random import shuffle
+from perceptron import PerceptronR0to1
 import matplotlib.pyplot as plt
 from data import DataFile
 from utils import index_max
@@ -34,10 +35,10 @@ def newtask3(l):
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 2
+    nbr_network = 1
     momentum = 0.9
     lrate = 0.1
-    nbEpoch = 4400
+    nbEpoch = 3600
     nbTry = 10
     display_interval = range(nbEpoch)[::50]
     
@@ -50,11 +51,13 @@ if __name__ == '__main__':
         high_order_10 = MultilayerPerceptron(16 * 4, 16 * 4 * 2, 16 * 16 + 16 * 4 + 10, learning_rate=lrate, momentum=momentum, grid=mode)
         control1 = deepcopy(first_order)
         control2 = deepcopy(high_order_10)
+        perceptron = [PerceptronR0to1(16 * 16, lrate, momentum) for _ in range(10)]
 
         networks[i] = {'first_order' : first_order,
                         'high_order_10' : high_order_10,
                         'first_order_control': control1,
-                        'high_order_control':control2}
+                        'high_order_control':control2,
+                        'perceptron' : perceptron}
 
     #create inputs/outputs to learn
     examples = DataFile("digit_handwritten_16.txt", mode)
@@ -63,14 +66,16 @@ if __name__ == '__main__':
     err_plot = {'first_order' : [] ,
               'high_order_10' : [],
               'first_order_control': [],
-              'high_order_control': []}
+              'high_order_control': [],
+              'perceptron' : []}
 
     #learning
-    for epoch in range(800):
+    for epoch in range(600):
         err_one_network = {'first_order' : 0. ,
                            'high_order_10' : 0.,
                            'first_order_control': 0.,
-                           'high_order_control': 0.}
+                           'high_order_control': 0.,
+                           'perceptron': 0.}
         
         for network in networks:
             l_exx = list(range(len(examples.inputs)))
@@ -94,7 +99,11 @@ if __name__ == '__main__':
                 
                 network['high_order_control'].calc_output(
                                             network['first_order_control'].stateHiddenNeurons)
+                
+                res = [network['perceptron'][i].calc_output(examples.inputs[ex]) for i in range(10)]
 
+                if(index_max(res) != index_max(examples.outputs[ex])):
+                    err_one_network['perceptron'] += 1
 
                 if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
                     err_one_network['first_order'] += 1
@@ -120,6 +129,8 @@ if __name__ == '__main__':
                                              examples.outputs[ex])
                 network['first_order_control'].train(examples.inputs[ex],
                                              examples.outputs[ex])
+                
+                [network['perceptron'][i].train(examples.inputs[ex], examples.outputs[ex][i]) for i in range(10)]
             
 
         #add plot
@@ -137,11 +148,12 @@ if __name__ == '__main__':
     print(examples.outputs[0])
     
         
-    for epoch in range(1200):
+    for epoch in range(1000):
         err_one_network = {'first_order' : 0. ,
                            'high_order_10' : 0.,
                            'first_order_control': 0.,
-                           'high_order_control': 0.}
+                           'high_order_control': 0.,
+                           'perceptron': 0.}
         
         for network in networks:
             l_exx = list(range(len(examples.inputs)))
@@ -166,6 +178,10 @@ if __name__ == '__main__':
                 network['high_order_control'].calc_output(
                                             network['first_order_control'].stateHiddenNeurons)
 
+                res = [network['perceptron'][i].calc_output(examples.inputs[ex]) for i in range(10)]
+
+                if(index_max(res) != index_max(examples.outputs[ex])):
+                    err_one_network['perceptron'] += 1
 
                 if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
                     err_one_network['first_order'] += 1
@@ -187,11 +203,12 @@ if __name__ == '__main__':
                 network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons,
                                                entire_first_order2)
                 
+                network['first_order_control'].train(examples.inputs[ex], examples.outputs[ex])
+                [network['perceptron'][i].train(examples.inputs[ex], examples.outputs[ex][i]) for i in range(10)]
                 for i in range(len(examples.outputs[ex])):
                     network['first_order'].outputNeurons[i].train(network['first_order'].stateHiddenNeurons,
                                              examples.outputs[ex][i])
-                network['first_order_control'].train(examples.inputs[ex],
-                                             examples.outputs[ex])
+                
 
         #add plot
         for k in err_plot.keys() :
@@ -208,11 +225,12 @@ if __name__ == '__main__':
     print(examples.outputs[0])
     
         
-    for epoch in range(1200):
+    for epoch in range(1000):
         err_one_network = {'first_order' : 0. ,
                            'high_order_10' : 0.,
                            'first_order_control': 0.,
-                           'high_order_control': 0.}
+                           'high_order_control': 0.,
+                           'perceptron': 0.}
         
         for network in networks:
             l_exx = list(range(len(examples.inputs)))
@@ -237,6 +255,10 @@ if __name__ == '__main__':
                 network['high_order_control'].calc_output(
                                             network['first_order_control'].stateHiddenNeurons)
 
+                res = [network['perceptron'][i].calc_output(examples.inputs[ex]) for i in range(10)]
+
+                if(index_max(res) != index_max(examples.outputs[ex])):
+                    err_one_network['perceptron'] += 1
 
                 if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
                     err_one_network['first_order'] += 1
@@ -258,17 +280,19 @@ if __name__ == '__main__':
                 network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons,
                                                entire_first_order2)
                 
+                network['first_order_control'].train(examples.inputs[ex], examples.outputs[ex])
+                [network['perceptron'][i].train(examples.inputs[ex], examples.outputs[ex][i]) for i in range(10)]
                 for i in range(len(examples.outputs[ex])):
                     network['first_order'].outputNeurons[i].train(network['first_order'].stateHiddenNeurons,
                                              examples.outputs[ex][i])
-                network['first_order_control'].train(examples.inputs[ex],
-                                             examples.outputs[ex])
+                
 
         #add plot
         for k in err_plot.keys() :
             err_plot[k].append(err_one_network[k] / (nbTry * nbr_network))
         
         print(epoch, " err : ", err_plot['first_order'][epoch])
+            
         
 
 
@@ -280,11 +304,12 @@ if __name__ == '__main__':
     print(examples.outputs[0])
     
         
-    for epoch in range(1200):
+    for epoch in range(1000):
         err_one_network = {'first_order' : 0. ,
                            'high_order_10' : 0.,
                            'first_order_control': 0.,
-                           'high_order_control': 0.}
+                           'high_order_control': 0.,
+                           'perceptron': 0.}
         
         for network in networks:
             l_exx = list(range(len(examples.inputs)))
@@ -309,6 +334,10 @@ if __name__ == '__main__':
                 network['high_order_control'].calc_output(
                                             network['first_order_control'].stateHiddenNeurons)
 
+                res = [network['perceptron'][i].calc_output(examples.inputs[ex]) for i in range(10)]
+
+                if(index_max(res) != index_max(examples.outputs[ex])):
+                    err_one_network['perceptron'] += 1
 
                 if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
                     err_one_network['first_order'] += 1
@@ -330,17 +359,19 @@ if __name__ == '__main__':
                 network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons,
                                                entire_first_order2)
                 
+                network['first_order_control'].train(examples.inputs[ex], examples.outputs[ex])
+                [network['perceptron'][i].train(examples.inputs[ex], examples.outputs[ex][i]) for i in range(10)]
                 for i in range(len(examples.outputs[ex])):
                     network['first_order'].outputNeurons[i].train(network['first_order'].stateHiddenNeurons,
                                              examples.outputs[ex][i])
-                network['first_order_control'].train(examples.inputs[ex],
-                                             examples.outputs[ex])
+                
 
         #add plot
         for k in err_plot.keys() :
             err_plot[k].append(err_one_network[k] / (nbTry * nbr_network))
         
-        print(epoch, " err : ", err_plot['first_order'][epoch])        
+        print(epoch, " err : ", err_plot['first_order'][epoch])
+            
         
 
           
@@ -366,6 +397,9 @@ if __name__ == '__main__':
     
     plt.plot(display_interval, [err_plot['high_order_control'][i] for i in display_interval],
              label="output layer ( winner take all )")
+    
+    plt.plot(display_interval, [err_plot['perceptron'][i] for i in display_interval],
+             label="perceptron")
     
     plt.title('Error ratio of first-order and high-order networks ( control network )')
     plt.ylabel('ERROR RATIO')

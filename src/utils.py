@@ -21,6 +21,17 @@ def index_max(l):
             m = i
     return m
 
+def last_index_max(l):
+    '''
+    returns the index of the max value in the list l by the end
+    '''
+    m = len(l) - 1
+    ln = len(l)
+    for i in range(1, len(l)+1):
+        if (l[ln - i] > l[m]):
+            m = ln - i
+    return m
+
 def index_min(l):
     '''
     returns the index of the max value in the list l
@@ -86,3 +97,7 @@ if __name__ == '__main__':
     print(charge_to_indice(multithread_repartition(41, 5)))
     print(charge_to_indice(multithread_repartition(41, 1)))
     print(charge_to_indice(multithread_repartition(45, 5)))
+    
+    
+    print(index_max([1, 0, 0, 1, 0]))
+    print(last_index_max([1, 0, 0, 1, 0]))
