@@ -33,9 +33,10 @@
 &nbsp;&nbsp;&nbsp;&nbsp;nbr_network <font color="#990000">=</font> <font color="#993399">5</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;momentum <font color="#990000">=</font> <font color="#993399">0.9</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;lrate <font color="#990000">=</font> <font color="#993399">0.1</font><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;nbEpoch <font color="#990000">=</font> <font color="#993399">201</font><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;nbTry <font color="#990000">=</font> <font color="#993399">50</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nbEpoch <font color="#990000">=</font> <font color="#993399">1000</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nbTry <font color="#990000">=</font> <font color="#993399">10</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;display_interval <font color="#990000">=</font> <b><font color="#000000">range</font></b><font color="#990000">(</font>nbEpoch<font color="#990000">)[::</font><font color="#993399">6</font><font color="#990000">]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;display_interval2 <font color="#990000">=</font> <font color="#990000">[</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">25</font><font color="#990000">,</font> <font color="#993399">50</font><font color="#990000">,</font> <font color="#993399">100</font><font color="#990000">,</font> <font color="#993399">200</font><font color="#990000">,</font> <font color="#993399">500</font><font color="#990000">,</font> <font color="#993399">999</font><font color="#990000">]</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#create all networks</font></i><br/>
@@ -132,13 +133,13 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;rms_plot<font color="#990000">[</font><font color="#FF0000">'high_order_5'</font><font color="#990000">][</font>i<font color="#990000">]</font> <font color="#990000">/=</font> max_err<font color="#990000">[</font><font color="#993399">2</font><font color="#990000">]</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#displays rms</font></i><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">plot</font></b><font color="#990000">(</font>display_interval<font color="#990000">,</font> <font color="#990000">[</font>rms_plot<font color="#990000">[</font><font color="#FF0000">'first_order'</font><font color="#990000">][</font>i<font color="#990000">]</font> <b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> display_interval<font color="#990000">],</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">plot</font></b><font color="#990000">(</font>display_interval2<font color="#990000">,</font> <font color="#990000">[</font>rms_plot<font color="#990000">[</font><font color="#FF0000">'first_order'</font><font color="#990000">][</font>i<font color="#990000">]</font> <b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> display_interval2<font color="#990000">],</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label<font color="#990000">=</font><font color="#FF0000">"first-order network"</font><font color="#990000">)</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">plot</font></b><font color="#990000">(</font>display_interval<font color="#990000">,</font> <font color="#990000">[</font>rms_plot<font color="#990000">[</font><font color="#FF0000">'high_order_10'</font><font color="#990000">][</font>i<font color="#990000">]</font> <b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> display_interval<font color="#990000">],</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">plot</font></b><font color="#990000">(</font>display_interval2<font color="#990000">,</font> <font color="#990000">[</font>rms_plot<font color="#990000">[</font><font color="#FF0000">'high_order_10'</font><font color="#990000">][</font>i<font color="#990000">]</font> <b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> display_interval2<font color="#990000">],</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label<font color="#990000">=</font><font color="#FF0000">"high-order network (128 hidden units)"</font><font color="#990000">)</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">plot</font></b><font color="#990000">(</font>display_interval<font color="#990000">,</font> <font color="#990000">[</font>rms_plot<font color="#990000">[</font><font color="#FF0000">'high_order_5'</font><font color="#990000">][</font>i<font color="#990000">]</font> <b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> display_interval<font color="#990000">],</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">plot</font></b><font color="#990000">(</font>display_interval2<font color="#990000">,</font> <font color="#990000">[</font>rms_plot<font color="#990000">[</font><font color="#FF0000">'high_order_5'</font><font color="#990000">][</font>i<font color="#990000">]</font> <b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> display_interval2<font color="#990000">],</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;label<font color="#990000">=</font><font color="#FF0000">"high-order network (64 hidden units)"</font><font color="#990000">)</font><br/>
 <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">title</font></b><font color="#990000">(</font><font color="#FF0000">'Error proportion (RMS) of first-order and high-order networks'</font><font color="#990000">)</font><br/>

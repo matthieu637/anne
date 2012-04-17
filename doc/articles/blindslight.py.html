@@ -21,7 +21,7 @@
 <br/>
 <b><font color="#000080">from</font></b>&nbsp;data <b><font color="#000080">import</font></b> DataFile<br/>
 <b><font color="#000080">from</font></b>&nbsp;random <b><font color="#000080">import</font></b> shuffle<br/>
-<b><font color="#000080">from</font></b>&nbsp;multilayerp <b><font color="#000080">import</font></b> MultilayerPerceptron<br/>
+<b><font color="#000080">from</font></b>&nbsp;multilayerp <b><font color="#000080">import</font></b> MultilayerPerceptronXT<br/>
 <b><font color="#000080">from</font></b>&nbsp;perceptron <b><font color="#000080">import</font></b> Perceptron<font color="#990000">,</font> PerceptronN0to1<font color="#990000">,</font> PerceptronR0to1<br/>
 <b><font color="#000080">from</font></b>&nbsp;utils <b><font color="#000080">import</font></b> index_max<br/>
 <b><font color="#000080">import</font></b>&nbsp;matplotlib<font color="#990000">.</font>pyplot as plt<br/>
@@ -35,7 +35,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;samples <font color="#990000">=</font> <b><font color="#000000">DataFile</font></b><font color="#990000">(</font><font color="#FF0000">"../data/blindslight.txt"</font><font color="#990000">,</font> rules<font color="#990000">=</font>r<font color="#990000">)</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;first_order <font color="#990000">=</font> <b><font color="#000000">MultilayerPerceptron</font></b><font color="#990000">(</font><font color="#993399">100</font><font color="#990000">,</font> <font color="#993399">60</font><font color="#990000">,</font> <font color="#993399">100</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0.9</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">.,</font> <font color="#993399">2</font><font color="#990000">,</font> False<font color="#990000">,</font> True<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;first_order <font color="#990000">=</font> <b><font color="#000000">MultilayerPerceptronXT</font></b><font color="#990000">(</font><font color="#993399">100</font><font color="#990000">,</font> <font color="#993399">60</font><font color="#990000">,</font> <font color="#993399">100</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0.9</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">.,</font> <font color="#993399">2</font><font color="#990000">,</font> False<font color="#990000">,</font> True<font color="#990000">)</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;first_order<font color="#990000">.</font><b><font color="#000000">init_weights_randomly</font></b><font color="#990000">(-</font><font color="#993399">0.6</font><font color="#990000">,</font> <font color="#993399">0.6</font><font color="#990000">)</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>

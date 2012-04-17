@@ -18,10 +18,12 @@
 <br/>
 <i><font color="#9A1900">@author: Matthieu Zimmer</font></i><br/>
 <br/>
-<i><font color="#9A1900">Provides some basics functions</font></i><br/>
+<i><font color="#9A1900">Provides some basics functions and constants</font></i><br/>
 <i><font color="#9A1900">'''</font></i><br/>
 <br/>
 <b><font color="#000080">from</font></b>&nbsp;random <b><font color="#000080">import</font></b> random<br/>
+<br/>
+NB_CORE <font color="#990000">=</font>&nbsp;<font color="#993399">4</font><br/>
 <br/>
 <b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">index_max</font></b><font color="#990000">(</font>l<font color="#990000">):</font><br/>
 <i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
@@ -31,6 +33,17 @@
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">1</font><font color="#990000">,</font> <b><font color="#000000">len</font></b><font color="#990000">(</font>l<font color="#990000">)):</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b> <font color="#990000">(</font>l<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">&gt;</font> l<font color="#990000">[</font>m<font color="#990000">]):</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m <font color="#990000">=</font> i<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> m<br/>
+<br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">last_index_max</font></b><font color="#990000">(</font>l<font color="#990000">):</font><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;returns the index of the max value in the list l by the end</font></i><br/>
+<i><font color="#9A1900">&nbsp;&nbsp;&nbsp;&nbsp;'''</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;m <font color="#990000">=</font> <b><font color="#000000">len</font></b><font color="#990000">(</font>l<font color="#990000">)</font> <font color="#990000">-</font> <font color="#993399">1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ln <font color="#990000">=</font> <b><font color="#000000">len</font></b><font color="#990000">(</font>l<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">1</font><font color="#990000">,</font> <b><font color="#000000">len</font></b><font color="#990000">(</font>l<font color="#990000">)+</font><font color="#993399">1</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b> <font color="#990000">(</font>l<font color="#990000">[</font>ln <font color="#990000">-</font> i<font color="#990000">]</font> <font color="#990000">&gt;</font> l<font color="#990000">[</font>m<font color="#990000">]):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m <font color="#990000">=</font> ln <font color="#990000">-</font> i<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> m<br/>
 <br/>
 <b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">index_min</font></b><font color="#990000">(</font>l<font color="#990000">):</font><br/>
@@ -72,5 +85,35 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">0</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">1</font><br/>
 <br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font>n<font color="#990000">,</font> depth<font color="#990000">=</font>NB_CORE<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;res <font color="#990000">=</font> <font color="#990000">[</font>n <font color="#990000">//</font> depth<font color="#990000">]</font> <font color="#990000">*</font> depth<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>n <font color="#990000">%</font> depth<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">+=</font> <font color="#993399">1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> res<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">charge_to_indice</font></b><font color="#990000">(</font>charge<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;buffer <font color="#990000">=</font> <font color="#993399">0</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;i <font color="#990000">=</font> <font color="#993399">0</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;res <font color="#990000">=</font> <font color="#990000">[]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> c <b><font color="#0000FF">in</font></b> charge<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;res<font color="#990000">.</font><b><font color="#000000">append</font></b><font color="#990000">((</font>i <font color="#990000">,</font>buffer<font color="#990000">,</font> buffer <font color="#990000">+</font> c<font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i <font color="#990000">+=</font> <font color="#993399">1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buffer <font color="#990000">+=</font> c<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> res<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<b><font color="#0000FF">if</font></b>&nbsp;__name__ <font color="#990000">==</font> <font color="#FF0000">'__main__'</font><font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">42</font><font color="#990000">,</font> <font color="#993399">4</font><font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">41</font><font color="#990000">,</font> <font color="#993399">5</font><font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">41</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">45</font><font color="#990000">,</font> <font color="#993399">5</font><font color="#990000">))</font><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">charge_to_indice</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">42</font><font color="#990000">,</font> <font color="#993399">4</font><font color="#990000">)))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">charge_to_indice</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">41</font><font color="#990000">,</font> <font color="#993399">5</font><font color="#990000">)))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">charge_to_indice</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">41</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">)))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">charge_to_indice</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">45</font><font color="#990000">,</font> <font color="#993399">5</font><font color="#990000">)))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">index_max</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">last_index_max</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
 </tt><br/>
 </body>

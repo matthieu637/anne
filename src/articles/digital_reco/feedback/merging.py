@@ -9,7 +9,7 @@ Created on 19 March 2012
 from perceptron import PerceptronR0to1
 from multilayerp import MultilayerPerceptron
 from utils import index_max, randmm
-from random import shuffle
+from random import shuffle, seed
 import matplotlib.pyplot as plt
 from data import DataFile
 from copy import deepcopy
@@ -150,6 +150,7 @@ if __name__ == '__main__':
     nbEpoch = 201
     nbTry = 50
     display_interval = range(nbEpoch)[3::5]
+    seed(100)
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
@@ -210,10 +211,13 @@ if __name__ == '__main__':
                     perfo['wager_proportion'] += 1
                     
                 
+                cell2 = [0, 0]
                 network['first_order'].calc_output(ampli(network['high_order_h'].stateOutputNeurons, 8))
                 if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo['feedback'] += 1
-                
+                    cell2[1] = 1
+                else :
+                    cell2[0] = 1
                 
                 
                 #learn
@@ -223,7 +227,7 @@ if __name__ == '__main__':
                              examples.outputs[ex], ampli(network['high_order_h'].stateOutputNeurons, 8))
                 
                 
-                network['high_order_h'].train(tmp, cell)
+                network['high_order_h'].train(tmp, cell2)
 #                print(control.hiddenNeurons[0].weights[0])
                 network['control'].train(examples.inputs[ex], examples.outputs[ex])
 

@@ -1,0 +1,100 @@
+<html>
+<head>
+  <script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+  </script>
+  <script type="text/javascript" src="mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body style="font-size:1.15em">
+<tt><i><font color="#9A1900"># -*- coding: UTF-8 -*-</font></i><br/>
+<i><font color="#9A1900">'''</font></i><br/>
+<i><font color="#9A1900">Created on 17 April 2012</font></i><br/>
+<br/>
+<i><font color="#9A1900">@author: Matthieu Zimmer</font></i><br/>
+<br/>
+<i><font color="#9A1900">'''</font></i><br/>
+<br/>
+<b><font color="#000080">from</font></b>&nbsp;utils <b><font color="#000080">import</font></b> randmm<br/>
+<b><font color="#000080">from</font></b>&nbsp;random <b><font color="#000080">import</font></b> random<br/>
+<b><font color="#000080">from</font></b>&nbsp;math <b><font color="#000080">import</font></b> exp<br/>
+<br/>
+<b><font color="#0000FF">class</font></b>&nbsp;PRenforcement<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">__init__</font></b><font color="#990000">(</font>self<font color="#990000">,</font> nbr_input<font color="#990000">,</font> mu_plus<font color="#990000">=</font><font color="#993399">0.1</font><font color="#990000">,</font> mu_minus<font color="#990000">=</font><font color="#993399">0.01</font><font color="#990000">,</font> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temperature<font color="#990000">=</font><font color="#993399">2</font><font color="#990000">.,</font> init_w_randomly<font color="#990000">=</font>True<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>nbr_input <font color="#990000">=</font> nbr_input<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>mu_plus <font color="#990000">=</font> mu_plus<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>mu_minus <font color="#990000">=</font> mu_minus<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>temperature <font color="#990000">=</font> temperature<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>init_w_randomly<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font><b><font color="#000000">init_weights_randomly</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">init_weights_randomly</font></b><font color="#990000">(</font>self<font color="#990000">,</font> vmin<font color="#990000">=</font> <font color="#990000">-</font><font color="#993399">0.25</font><font color="#990000">,</font> vmax<font color="#990000">=</font><font color="#993399">0.25</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>weights <font color="#990000">=</font> <font color="#990000">[</font><b><font color="#000000">randmm</font></b><font color="#990000">(</font>vmin<font color="#990000">,</font> vmax<font color="#990000">)</font> <b><font color="#0000FF">for</font></b> _ <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>self<font color="#990000">.</font>nbr_input<font color="#990000">)]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>bias <font color="#990000">=</font> <b><font color="#000000">randmm</font></b><font color="#990000">(</font>vmin<font color="#990000">,</font> vmax<font color="#990000">)</font><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">calc_output</font></b><font color="#990000">(</font>self<font color="#990000">,</font> inputs<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#calculates the output</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a <font color="#990000">=</font> <font color="#993399">0</font><font color="#990000">.</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a <font color="#990000">+=</font> inputs<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">*</font> self<font color="#990000">.</font>weights<font color="#990000">[</font>i<font color="#990000">]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;a <font color="#990000">+=</font> self<font color="#990000">.</font>bias<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_last_inputs <font color="#990000">=</font> <b><font color="#000000">list</font></b><font color="#990000">(</font>inputs<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_ga <font color="#990000">=</font> self<font color="#990000">.</font><b><font color="#000000">_sigmoid</font></b><font color="#990000">(</font>a<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>_out <font color="#990000">=</font> <font color="#993399">1</font> <b><font color="#0000FF">if</font></b> <b><font color="#000000">random</font></b><font color="#990000">()</font> <font color="#990000">&lt;=</font> self<font color="#990000">.</font>_ga <b><font color="#0000FF">else</font></b> <font color="#993399">0</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> self<font color="#990000">.</font>_out<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">train</font></b><font color="#990000">(</font>self<font color="#990000">,</font> reward<font color="#990000">):</font> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;m <font color="#990000">=</font> <font color="#990000">(</font><font color="#993399">1</font> <font color="#990000">*</font> self<font color="#990000">.</font>_ga<font color="#990000">)</font> <font color="#990000">+</font> <font color="#990000">(-</font><font color="#993399">1</font> <font color="#990000">*</font> <font color="#990000">(</font><font color="#993399">1</font> <font color="#990000">-</font> self<font color="#990000">.</font>_ga<font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;d <font color="#990000">=</font> <font color="#990000">-</font><font color="#993399">1</font> <b><font color="#0000FF">if</font></b> self<font color="#990000">.</font>_out <font color="#990000">==</font> <font color="#993399">0</font> <b><font color="#0000FF">else</font></b> <font color="#993399">1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dw <font color="#990000">=</font> <font color="#993399">0</font><font color="#990000">.</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>reward <font color="#990000">==</font> True<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dw <font color="#990000">=</font> self<font color="#990000">.</font>mu_plus <font color="#990000">*</font> <font color="#990000">(</font>d <font color="#990000">-</font> m<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">else</font></b> <font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;dw <font color="#990000">=</font> self<font color="#990000">.</font>mu_minus <font color="#990000">*</font> <font color="#990000">(-</font>d <font color="#990000">-</font> m<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> j <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>self<font color="#990000">.</font>weights<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>weights<font color="#990000">[</font>j<font color="#990000">]</font> <font color="#990000">+=</font> dw <font color="#990000">*</font> self<font color="#990000">.</font>_last_inputs<font color="#990000">[</font>j<font color="#990000">]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<i><font color="#9A1900">#        print("dw : ", dw, " ga-m : ",self._ga - m, " m : ",  m, " ga", self._ga, reward, " -&gt; ", self.bias)</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;self<font color="#990000">.</font>bias <font color="#990000">+=</font> dw <font color="#990000">*</font> <font color="#993399">1</font><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">_sigmoid</font></b> <font color="#990000">(</font>self<font color="#990000">,</font> x<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">1</font> <font color="#990000">/</font> <font color="#990000">(</font><font color="#993399">1</font> <font color="#990000">+</font> <b><font color="#000000">exp</font></b><font color="#990000">(-</font> self<font color="#990000">.</font>temperature <font color="#990000">*</font> x<font color="#990000">))</font><br/>
+<br/>
+<b><font color="#0000FF">if</font></b>&nbsp;__name__ <font color="#990000">==</font> <font color="#FF0000">'__main__'</font><font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#Some examples :</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#AND example</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;n <font color="#990000">=</font> <b><font color="#000000">PRenforcement</font></b><font color="#990000">(</font><font color="#993399">2</font><font color="#990000">,</font> <font color="#993399">0.2</font><font color="#990000">,</font> <font color="#993399">0.02</font><font color="#990000">,</font> <font color="#993399">2</font><font color="#990000">.,</font> True<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> epoch <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">500</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r <font color="#990000">=</font> <b><font color="#000000">random</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font> r <font color="#990000">&lt;=</font> <font color="#993399">0.25</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">])</font> <font color="#990000">==</font> <font color="#993399">0</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">elif</font></b> <font color="#990000">(</font>r <font color="#990000">&lt;=</font> <font color="#993399">0.5</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">])</font> <font color="#990000">==</font> <font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">elif</font></b> <font color="#990000">(</font>r <font color="#990000">&lt;=</font> <font color="#993399">0.75</font><font color="#990000">)</font> <font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">])</font> <font color="#990000">==</font> <font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">else</font></b> <font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;n<font color="#990000">.</font><b><font color="#000000">train</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">])</font> <font color="#990000">==</font> <font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font><b><font color="#000000">calc_output</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font>n<font color="#990000">.</font>weights <font color="#990000">+</font> <font color="#990000">[</font>n<font color="#990000">.</font>bias<font color="#990000">])</font><br/>
+&nbsp;&nbsp;</tt><br/>
+</body>

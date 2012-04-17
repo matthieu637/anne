@@ -48,6 +48,7 @@ if __name__ == '__main__':
     
     corrections = [[0 for _ in range(10)] for _ in range(10)]
     
+    
     #learning
     for epoch in range(nbEpoch):
         perfo = {'first_order' : 0. ,
@@ -101,7 +102,25 @@ if __name__ == '__main__':
     
     print("score : ", sum(y_perfo['diff']) / len(y_perfo['diff']))
     print(corrections)
+    
+    corrections2 = [[0 for _ in range(10)] for _ in range(10)]
+    
+    #testing
+    for network in networks:
+        for ex in range(len(examples.inputs)):
+            network['first_order'].calc_output(examples.inputs[ex])
+            cell = [mode, 1] \
+                    if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]) \
+                    else [1, mode]
+            
+            network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
 
+            res = [ network['feedback'][i].calc_output(network['first_order'].stateHiddenNeurons + 
+                                                       ampli(network['high_order_h'].stateOutputNeurons, 8)) for i in range(10)]
+            if(index_max(res) == index_max(examples.outputs[ex])):
+                if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
+                    corrections2[index_max(network['first_order'].stateOutputNeurons)][index_max(res)] += 1
+                    
     plt.title("Feedback with a third perceptron network ( on hidden layer )")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
     plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
@@ -118,6 +137,16 @@ if __name__ == '__main__':
 
     for i in range(10)[0::]:
         plt.bar(range(i*12+10)[i*12::], corrections[i], color=colors[i])
+    
+    plt.ylabel("Number of corrections")
+    plt.xlabel("Number to correct")
+    plt.title("Distribution corrections")
+    plt.xticks([5+i*12 for i in range(10)], range(10))
+    
+    plt.show()
+    
+    for i in range(10)[0::]:
+        plt.bar(range(i*12+10)[i*12::], corrections2[i], color=colors[i])
     
     plt.ylabel("Number of corrections")
     plt.xlabel("Number to correct")

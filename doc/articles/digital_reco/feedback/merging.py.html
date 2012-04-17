@@ -23,7 +23,7 @@
 <b><font color="#000080">from</font></b>&nbsp;perceptron <b><font color="#000080">import</font></b> PerceptronR0to1<br/>
 <b><font color="#000080">from</font></b>&nbsp;multilayerp <b><font color="#000080">import</font></b> MultilayerPerceptron<br/>
 <b><font color="#000080">from</font></b>&nbsp;utils <b><font color="#000080">import</font></b> index_max<font color="#990000">,</font> randmm<br/>
-<b><font color="#000080">from</font></b>&nbsp;random <b><font color="#000080">import</font></b> shuffle<br/>
+<b><font color="#000080">from</font></b>&nbsp;random <b><font color="#000080">import</font></b> shuffle<font color="#990000">,</font> seed<br/>
 <b><font color="#000080">import</font></b>&nbsp;matplotlib<font color="#990000">.</font>pyplot as plt<br/>
 <b><font color="#000080">from</font></b>&nbsp;data <b><font color="#000080">import</font></b> DataFile<br/>
 <b><font color="#000080">from</font></b>&nbsp;copy <b><font color="#000080">import</font></b> deepcopy<br/>
@@ -164,6 +164,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;nbEpoch <font color="#990000">=</font> <font color="#993399">201</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;nbTry <font color="#990000">=</font> <font color="#993399">50</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;display_interval <font color="#990000">=</font> <b><font color="#000000">range</font></b><font color="#990000">(</font>nbEpoch<font color="#990000">)[</font><font color="#993399">3</font><font color="#990000">::</font><font color="#993399">5</font><font color="#990000">]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#000000">seed</font></b><font color="#990000">(</font><font color="#993399">100</font><font color="#990000">)</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#create all networks</font></i><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;networks <font color="#990000">=</font> <font color="#990000">[{}</font> <b><font color="#0000FF">for</font></b> _ <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>nbr_network<font color="#990000">)]</font><br/>
@@ -224,10 +225,13 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perfo<font color="#990000">[</font><font color="#FF0000">'wager_proportion'</font><font color="#990000">]</font> <font color="#990000">+=</font> <font color="#993399">1</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cell2 <font color="#990000">=</font> <font color="#990000">[</font><font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;network<font color="#990000">[</font><font color="#FF0000">'first_order'</font><font color="#990000">].</font><b><font color="#000000">calc_output</font></b><font color="#990000">(</font><b><font color="#000000">ampli</font></b><font color="#990000">(</font>network<font color="#990000">[</font><font color="#FF0000">'high_order_h'</font><font color="#990000">].</font>stateOutputNeurons<font color="#990000">,</font> <font color="#993399">8</font><font color="#990000">))</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font><b><font color="#000000">index_max</font></b><font color="#990000">(</font>network<font color="#990000">[</font><font color="#FF0000">'first_order'</font><font color="#990000">].</font>stateOutputNeurons<font color="#990000">)</font> <font color="#990000">==</font> <b><font color="#000000">index_max</font></b><font color="#990000">(</font>examples<font color="#990000">.</font>outputs<font color="#990000">[</font>ex<font color="#990000">])):</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;perfo<font color="#990000">[</font><font color="#FF0000">'feedback'</font><font color="#990000">]</font> <font color="#990000">+=</font> <font color="#993399">1</font><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cell2<font color="#990000">[</font><font color="#993399">1</font><font color="#990000">]</font> <font color="#990000">=</font> <font color="#993399">1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">else</font></b> <font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cell2<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">]</font> <font color="#990000">=</font> <font color="#993399">1</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#learn</font></i><br/>
@@ -237,7 +241,7 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;examples<font color="#990000">.</font>outputs<font color="#990000">[</font>ex<font color="#990000">],</font> <b><font color="#000000">ampli</font></b><font color="#990000">(</font>network<font color="#990000">[</font><font color="#FF0000">'high_order_h'</font><font color="#990000">].</font>stateOutputNeurons<font color="#990000">,</font> <font color="#993399">8</font><font color="#990000">))</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;network<font color="#990000">[</font><font color="#FF0000">'high_order_h'</font><font color="#990000">].</font><b><font color="#000000">train</font></b><font color="#990000">(</font>tmp<font color="#990000">,</font> cell<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;network<font color="#990000">[</font><font color="#FF0000">'high_order_h'</font><font color="#990000">].</font><b><font color="#000000">train</font></b><font color="#990000">(</font>tmp<font color="#990000">,</font> cell2<font color="#990000">)</font><br/>
 <i><font color="#9A1900">#                print(control.hiddenNeurons[0].weights[0])</font></i><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;network<font color="#990000">[</font><font color="#FF0000">'control'</font><font color="#990000">].</font><b><font color="#000000">train</font></b><font color="#990000">(</font>examples<font color="#990000">.</font>inputs<font color="#990000">[</font>ex<font color="#990000">],</font> examples<font color="#990000">.</font>outputs<font color="#990000">[</font>ex<font color="#990000">])</font><br/>
 <br/>
