@@ -12,5 +12,5 @@ __pycache__/
 *.log
 *.aux
 *.backup
-*..odp#
+*.odp#
 *.dvi

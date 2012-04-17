@@ -1,3 +1,21 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8x]{inputenc} %commentaire
+\usepackage[francais]{babel} %FR
+\usepackage[T1]{fontenc} 
+
+\usepackage[pdftex]{graphicx} % img
+\usepackage{wrapfig}
+
+\usepackage{algpseudocode}
+
+\usepackage[a4paper]{geometry} %Réduire les marges
+
+% Style Page
+\pagestyle{headings} % entêtes avec titres des sections en haut de pagestyle
+
+\sloppy % ne pas faire déborder les lignes dans la marge
+
+\begin{document}
 
 Formule RMS
 
@@ -11,7 +29,7 @@ $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\
          
 
 
-
+\newpage
 
 
 \begin{algorithmic}
@@ -27,6 +45,33 @@ $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\
 
 \end{algorithmic}
 
+ -\\[4cm]
+
+\begin{algorithmic}
+
+\State $first\_order.calc\_hidden\_layer(samples.inputs)$
+\State $high\_order.calc\_output\_layer(first\_order.hidden\_layer)$
+\State $first\_order.calc\_output\_layer(first\_order.hidden\_layer,\ [0, ..., 0])$
+\State 
+\State $h\_output \gets ampli(high\_order.output\_layer)$
+\State $right\_houtput \gets [0,\ 0]$
+\If{$good\_answer(first\_order)$}
+  \State $right\_houtput[1] \gets 1$
+\Else
+  \State $right\_houtput[0] \gets 1$
+\EndIf
+\State $first\_order.calc\_output\_layer(first\_order.hidden\_layer,\ h\_output)$
+\State
+\State $calc\_stats()$
+\State
+\State $high\_order.train(first\_order.hidden\_layer,\ right\_houtput)$
+\State $first\_order.train(samples.inputs,\ samples.outputs,\ h\_output)$
+
+
+\end{algorithmic}
+
+
+\newpage
 
 \begin{algorithmic}
 
@@ -58,7 +103,7 @@ $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\
 \end{algorithmic}
 
 
-
+\begin{algorithmic}
 
 \Function{$update\_weights\_perceptron$}{$goal,\ intputs,\ add$}
 \State $calc\_output(inputs + add)$
@@ -69,3 +114,8 @@ $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\
 \State $weights[j] \gets weights[j] + \frac{learning\_rate \times p + momentum \times dw}{add.length} $
 \EndFor
 \EndFunction
+
+\end{algorithmic}
+
+
+\end{document}
