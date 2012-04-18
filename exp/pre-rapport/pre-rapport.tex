@@ -1,14 +1,15 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper,12pt, twoside]{article}
 \usepackage[utf8x]{inputenc} %commentaire
 \usepackage[francais]{babel} %FR
 \usepackage[T1]{fontenc} 
 
 \usepackage[pdftex]{graphicx} % img
 \usepackage{wrapfig}
+\usepackage{float}
 
 \usepackage{algpseudocode}
 
-\usepackage[a4paper]{geometry} %Réduire les marges
+\usepackage[top=2.5cm, bottom=2.5cm, left=2.5cm, right=2.5cm]{geometry} %Réduire les marges
 
 % Style Page
 \pagestyle{headings} % entêtes avec titres des sections en haut de pagestyle
@@ -70,67 +71,172 @@ Notre intérêt s'est tourné vers l'article \cite{Cleeremans_2007} et ses 2 typ
 Dans un premier temps, nous avons cherché à reproduire et expliquer les résultats
 donnés, et ensuite à des solutions pour tirer profit des paris réalisés.
 \newline
-Nous nous sommes également pencher sur \cite{Pasquali_2010} dont nous avons reproduit
+Nous nous sommes également penchés sur \cite{Pasquali_2010} dont nous avons reproduit
 les expériences, mais leurs enjeux nous semblent encore vagues.
 
 
 \section{Dupliquer le premier réseau}
 
-Rappelons la structure des réseaux avec le schéma suivant :
-\begin{figure}[h]
+\subsection{Les bases}
+En premier lieu, rappelons la structure des réseaux et les résultats de l'article :
+\begin{figure}[H]
 \begin{center}
- \includegraphics[width=240px]{../cleeremans_2007/digit_reco/digit_reco.png}
+\begin{tabular}{cc}
+ \includegraphics[width=190px]{../cleeremans_2007/digit_reco/digit_reco.png} &
+ \includegraphics[width=270px]{../cleeremans_2007/digit_reco/rms.png}
+\end{tabular}
 \end{center}
 \caption{ \cite{Cleeremans_2007} Architecture connexionniste avec méta-représentations  }
 \end{figure}
 
-Nous avons réalisé que le second réseau\,\footnote{high-order network} apprenait 
-plus vite sa tâche que le premier\,\footnote{first-order network}
-uniquement parce que les entrées étaient faciles à reproduire. De plus, les entrées
-étant plus nombreuses, elles ont un poids plus élevé dans la formule RMS. Ce qui 
-explique le comportement des courbes de l'article.
-\newline
-Par ailleurs, nous avons remarqué que les neurones de la couche caché du premier
-réseau se stabilisaient très rapidement ( autour de la 50\up{ième} époque ), le tout
-permettant au second réseau d'avoir des entrées très peu variables, favorisant donc son
-apprentissage.
-\newline
-Lorsque nous avons 
-augmenté le nombre d'entrées en passant sur des chiffres manuscrits ( et en 
-augmentant proportionnellement le nombre de neurones à l'intérieur des couches
-cachés ), les performances du second réseau se sont écroulées : il n'était alors
-plus que capable de reproduire la couche de sortie.
-\newline
+Analysons la formule RMS utilisé à une époque $e$ :
+\begin{center}
+\begin{large}
+$ rms\ proportion_{e} = \frac{ rms_{e} = \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{n} ( o_{i,e} - d_{i} )^2 }}{max(rms_{e'}),\ \forall e' \in epochs } $
+\end{large}
+$ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\o_{i,e} : value\ obtained\ for\ the\ i^{th}\ neuron\ at\ the\ e^{th}\ epoch\\d_{i} : value\ desired \ for\ the\ i^{th}\ neuron\end{array} \right.$
+\end{center}
+
+Il faut bien comprendre que c'est une proportion et que ces courbes représentent
+plus le taux de variation des neurones que le taux de succès à l'apprentissage 
+lui-même. Par exemple, la pente de la courbe sera plus raide en passant d'une 
+erreur de 0.9 à 0.3, qu'en passant de 0.4 à 0.2. 
+
+On peut donc penser que le second
+réseau\footnote{high-order network} apprenne plus vite (dans le sens où il avait plus de lacunes au départ),
+mais pas forcément qu'il apprenne mieux sa tâche. 
+
+Nous avons donc analysé ses performances réelles.
+
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[width=290px]{../cleeremans_2007/digit_reco/err_ffa.png}
+\end{center}
+\caption{ Erreur de classification. Le réseau supérieur à 5 unités cachées n'est plus considéré, et celui à 
+10 est découpé en 3 courbes pour représenter les 3 couches à reproduire.}
+\end{figure}
+
+Difficile d'en déduire que le second réseau\footnote{high-order network} apprend 
+plus vite que le premier\,\footnote{first-order network}. Par contre, on peut expliquer
+la chute du RMS du second réseau sur l'ancienne figure, par l'apprentissage de
+la couche d'entrée qui coïncide en même temps (les entrées, étant plus nombreuses,
+ont plus de poids dans la formule RMS).
+
+\subsection{Les rouages}
+
+Notre attention s'est également portée sur les mécanismes qui permettaient la réalisation de cette architecture.
+Nous avons alors pu remarquer que les neurones de la couche cachée du premier
+réseau se stabilisaient très rapidement (autour de la 50\up{ième} époque en moyenne), le tout
+permettant au second réseau d'avoir des entrées très peu variables, favorisant et permettant
+donc son apprentissage.
+
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[height=240px]{../cleeremans_2007/digit_reco/discretize_cloud.png}
+\end{center}
+\caption{ Valeurs discrétisés de la couche caché du premier réseau. Chaque couleurs 
+représentant un des 10 chiffres en entrée. Les courbes deviennent rapidement stables.}
+\end{figure}
+
+
+\subsection{Réhaussement}
+
+Pour revenir à l'importance des entrées, nous avons réalisé que le second réseau
+n'était capable de dupliquer le premier qu'uniquement parce que ces entrées 
+sont triviales.
+Ainsi nous avons augmenté le nombre d'entrées en passant sur des chiffres
+manuscrits \cite{Handwritten_256}, tout en augmentant proportionnellement le nombre de 
+neurones des couches cachées :
+
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[height=240px]{../cleeremans_2007/digit_reco/schema_handwritten.png}
+\end{center}
+\caption{ Architecture avec méta-représentation pour chiffres manuscrits}
+\end{figure}
+
+Les performances du second réseau se sont alors écroulées : 
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[height=200px]{../cleeremans_2007/digit_reco/err_handwritten.png}
+\end{center}
+\caption{ Erreur de classification de l'architecture sur des chiffres manuscrits.
+L'erreur du second réseau est toujours divisé en 3.}
+\end{figure}
+Il n'est alors plus capable que de reproduire la couche de sortie. Petit bémol tout de même,
+le critère de classification pour la couche caché est peut-être trop rigide, il suffit qu'un
+neurone diffère de 0.2 ( de la valeur voulue ) pour considérer que c'est un échec.
+
+\subsection{Représentations}
+
 Enfin, nous avons remarqué qu'en bloquant l'apprentissage entre la couche cachée et les 
 entrées du premier réseau, puis en changeant de tâche, le réseau était capable de réapprendre
-la nouvelle tâche, ce qui prouve la présence d'une représentation des entrées dans la couche 
-caché.
-\newline
-\newline
+la nouvelle tâche, ce qui prouve bien la présence d'une représentation des entrées dans la couche 
+cachée.
+
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[height=200px]{../cleeremans_2007/digit_reco/err_handwritten_relearn_2.png}
+\end{center}
+\caption{ Erreur de classification de l'architecture sur des chiffres manuscrits.
+Apprentissage bloqué à l'époque 800. Changement de tâche aux époques : 800, 2000, 3200}
+\end{figure}
+
+\subsection{Remarque}
+
 Il faut cependant remarquer qu'un simple perceptron est suffisant pour réaliser la tâche
-du premier réseau, et donc, qu'il est possible que dans le cas d'un problème non linéairement
-séparable cette architecture soit invalidé.
+du premier réseau (même sur les chiffres manuscrits), et donc, qu'il est possible que 
+dans le cas d'un problème non linéairement séparable cette architecture soit invalidée.
+ 
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[height=230px]{../cleeremans_2007/digit_reco/p_vs_mlp.png}
+\end{center}
+\caption{ Erreur de classification d'un perceptron et d'un perceptron multi-couches
+sur la base de chiffres manuscrits.}
+\end{figure}
 
 \section{Parier sur le premier réseau}
 
-Rappelons également la structure des réseaux :
-\begin{figure}[h]
+\subsection{Les bases}
+
+Rappelons également la structure des réseaux et les résultats :
+\begin{figure}[H]
 \begin{center}
- \includegraphics[width=280px]{../cleeremans_2007/digital_reco/schema.png}
+\begin{tabular}{cc}
+ \includegraphics[width=220px]{../cleeremans_2007/digital_reco/schema.png} &
+ \includegraphics[width=220px]{../cleeremans_2007/digital_reco/perf_article.png}
+\end{tabular}
 \end{center}
  \caption{ \cite{Cleeremans_2007}  Architecture connexionniste avec paris  }
 \end{figure}
 
 
 La première chose que nous avons faites à été d'améliorer les performances du second réseau
-en modifiant quelques paramètres. Contrairement à celui de l'article, il ne se contentera 
-plus simplement de parier haut à chaque coups ( après 40 époques). Il aura une longueur d'avance
-sur le premier réseau sur toute la durée de l'apprentissage.
+en modifiant quelques paramètres (initialisation des poids sur [-1 ; -1], momentum à 0.5). 
 
-À partir de cette différence de performances, nous avons imaginer plusieurs architectures, qui
-améliore plus ou moins les performances de reconnaissance du réseau sur des chiffres manuscrits:
+\begin{figure}[H]
+\begin{center}
+\begin{tabular}{cc}
+ \includegraphics[width=230px]{../cleeremans_2007/digital_reco/perf_wag.png} &
+ \includegraphics[width=230px]{../cleeremans_2007/digital_reco/perf_boost.png}
+\end{tabular}
+\end{center}
+ \caption{ Performance de l'architecture. À gauche la base, à droite la version améliorée.
+ On ne considère plus le réseau avec apprentissage faible, mais on a ajouté le taux de paris hauts.}
+\end{figure}
 
-\begin{figure}[h]
+Contrairement à celui de l'article, il ne se contentera 
+plus simplement de parier haut à chaque coups (après 40 époques). Il aura une longueur d'avance
+sur le premier réseau sur toute la durée de l'apprentissage. On pourra donc tirer profit de
+cette avance.
+
+\subsection{Feedbacks}
+
+À partir de cette différence de performances, nous avons imaginé plusieurs architectures, qui
+améliorent plus ou moins les performances de reconnaissance du réseau sur des chiffres manuscrits:
+
+\begin{figure}[H]
  \begin{center}
 \begin{tabular}{c|c}
  \includegraphics[width=210px]{../pre-presentation/thrid.png} & 
@@ -143,17 +249,17 @@ améliore plus ou moins les performances de reconnaissance du réseau sur des ch
 Dans ces 2 architectures, nous nous contentons de connecter un 3\up{ième} réseau qui doit 
 tirer des conclusions à partir d'informations sur les 2 premiers.
 
-\begin{figure}[h]
+\begin{figure}[H]
  \begin{center}
  \includegraphics[width=250px]{../pre-presentation/merging.png}
 \end{center}
 \caption{Architecture par fusion}
 \end{figure}
 
-Ici, nous mélangeons un apprentissage par descente de gradient ( sur le premier et second réseau )
-et un apprentissage perceptron ( entre les 2 couches de sorties ).
+Ici, nous mélangeons un apprentissage par descente de gradient (sur le premier et second réseau)
+et un apprentissage perceptron (entre les 2 couches de sorties).
 
-\begin{figure}[h]
+\begin{figure}[H]
  \begin{center}
  \includegraphics[width=300px]{../pre-presentation/nth_wta.png}
 \end{center}
@@ -166,17 +272,20 @@ Exemple : le réseau supérieur sort 2 -> la réponse est le 3\up{ième} neurone
 de la couche de sortie du premier réseau.
 \newline
 
-Nous avons aussi essayer quelques modèles où le réseau supérieur servait de superviseur
-à l'apprentissage du premier réseau. Par exemple, s'il pari haut, l'apprentissage du premier réseau
+Nous avons aussi essayé quelques modèles où le réseau supérieur servait de superviseur
+à l'apprentissage du premier réseau. Par exemple, s'il parie haut, l'apprentissage du premier réseau
 sera faible, sinon il sera accentué.
 
 \section{La suite}
 
 Ce que nous continuons d'étudier : 
 \begin{itemize}
- \item validation sur des expériences plus complexes ( qui ne peuvent être résolue directement par un perceptron )
- \item relation entre la taille de la couche caché du premier réseau et le taux de paris avantageux
- \item de nouvelles architectures
+ \item validation sur des expériences plus complexes (qui ne peuvent être résolue directement par un perceptron)
+ \item relation entre la taille de la couche cachée du premier réseau et le taux de paris avantageux
+ \item nouveau critère de classification pour la couche caché dans la première architecture sur les chiffres manuscrits
+ \item approfondir les intérêts du second article \cite{Pasquali_2010}
+ \item de nouvelles architectures axées méta-apprentissage où le réseau d'ordre supérieur contrôle le premier
+ (taux d'apprentissage, momentum, entrées à approfondir, ...) telle une conscience
 \end{itemize}
 
 
