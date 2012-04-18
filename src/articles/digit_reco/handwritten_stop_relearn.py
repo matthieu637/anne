@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from data import DataFile
 from utils import index_max
 from copy import deepcopy
+from random import seed
 
 
 def newtask(l):
@@ -35,13 +36,13 @@ def newtask3(l):
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 1
+    nbr_network = 3
     momentum = 0.9
     lrate = 0.1
     nbEpoch = 3600
     nbTry = 10
     display_interval = range(nbEpoch)[::50]
-    
+    seed(10)
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
@@ -399,7 +400,8 @@ if __name__ == '__main__':
              label="output layer ( winner take all )")
     
     plt.plot(display_interval, [err_plot['perceptron'][i] for i in display_interval],
-             label="perceptron")
+             label="perceptron",
+             linewidth=2)
     
     plt.title('Error ratio of first-order and high-order networks ( control network )')
     plt.ylabel('ERROR RATIO')

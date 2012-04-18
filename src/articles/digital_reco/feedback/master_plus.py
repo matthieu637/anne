@@ -31,7 +31,7 @@ if __name__ == '__main__':
     for i in range(nbr_network):
         first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
         first_order.init_weights_randomly(-1, 1)
-        high_order_h = [PRenforcement(100, 0.2, 0.2, 2., True) for _ in range(20)]
+        high_order_h = [PRenforcement(100, 0.4, 0.04, 2., True) for _ in range(20)]
         
         control = deepcopy(first_order)
         
@@ -73,18 +73,38 @@ if __name__ == '__main__':
                 if(index_max(network['control'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo['control'] += 1
                 
-                perfo['wager_proportion'] += last_index_max(res[0:10])*0.05
-                perfo['high_order_h'] += last_index_max(res[10:20])*0.05
+                il = last_index_max(res[0:10]) if res[0:10] != ([0]*10) else 0
+                im = last_index_max(res[10:20]) if res[10:20] != ([0]*10) else 0
+                
+                perfo['wager_proportion'] += il*0.1
+                perfo['high_order_h'] += im*0.1
 
                 #learn
                 network['control'].train(examples.inputs[ex], examples.outputs[ex])
                 
 #                for i in range(20):
 #                    [ network['high_order_h'][i].calc_output(network['first_order'].stateHiddenNeurons) for i in range(20) ]
-#                    [ network['high_order_h'][i].train(f_success) for i in range(20)]
+
+#                [ network['high_order_h'][i].train(f_success) for i in range(20)]
                 
-                network['first_order'].set_learning_rate(last_index_max(res[0:10])*0.05)
-                network['first_order'].set_momentum(last_index_max(res[10:20])*0.05)
+#                for i in range(0, il):
+#                    network['high_order_h'][il].train(f_success)
+                
+                if(il < 9):
+                    for _ in range(5):
+                        network['high_order_h'][il+1].calc_output(network['first_order'].stateHiddenNeurons)
+                        network['high_order_h'][il+1].train(f_success)
+                
+                for _ in range(5):
+                    network['high_order_h'][il].calc_output(network['first_order'].stateHiddenNeurons)
+                    network['high_order_h'][il].train(f_success)
+                
+                
+#                network['high_order_h'][im].train(f_success)
+
+                print(res[0:10])
+                network['first_order'].set_learning_rate(il*0.1)
+                network['first_order'].set_momentum(im*0.1)
                 network['first_order'].train(examples.inputs[ex],
                                          examples.outputs[ex])
                 
