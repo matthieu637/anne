@@ -1,4 +1,4 @@
-\documentclass[a4paper,12pt]{article}
+\documentclass[a4paper]{article}
 \usepackage[utf8x]{inputenc} %commentaire
 \usepackage[francais]{babel} %FR
 \usepackage[T1]{fontenc} 
@@ -8,21 +8,15 @@
 
 \usepackage{algpseudocode}
 
-\usepackage[a4paper]{geometry} %Réduire les marges
 
-% Style Page
-\pagestyle{headings} % entêtes avec titres des sections en haut de pagestyle
+\usepackage[top=0.5cm, bottom=0.5cm, left=0.5cm, right=0.5cm]{geometry} %Réduire les marges
 
-\sloppy % ne pas faire déborder les lignes dans la marge
+\usepackage{layout}
 
 \begin{document}
 
 Formule RMS
 
-$ rms\ proportion_{e} = \frac{ rms_{e} = \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{n} ( o_{i,e} - d_{i} )^2 }}{max(rms_{e}),\ \forall e \in epochs } $
-
-$ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\o_{i,e} : value\ obtained\ for\ the\ i^{th}\ neuron\ at\ the\ e^{th}\ epoch\\d_{i} : value\ desired \ for\ the\ i^{th}\ neuron\end{array} \right.$
-         
 $ rms\ proportion_{e} = \frac{ rms_{e} = \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{n} ( o_{i,e} - d_{i} )^2 }}{max(rms_{e}),\ \forall e \in epochs } $
 
 $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\o_{i,e} : value\ obtained\ for\ the\ i^{th}\ neuron\ at\ the\ e^{th}\ epoch\\d_{i} : value\ desired \ for\ the\ i^{th}\ neuron\end{array} \right.$
@@ -76,11 +70,18 @@ $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\
 \begin{algorithmic}
 
 \Function{$train$}{$inputs,\ outputs,\ add$}
-\State $y \gets build\_error\_vector(...)$
-\State $update\_weights\_hidden\_layer( ...)$
+\For {$i = 0 \to output\_neurons.length$}
+\State $y_{output}[i] \gets g'(output\_neurons[i].a) \times ( outputs[i] - output\_neurons.state )$
+\EndFor
+\\
+\For {$i = 0 \to hidden\_neurons.length$}
+\State $w\_sum \gets \sum \limits_{j=0}^{output\_neurons.length} output\_neurons[j].weights[i] \times y_{output[j]}$
+\State $y_{hidden}[i] \gets g'(hidden\_neurons[i].a) \times w\_sum$
+\EndFor
+\State $update\_weights\_hidden\_layer(y_{hidden})$
 \\
 \For {$i = 0 \to output\_neurons.length$ } 
-\State $output\_neurons[i].update\_weights\_gradient(y[i],\ hidden\_neurons,\ add)$
+\State $output\_neurons[i].update\_weights\_gradient(y_{output}[i],\ hidden\_neurons,\ add)$
 \State $output\_neurons[i].update\_weights\_perceptron(outputs[i],\ hidden\_neurons,\ add)$
 \EndFor
 \EndFunction
