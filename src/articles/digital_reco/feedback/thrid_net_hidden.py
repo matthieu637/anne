@@ -9,14 +9,16 @@ Created on 19 March 2012
 from multilayerp import MultilayerPerceptron
 from perceptron import PerceptronR0to1
 from utils import index_max
-from random import shuffle
+from random import shuffle, seed
 import matplotlib.pyplot as plt
 from data import DataFile
 from articles.digital_reco.feedback.merging import ampli
 
+DEBUG = False
+
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
+    nbr_network = 1 if DEBUG else 5
     momentum = 0.5
     nbEpoch = 201
     nbTry = 50
@@ -26,11 +28,13 @@ if __name__ == '__main__':
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
+        seed(i)
         first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
+        first_order.init_weights_randomly(-1, 1)
+        
         high_order_h = MultilayerPerceptron(100, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
         feedback = [PerceptronR0to1(100 + 8, 0.1, 0., True) for _ in range(10)]
-        
-        first_order.init_weights_randomly(-1, 1)
+
 
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h,
@@ -43,11 +47,12 @@ if __name__ == '__main__':
     y_perfo = {'first_order' : [] ,
               'high_order_h' : [],
               'wager_proportion': [],
-              'feedback' : [], 
+              'feedback' : [],
               'diff' : []}
     
     corrections = [[0 for _ in range(10)] for _ in range(10)]
     
+    seed(100)
     
     #learning
     for epoch in range(nbEpoch):
@@ -123,8 +128,9 @@ if __name__ == '__main__':
                     
     plt.title("Feedback with a third perceptron network ( on hidden layer )")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
-    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
-    plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
+    if(DEBUG):
+        plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
+        plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
     plt.plot(display_interval , y_perfo['feedback'][3::5], label="feedback", linewidth=2)
     plt.ylabel('SUCCESS RATIO')
     plt.xlabel("EPOCHS")
@@ -132,26 +138,26 @@ if __name__ == '__main__':
     plt.legend(loc='best', frameon=False)
     plt.show()
     
+    if(DEBUG):
+        colors = [(0.2, 0.8, 0.88), 'b', 'g', 'r', 'c', 'm', 'y', 'w', (0.8, 0.1, 0.8), (0., 0.2, 0.5)]
     
-    colors =[(0.2, 0.8, 0.88), 'b', 'g', 'r', 'c', 'm', 'y', 'w', (0.8,0.1,0.8), (0.,0.2,0.5)]
-
-    for i in range(10)[0::]:
-        plt.bar(range(i*12+10)[i*12::], corrections[i], color=colors[i])
-    
-    plt.ylabel("Number of corrections")
-    plt.xlabel("Number to correct")
-    plt.title("Distribution corrections")
-    plt.xticks([5+i*12 for i in range(10)], range(10))
-    
-    plt.show()
-    
-    for i in range(10)[0::]:
-        plt.bar(range(i*12+10)[i*12::], corrections2[i], color=colors[i])
-    
-    plt.ylabel("Number of corrections")
-    plt.xlabel("Number to correct")
-    plt.title("Distribution corrections")
-    plt.xticks([5+i*12 for i in range(10)], range(10))
-    
-    plt.show()
+        for i in range(10)[0::]:
+            plt.bar(range(i * 12 + 10)[i * 12::], corrections[i], color=colors[i])
+        
+        plt.ylabel("Number of corrections")
+        plt.xlabel("Number to correct")
+        plt.title("Distribution corrections")
+        plt.xticks([5 + i * 12 for i in range(10)], range(10))
+        
+        plt.show()
+        
+        for i in range(10)[0::]:
+            plt.bar(range(i * 12 + 10)[i * 12::], corrections2[i], color=colors[i])
+        
+        plt.ylabel("Number of corrections")
+        plt.xlabel("Number to correct")
+        plt.title("Distribution corrections")
+        plt.xticks([5 + i * 12 for i in range(10)], range(10))
+        
+        plt.show()
     

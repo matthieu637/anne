@@ -11,8 +11,7 @@ from multilayerp import MultilayerPerceptron
 from random import shuffle
 import matplotlib.pyplot as plt
 from data import DataFile
-from utils import index_max, compare
-from articles.digit_reco.discretize import discretis
+from utils import index_max, compare, compare_f
 
 
 if __name__ == '__main__':
@@ -67,7 +66,7 @@ if __name__ == '__main__':
             shuffle(l_exx)
             for ex in l_exx:              
                 #RMS
-                sum_rms['first_order'] += network['first_order'].calc_ME(
+                sum_rms['first_order'] += network['first_order'].calc_RMS(
                                             examples.inputs[ex],
                                             examples.outputs[ex])
                 
@@ -75,19 +74,19 @@ if __name__ == '__main__':
                                      network['first_order'].stateHiddenNeurons + \
                                      network['first_order'].stateOutputNeurons
                 
-                sum_rms['high_order_10'] += network['high_order_10'].calc_ME_range(
+                sum_rms['high_order_10'] += network['high_order_10'].calc_RMS_range(
                                             network['first_order'].stateHiddenNeurons,
                                              entire_first_order, 25, 35)
 
-                sum_rms['high_order_5'] += network['high_order_10'].calc_ME_range(
+                sum_rms['high_order_5'] += network['high_order_10'].calc_RMS_range(
                                             network['first_order'].stateHiddenNeurons,
                                             entire_first_order, 20, 25)
                 
-                sum_rms['high_order_20'] += network['high_order_10'].calc_ME_range(
+                sum_rms['high_order_20'] += network['high_order_10'].calc_RMS_range(
                                             network['first_order'].stateHiddenNeurons,
                                             entire_first_order, 0, 20)
                 
-                sum_rms['high_order'] += network['high_order_10'].calc_ME(
+                sum_rms['high_order'] += network['high_order_10'].calc_RMS(
                                             network['first_order'].stateHiddenNeurons,
                                              entire_first_order)
                 
@@ -96,7 +95,9 @@ if __name__ == '__main__':
                 if(index_max(network['high_order_10'].stateOutputNeurons[25:35]) != index_max(network['first_order'].stateOutputNeurons)):
                     err_one_network['high_order_10'] += 1
                 
-                if(discretis(network['high_order_10'].stateOutputNeurons[20:25], 4) != discretis(network['first_order'].stateHiddenNeurons, 4)):
+                
+                if( not compare_f(network['first_order'].stateHiddenNeurons, 
+                                  network['high_order_10'].stateOutputNeurons[20:25], 0.3) ):
                     err_one_network['high_order_5'] += 1
                 err_one_network['high_order_20'] += 1 - compare(examples.inputs[ex], network['high_order_10'].stateOutputNeurons[0:20])
                 
@@ -110,9 +111,9 @@ if __name__ == '__main__':
 
         #add plot
         rms_plot['first_order'].append(sum_rms['first_order'] / (nbShape * nbr_network))
-        rms_plot['high_order_10'].append(sum_rms['high_order_10'] / (nbShape * nbr_network))
-        rms_plot['high_order_5'].append(sum_rms['high_order_5'] / (nbShape * nbr_network))
-        rms_plot['high_order_20'].append(sum_rms['high_order_20'] / (nbShape * nbr_network))
+        rms_plot['high_order_10'].append(sum_rms['high_order_10'] / (nbShape * nbr_network* 35 / 10))
+        rms_plot['high_order_5'].append(sum_rms['high_order_5'] / (nbShape * nbr_network * 35 / 5))
+        rms_plot['high_order_20'].append(sum_rms['high_order_20'] / (nbShape * nbr_network * 35 / 20))
         rms_plot['high_order'].append(sum_rms['high_order'] / (nbShape * nbr_network))
         
         
@@ -123,6 +124,21 @@ if __name__ == '__main__':
         
         
         print(epoch)
+    
+    
+    # divided by the maximum error
+#    max_err = (max(rms_plot['first_order']),
+#               max(rms_plot['high_order_10']),
+#               max(rms_plot['high_order_5']),
+#               max(rms_plot['high_order_20']),
+#               max(rms_plot['high_order']))
+#    for i in range(nbEpoch):
+#        rms_plot['first_order'][i] /= max_err[0]
+#        rms_plot['high_order_10'][i] /= max_err[4]
+#        rms_plot['high_order_5'][i] /= max_err[4]
+#        rms_plot['high_order_20'][i] /= max_err[4]
+#        rms_plot['high_order'][i] /= max_err[4]
+        
     
     #displays rms
     plt.plot(display_interval, [rms_plot['first_order'][i] for i in display_interval],
@@ -142,22 +158,22 @@ if __name__ == '__main__':
              label="high-order network (10 hidden units)",
              linewidth=2)
     
-    plt.title('Mean error of one neuron')
-    plt.ylabel('MEAN ERROR')
+    plt.title('Error RMS error of first-order and high-order networks')
+    plt.ylabel('RMS ERROR')
     plt.xlabel("EPOCHS")
     plt.legend(loc='best', frameon=False)
     plt.show()
     
     
     plt.plot(display_interval, [err_plot['first_order'][i] for i in display_interval],
-             label="first-order network",
+             label="first-order network ( winner take all )",
              linewidth=2)
     
     plt.plot(display_interval, [err_plot['high_order_10'][i] for i in display_interval],
              label="10 outputs ( winner take all )")
     
     plt.plot(display_interval, [err_plot['high_order_5'][i] for i in display_interval],
-             label="5 hidden  ( | x - o | <= 0.1 )")
+             label="5 hidden  ( | x - o | <= 0.3 )")
     
     plt.plot(display_interval, [err_plot['high_order_20'][i] for i in display_interval],
              label="20 inputs ( x > 0.5 => activation  )")

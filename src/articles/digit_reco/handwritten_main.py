@@ -11,12 +11,11 @@ from multilayerp import MultilayerPerceptron
 from random import shuffle
 import matplotlib.pyplot as plt
 from data import DataFile
-from utils import index_max, compare
-from articles.digit_reco.discretize import discretis
+from utils import index_max, compare, compare_f
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
+    nbr_network = 3
     momentum = 0.9
     lrate = 0.1
     nbEpoch = 1000
@@ -39,7 +38,8 @@ if __name__ == '__main__':
                         'high_order_5':high_order_5}
 
     #create inputs/outputs to learn
-    examples = DataFile("digit_handwritten_16.txt", mode)
+#    examples = DataFile("digit_shape_16.txt")
+    examples = DataFile("digit_handwritten_16.txt")
 
     #3 curves
     rms_plot = {'first_order' : [] ,
@@ -84,7 +84,8 @@ if __name__ == '__main__':
                     err_one_network['first_order'] += 1
 
                 err_one_network['high_order_20'] += 1 - compare(examples.inputs[ex], network['high_order_10'].stateOutputNeurons[0:16 * 16])
-                if(discretis(network['high_order_10'].stateOutputNeurons[20:25]) != discretis(network['first_order'].stateHiddenNeurons)):
+                if( not compare_f(network['first_order'].stateHiddenNeurons, 
+                                  network['high_order_10'].stateOutputNeurons[16 * 16:16 * 16 + 16 * 4], 0.3) ):
                     err_one_network['high_order_5'] += 1
                 if(index_max(network['high_order_10'].stateOutputNeurons[16 * 16 + 16 * 4:16 * 16 + 16 * 4 + 10]) != 
                     index_max(network['first_order'].stateOutputNeurons)):
@@ -144,7 +145,7 @@ if __name__ == '__main__':
              label="output layer ( winner take all )")
     
     plt.plot(display_interval, [err_plot['high_order_5'][i] for i in display_interval],
-             label="hidden layer ( | x - o | <= 0.2 )")
+             label="hidden layer ( | x - o | <= 0.3 )")
     
     plt.plot(display_interval, [err_plot['high_order_20'][i] for i in display_interval],
              label="input layer ( x > 0.5 => activation  )")
