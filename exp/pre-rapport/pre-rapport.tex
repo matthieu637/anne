@@ -89,7 +89,7 @@ En premier lieu, rappelons la structure des réseaux et les résultats de l'arti
 \caption{ \cite{Cleeremans_2007} Architecture connexionniste avec méta-représentations  }
 \end{figure}
 
-Analysons la formule RMS utilisé à une époque $e$ :
+La formule RMS utilisée à une époque $e$ est la suivante :
 \begin{center}
 \begin{large}
 $ rms\ proportion_{e} = \frac{ rms_{e} = \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{n} ( o_{i,e} - d_{i} )^2 }}{max(rms_{e'}),\ \forall e' \in epochs } $
@@ -97,30 +97,41 @@ $ rms\ proportion_{e} = \frac{ rms_{e} = \sqrt{ \frac{1}{n} \sum \limits_{i=1}^{
 $ with \left\lbrace \begin{array}{lll} n : number\ of\ neurons\ on\ the\ output\ layer\\o_{i,e} : value\ obtained\ for\ the\ i^{th}\ neuron\ at\ the\ e^{th}\ epoch\\d_{i} : value\ desired \ for\ the\ i^{th}\ neuron\end{array} \right.$
 \end{center}
 
-Il faut bien comprendre que c'est une proportion et que ces courbes représentent
-plus le taux de variation des neurones que le taux de succès à l'apprentissage 
-lui-même. Par exemple, la pente de la courbe sera plus raide en passant d'une 
-erreur de 0.9 à 0.3, qu'en passant de 0.4 à 0.2. 
-
-On peut donc penser que le second
-réseau\footnote{high-order network} apprenne plus vite (dans le sens où il avait plus de lacunes au départ),
-mais pas forcément qu'il apprenne mieux sa tâche. 
-
-Nous avons donc analysé ses performances réelles.
+Nous avons décomposé les erreurs pour mieux comprendre le fonctionnement de l'architecture.
 
 \begin{figure}[H]
 \begin{center}
- \includegraphics[width=290px]{../cleeremans_2007/digit_reco/err_ffa.png}
+ \includegraphics[width=270px]{../cleeremans_2007/digit_reco/rms_ffa.png}
 \end{center}
-\caption{ Erreur de classification. Le réseau supérieur à 5 unités cachées n'est plus considéré, et celui à 
+\caption{ \textbf{Erreur RMS sans proportion}. Le réseau supérieur à 5 unités cachées n'est plus considéré, et celui à 
+10 est découpé en 3 courbes pour représenter les 3 couches à reproduire. La courbe violette est donc la somme des 3 courbes des 
+couches.}
+\end{figure}
+
+On peut en conclure 2 choses :
+\begin{itemize}
+ \item la couche caché et la couche de sortie de pose aucun problème d'apprentissage
+ \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
+\end{itemize}
+
+Il reste une question en suspend :
+\newline 
+\textbf{Pourquoi le second réseau apprendrait-il plus rapidement que le premier ?}
+
+Nous n'avons pas la réponse. Par contre, nous pouvons nous intéresser à l'erreur de classification.
+
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[width=270px]{../cleeremans_2007/digit_reco/err_ffa.png}
+\end{center}
+\caption{ \textbf{Erreur de classification}. Le réseau supérieur à 5 unités cachées n'est plus considéré, et celui à
 10 est découpé en 3 courbes pour représenter les 3 couches à reproduire.}
 \end{figure}
 
-Difficile d'en déduire que le second réseau\footnote{high-order network} apprend 
-plus vite que le premier\,\footnote{first-order network}. Par contre, on peut expliquer
-la chute du RMS du second réseau sur l'ancienne figure, par l'apprentissage de
-la couche d'entrée qui coïncide en même temps (les entrées, étant plus nombreuses,
-ont plus de poids dans la formule RMS).
+Il est alors beaucoup moins flagrant que le second réseau apprend mieux que le premier.
+Évidemment, parler de classification de la premier couche (courbe 20 inputs) et de la couche 
+caché (courbe 5 hidden) est relativement dérisoire. 
+\newline La question de la rapidité d'apprentissage reste donc ouverte.
 
 \subsection{Les rouages}
 
@@ -139,7 +150,7 @@ représentant un des 10 chiffres en entrée. Les courbes deviennent rapidement s
 \end{figure}
 
 
-\subsection{Réhaussement}
+\subsection{Ré-haussement}
 
 Pour revenir à l'importance des entrées, nous avons réalisé que le second réseau
 n'était capable de dupliquer le premier qu'uniquement parce que ces entrées 
@@ -160,12 +171,27 @@ Les performances du second réseau se sont alors écroulées :
 \begin{center}
  \includegraphics[height=200px]{../cleeremans_2007/digit_reco/err_handwritten.png}
 \end{center}
-\caption{ Erreur de classification de l'architecture sur des chiffres manuscrits.
+\caption{ \textbf{Erreur de classification} de l'architecture sur des chiffres manuscrits.
 L'erreur du second réseau est toujours divisé en 3.}
 \end{figure}
+FIXME
 Il n'est alors plus capable que de reproduire la couche de sortie. Petit bémol tout de même,
 le critère de classification pour la couche caché est peut-être trop rigide, il suffit qu'un
 neurone diffère de 0.2 ( de la valeur voulue ) pour considérer que c'est un échec.
+
+\newline
+Tentons d'expliquer cette chute :
+\newline La première chose à comprendre est que l'augmentation
+du nombre de neurone n'a rien à voir avec cette perte. En effet, nous avons fait les 
+simulations avec les chiffres triviales (seulement 10 formes différentes) agrandit en $16 \times 16$
+et tout se passe très bien.
+\newline
+Cette chute provient du fait que les entrées proposées sont très nombreuses. Il s'opère ainsi
+une première étape de classification dans la couche caché du premier réseau.
+Donc différentes formes peuvent être représentées par la même couche cachée.
+Sauf que le second réseau n'ayant en entrée que la version factorisé (la couche caché), il lui 
+est impossible de retrouver les formes initiales.
+
 
 \subsection{Représentations}
 
@@ -178,7 +204,7 @@ cachée.
 \begin{center}
  \includegraphics[height=200px]{../cleeremans_2007/digit_reco/err_handwritten_relearn_2.png}
 \end{center}
-\caption{ Erreur de classification de l'architecture sur des chiffres manuscrits.
+\caption{ \textbf{Erreur de classification} de l'architecture sur des chiffres manuscrits.
 Apprentissage bloqué à l'époque 800. Changement de tâche aux époques : 800, 2000, 3200}
 \end{figure}
 
@@ -192,7 +218,7 @@ dans le cas d'un problème non linéairement séparable cette architecture soit 
 \begin{center}
  \includegraphics[height=230px]{../cleeremans_2007/digit_reco/p_vs_mlp.png}
 \end{center}
-\caption{ Erreur de classification d'un perceptron et d'un perceptron multi-couches
+\caption{ \textbf{Erreur de classification} d'un perceptron et d'un perceptron multi-couches
 sur la base de chiffres manuscrits.}
 \end{figure}
 
@@ -289,8 +315,98 @@ Ce que nous continuons d'étudier :
 \end{itemize}
 
 
-\bibliographystyle{decsci}
+\bibliographystyle{apalike}
 \bibliography{biblio}
+
+\newpage
+\appendix
+\section{Algorithme}
+
+Ensemble d'inscrutions executé pour une époque et un tirage d'entrées/sorties.
+\newline
+Cet algorithme se déroule en plusieurs temps :
+\begin{itemize}
+ \item[a] On calcule la sortie du premier réseau en ignorant le second ( valeur à 0 )
+ \item[b] On calcule la sortie du second réseau
+ \item On calcule la sortie du premier réseau avec les sorties de b)
+\end{itemize}
+
+
+\begin{algorithmic}
+
+\State $first\_order.calc\_hidden\_layer(samples.inputs)$
+\State $high\_order.calc\_output\_layer(first\_order.hidden\_layer)$
+\State $first\_order.calc\_output\_layer(first\_order.hidden\_layer,\ [0, ..., 0])$
+\State 
+\State $h\_output \gets ampli(high\_order.output\_layer)$
+\State $right\_houtput \gets [0,\ 0]$
+\If{$good\_answer(first\_order)$}
+  \State $right\_houtput[1] \gets 1$
+\Else
+  \State $right\_houtput[0] \gets 1$
+\EndIf
+\State $first\_order.calc\_output\_layer(first\_order.hidden\_layer,\ h\_output)$
+\State
+\State $calc\_stats()$
+\State
+\State $high\_order.train(first\_order.hidden\_layer,\ right\_houtput)$
+\State $first\_order.train(samples.inputs,\ samples.outputs,\ h\_output)$
+
+
+\end{algorithmic}
+
+L'interêt se porte sur
+
+\begin{algorithmic}
+
+\Function{$train$}{$inputs,\ outputs,\ add$}
+\For {$i = 0 \to output\_neurons.length$}
+\State $y_{output}[i] \gets g'(output\_neurons[i].a) \times ( outputs[i] - output\_neurons.state )$
+\EndFor
+\\
+\For {$i = 0 \to hidden\_neurons.length$}
+\State $w\_sum \gets \sum \limits_{j=0}^{output\_neurons.length} output\_neurons[j].weights[i] \times y_{output[j]}$
+\State $y_{hidden}[i] \gets g'(hidden\_neurons[i].a) \times w\_sum$
+\EndFor
+\State $update\_weights\_hidden\_layer(y_{hidden})$
+\\
+\For {$i = 0 \to output\_neurons.length$ } 
+\State $output\_neurons[i].update\_weights\_gradient(y_{output}[i],\ hidden\_neurons,\ add)$
+\State $output\_neurons[i].update\_weights\_perceptron(outputs[i],\ hidden\_neurons,\ add)$
+\EndFor
+\EndFunction
+
+\end{algorithmic}
+
+
+\begin{algorithmic}
+
+\Function{$update\_weights\_gradient$}{$error,\ intputs,\ add$}
+\State $calc\_output(inputs + add)$
+\\
+\For {$j = 0 \to inputs.length$ } 
+\State $dw \gets weights[j] - last\_weights[j]$
+\State $p \gets error \times inputs[j]$
+\State $weights[j] \gets weights[j] + learning\_rate \times p + momentum \times dw$
+\EndFor
+\EndFunction
+
+\end{algorithmic}
+
+
+\begin{algorithmic}
+
+\Function{$update\_weights\_perceptron$}{$goal,\ intputs,\ add$}
+\State $calc\_output(inputs + add)$
+\\
+\For {$j = inputs.length \to inputs.length + add.length$ } 
+\State $dw \gets weights[j] - last\_weights[j]$
+\State $p \gets (goal - state ) \times add[inputs.length - j]$
+\State $weights[j] \gets weights[j] + \frac{learning\_rate \times p + momentum \times dw}{add.length} $
+\EndFor
+\EndFunction
+
+\end{algorithmic}
 
 \end{document}
 
