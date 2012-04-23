@@ -110,12 +110,12 @@ couches.}
 
 On peut en conclure 2 choses :
 \begin{itemize}
- \item la couche caché et la couche de sortie de pose aucun problème d'apprentissage
+ \item la couche caché et la couche de sortie ne posent aucuns problèmes d'apprentissages
  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
 \end{itemize}
 
 Il reste une question en suspend :
-\newline 
+\newline
 \textbf{Pourquoi le second réseau apprendrait-il plus rapidement que le premier ?}
 
 Nous n'avons pas la réponse. Par contre, nous pouvons nous intéresser à l'erreur de classification.
@@ -179,7 +179,7 @@ Il n'est alors plus capable que de reproduire la couche de sortie. Petit bémol 
 le critère de classification pour la couche caché est peut-être trop rigide, il suffit qu'un
 neurone diffère de 0.2 ( de la valeur voulue ) pour considérer que c'est un échec.
 
-\newline
+
 Tentons d'expliquer cette chute :
 \newline La première chose à comprendre est que l'augmentation
 du nombre de neurone n'a rien à voir avec cette perte. En effet, nous avons fait les 

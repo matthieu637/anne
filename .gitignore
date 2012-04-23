@@ -1,5 +1,5 @@
 #ignored files
-.directory/
+*/.directory/
 .settings/
 .project
 .pydevproject
