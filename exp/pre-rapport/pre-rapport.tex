@@ -110,12 +110,16 @@ couches.}
 
 On peut en conclure 2 choses :
 \begin{itemize}
+<<<<<<< HEAD
  \item la couche cachée et la couche de sortie de pose aucun problème d'apprentissage
+=======
+ \item la couche caché et la couche de sortie ne posent aucuns problèmes d'apprentissages
+>>>>>>> e7940af960fe6b52092ff95bdbdfeb07116ef9fd
  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
 \end{itemize}
 
 Il reste une question en suspend :
-\newline 
+\newline
 \textbf{Pourquoi le second réseau apprendrait-il plus rapidement que le premier ?}
 
 Nous n'avons pas de réponse définitive. Cependant, nous pouvons nous intéresser à l'erreur de classification.
@@ -175,10 +179,15 @@ Les performances du second réseau se sont alors écroulées :
 L'erreur du second réseau est toujours divisé en 3.}
 \end{figure}
 
+<<<<<<< HEAD
 Il n'est alors plus capable de reproduire la couche d'entrée ( qui a un poids très important ).
 
 
 Tentons maintenant d'expliquer cette chute :
+=======
+
+Tentons d'expliquer cette chute :
+>>>>>>> e7940af960fe6b52092ff95bdbdfeb07116ef9fd
 \newline La première chose à comprendre est que l'augmentation
 du nombre de neurone n'a rien à voir avec cette perte. En effet, nous avons fait les 
 simulations avec les chiffres triviales (i.e. seulement 10 formes différentes) agrandit en $16 \times 16$
