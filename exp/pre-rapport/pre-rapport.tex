@@ -110,7 +110,7 @@ couches.}
 
 On peut en conclure 2 choses :
 \begin{itemize}
- \item la couche caché et la couche de sortie de pose aucun problème d'apprentissage
+ \item la couche cachée et la couche de sortie de pose aucun problème d'apprentissage
  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
 \end{itemize}
 
@@ -118,7 +118,7 @@ Il reste une question en suspend :
 \newline 
 \textbf{Pourquoi le second réseau apprendrait-il plus rapidement que le premier ?}
 
-Nous n'avons pas la réponse. Par contre, nous pouvons nous intéresser à l'erreur de classification.
+Nous n'avons pas de réponse définitive. Cependant, nous pouvons nous intéresser à l'erreur de classification.
 
 \begin{figure}[H]
 \begin{center}
@@ -130,7 +130,7 @@ Nous n'avons pas la réponse. Par contre, nous pouvons nous intéresser à l'err
 
 Il est alors beaucoup moins flagrant que le second réseau apprend mieux que le premier.
 Évidemment, parler de classification de la premier couche (courbe 20 inputs) et de la couche 
-caché (courbe 5 hidden) est relativement dérisoire. 
+cachée (courbe 5 hidden) est relativement dérisoire. 
 \newline La question de la rapidité d'apprentissage reste donc ouverte.
 
 \subsection{Les rouages}
@@ -145,7 +145,7 @@ donc son apprentissage.
 \begin{center}
  \includegraphics[height=240px]{../cleeremans_2007/digit_reco/discretize_cloud.png}
 \end{center}
-\caption{ Valeurs discrétisés de la couche caché du premier réseau. Chaque couleurs 
+\caption{ Valeurs discrétisés de la couche cachée du premier réseau. Chaque couleurs 
 représentant un des 10 chiffres en entrée. Les courbes deviennent rapidement stables.}
 \end{figure}
 
@@ -169,28 +169,39 @@ neurones des couches cachées :
 Les performances du second réseau se sont alors écroulées : 
 \begin{figure}[H]
 \begin{center}
- \includegraphics[height=200px]{../cleeremans_2007/digit_reco/err_handwritten.png}
+ \includegraphics[height=220px]{../cleeremans_2007/digit_reco/rms_handwritten_ffa.png}
 \end{center}
-\caption{ \textbf{Erreur de classification} de l'architecture sur des chiffres manuscrits.
+\caption{ \textbf{Erreur RMS sans proportion} de l'architecture sur des chiffres manuscrits.
 L'erreur du second réseau est toujours divisé en 3.}
 \end{figure}
-FIXME
-Il n'est alors plus capable que de reproduire la couche de sortie. Petit bémol tout de même,
-le critère de classification pour la couche caché est peut-être trop rigide, il suffit qu'un
-neurone diffère de 0.2 ( de la valeur voulue ) pour considérer que c'est un échec.
 
-\newline
-Tentons d'expliquer cette chute :
+Il n'est alors plus capable de reproduire la couche d'entrée ( qui a un poids très important ).
+
+
+Tentons maintenant d'expliquer cette chute :
 \newline La première chose à comprendre est que l'augmentation
 du nombre de neurone n'a rien à voir avec cette perte. En effet, nous avons fait les 
-simulations avec les chiffres triviales (seulement 10 formes différentes) agrandit en $16 \times 16$
-et tout se passe très bien.
+simulations avec les chiffres triviales (i.e. seulement 10 formes différentes) agrandit en $16 \times 16$
+et tout se passe alors très bien.
 \newline
-Cette chute provient du fait que les entrées proposées sont très nombreuses. Il s'opère ainsi
-une première étape de classification dans la couche caché du premier réseau.
-Donc différentes formes peuvent être représentées par la même couche cachée.
-Sauf que le second réseau n'ayant en entrée que la version factorisé (la couche caché), il lui 
-est impossible de retrouver les formes initiales.
+Cette chute provient du fait que les entrées proposées sont très nombreuses et différentes. Il s'opère ainsi
+une première étape de classification dans la couche cachée du premier réseau.
+Ainsi différentes formes peuvent être représentées par la même couche cachée.
+Sauf que le second réseau n'ayant en entrée que la version factorisé (la couche cachée), il lui 
+est impossible de retrouver les formes initiales : il est entraîné pour la même entrée, à différentes 
+sorties.
+Il est donc naturel que les courbes soient désavantageuses, sauf que lorsqu'on regarde les formes, 
+on n'est pas si loin de la réalité.
+
+\begin{figure}[H]
+\begin{center}
+ \includegraphics[height=140px]{metarepre.png}
+\end{center}
+\caption{ En première ligne, 10 entrées aléatoires. En seconde, première partie de la sortie du second réseau}
+\end{figure}
+
+Si l'on est optimiste, on peut même considérer que ceux sont des représentations personnelles de 
+l'agent pour chaque chiffre différents qu'il a vu jusqu'alors.
 
 
 \subsection{Représentations}
@@ -202,7 +213,7 @@ cachée.
 
 \begin{figure}[H]
 \begin{center}
- \includegraphics[height=200px]{../cleeremans_2007/digit_reco/err_handwritten_relearn_2.png}
+ \includegraphics[height=190px]{../cleeremans_2007/digit_reco/err_handwritten_relearn_2.png}
 \end{center}
 \caption{ \textbf{Erreur de classification} de l'architecture sur des chiffres manuscrits.
 Apprentissage bloqué à l'époque 800. Changement de tâche aux époques : 800, 2000, 3200}
@@ -248,7 +259,7 @@ en modifiant quelques paramètres (initialisation des poids sur [-1 ; -1], momen
  \includegraphics[width=230px]{../cleeremans_2007/digital_reco/perf_boost.png}
 \end{tabular}
 \end{center}
- \caption{ Performance de l'architecture. À gauche la base, à droite la version améliorée.
+ \caption{ \textbf{Performance de classification}. À gauche la base, à droite la version améliorée.
  On ne considère plus le réseau avec apprentissage faible, mais on a ajouté le taux de paris hauts.}
 \end{figure}
 
@@ -277,17 +288,44 @@ tirer des conclusions à partir d'informations sur les 2 premiers.
 
 \begin{figure}[H]
  \begin{center}
- \includegraphics[width=250px]{../pre-presentation/merging.png}
+\begin{tabular}{c|c}
+ \includegraphics[width=210px]{third_net.png} & 
+ \includegraphics[width=210px]{third_net_hidden.png}
+\end{tabular}
+\end{center}
+\caption{\textbf{Performance de classification} des 2 architectures.}
+\end{figure}
+
+Les deux architectures apportent un gain. Il est plus accentué lorsque la dernière couche dispose
+de plus d'informations (i.e. connecté sur la couche cachée ).
+
+\begin{figure}[H]
+ \begin{center}
+ \includegraphics[width=280px]{../pre-presentation/merging.png}
 \end{center}
 \caption{Architecture par fusion}
 \end{figure}
 
 Ici, nous mélangeons un apprentissage par descente de gradient (sur le premier et second réseau)
 et un apprentissage perceptron (entre les 2 couches de sorties).
+L'algorithme peut être trouvé dans l'annexe A.
 
 \begin{figure}[H]
  \begin{center}
- \includegraphics[width=300px]{../pre-presentation/nth_wta.png}
+ \includegraphics[width=270px]{merging.png}
+\end{center}
+\caption{\textbf{Performance de classification} de l'architecture fusion.}
+\end{figure}
+
+Le gain est aussi notable d'autant qu'il ne nécessite aucun ajout de neurone.
+Il est d'ailleurs assez similaire au gain de la première architecture, 
+puisqu'elle est aussi basée sur les 2 couches de sorties des 2 réseaux
+(néanmoins, le début diffère, mais c'est le temps que les perceptron apprennent).
+
+
+\begin{figure}[H]
+ \begin{center}
+ \includegraphics[width=320px]{../pre-presentation/nth_wta.png}
 \end{center}
 \caption{Architecture par intuitions}
 \end{figure}
@@ -297,6 +335,16 @@ plus de pari mais l'indice du n\up{ième} neurone le plus actif contenant la bon
 Exemple : le réseau supérieur sort 2 -> la réponse est le 3\up{ième} neurone le plus actif 
 de la couche de sortie du premier réseau.
 \newline
+
+\begin{figure}[H]
+ \begin{center}
+ \includegraphics[width=290px]{nth_wta.png}
+\end{center}
+\caption{\textbf{Performance de classification} de l'architecture intuition.}
+\end{figure}
+
+Dans ce cas malheureusement, les performances sont très peu améliorées.
+\\[0.7cm]
 
 Nous avons aussi essayé quelques modèles où le réseau supérieur servait de superviseur
 à l'apprentissage du premier réseau. Par exemple, s'il parie haut, l'apprentissage du premier réseau
@@ -308,10 +356,9 @@ Ce que nous continuons d'étudier :
 \begin{itemize}
  \item validation sur des expériences plus complexes (qui ne peuvent être résolue directement par un perceptron)
  \item relation entre la taille de la couche cachée du premier réseau et le taux de paris avantageux
- \item nouveau critère de classification pour la couche caché dans la première architecture sur les chiffres manuscrits
  \item approfondir les intérêts du second article \cite{Pasquali_2010}
  \item de nouvelles architectures axées méta-apprentissage où le réseau d'ordre supérieur contrôle le premier
- (taux d'apprentissage, momentum, entrées à approfondir, ...) telle une conscience
+ (taux d'apprentissage, momentum, entrées à approfondir, ...)
 \end{itemize}
 
 
@@ -320,17 +367,20 @@ Ce que nous continuons d'étudier :
 
 \newpage
 \appendix
-\section{Algorithme}
+\section{Algorithme fusion gradient/perceptron}
 
-Ensemble d'inscrutions executé pour une époque et un tirage d'entrées/sorties.
+Ensemble d'instructions exécuté pour une époque et un tirage d'entrées/sorties à apprendre.
 \newline
 Cet algorithme se déroule en plusieurs temps :
 \begin{itemize}
- \item[a] On calcule la sortie du premier réseau en ignorant le second ( valeur à 0 )
- \item[b] On calcule la sortie du second réseau
- \item On calcule la sortie du premier réseau avec les sorties de b)
+ \item[a)] On calcule la sortie du premier réseau en ignorant le second ( valeur à 0 )
+ \item[b)] On calcule la sortie du second réseau
+ \item[c)] On calcule la sortie du premier réseau avec les sorties de b)
+ \item[d)] Les performances sont calculées avec c)
+ \item[e)] Le second réseau apprend à parier sur le résultat a) (sans prendre compte de lui-même)
+ \item[f)] Le premier réseau apprend à discriminer en prennent compte de b)
+ \\[0.7cm]
 \end{itemize}
-
 
 \begin{algorithmic}
 
@@ -351,11 +401,11 @@ Cet algorithme se déroule en plusieurs temps :
 \State
 \State $high\_order.train(first\_order.hidden\_layer,\ right\_houtput)$
 \State $first\_order.train(samples.inputs,\ samples.outputs,\ h\_output)$
-
-
+\State
+\State
 \end{algorithmic}
-
-L'interêt se porte sur
+Intéressons-nous justement à l'étape f) :
+\\[0.7cm]
 
 \begin{algorithmic}
 
@@ -375,9 +425,11 @@ L'interêt se porte sur
 \State $output\_neurons[i].update\_weights\_perceptron(outputs[i],\ hidden\_neurons,\ add)$
 \EndFor
 \EndFunction
-
+\State
 \end{algorithmic}
 
+La différence principale se situe sur le dernier for, avec les 2 méthodes de mise à jours des poids.
+\\[0.7cm]
 
 \begin{algorithmic}
 
@@ -390,7 +442,8 @@ L'interêt se porte sur
 \State $weights[j] \gets weights[j] + learning\_rate \times p + momentum \times dw$
 \EndFor
 \EndFunction
-
+\State
+\State
 \end{algorithmic}
 
 
