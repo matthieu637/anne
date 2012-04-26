@@ -208,12 +208,20 @@ class MultilayerPerceptronM:
         self.hiddenNeurons = [[] for _ in range(nbr_layer)]
         self.outputNeurons = []
         
-        for i in range(nbr_layer):
+        
+        for _ in range(nbr_hidden):
+            if grid == self.R1to1:
+                ph = Perceptron(nbr_input, learning_rate, momentum, temperature, Perceptron.HIDDEN, random, enable_bias)
+            else:
+                ph = PerceptronR0to1(nbr_input, learning_rate, momentum, temperature, Perceptron.HIDDEN, random, enable_bias)
+            self.hiddenNeurons[0].append(ph)
+        
+        for i in range(1, nbr_layer):
             for _ in range(nbr_hidden):
                 if grid == self.R1to1:
-                    ph = Perceptron(nbr_input, learning_rate, momentum, temperature, Perceptron.HIDDEN, random, enable_bias)
+                    ph = Perceptron(nbr_hidden, learning_rate, momentum, temperature, Perceptron.HIDDEN, random, enable_bias)
                 else:
-                    ph = PerceptronR0to1(nbr_input, learning_rate, momentum, temperature, Perceptron.HIDDEN, random, enable_bias)
+                    ph = PerceptronR0to1(nbr_hidden, learning_rate, momentum, temperature, Perceptron.HIDDEN, random, enable_bias)
                 self.hiddenNeurons[i].append(ph)
             
         for _ in range(nbr_output):
