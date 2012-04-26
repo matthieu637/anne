@@ -7,9 +7,9 @@ Created on 13 March 2012
 Article implementation
 '''
 
-from multilayerp import MultilayerPerceptron
+from multilayerp import MultilayerPerceptron, MultilayerPerceptronM
 from perceptron import PerceptronR0to1
-from random import shuffle
+from random import shuffle, seed
 from utils import index_max
 import matplotlib.pyplot as plt
 from data import DataFile, DataFileR
@@ -21,7 +21,7 @@ if __name__ == '__main__':
     nbr_network = 5
     momentum = 0.5
     lrate = 0.15
-    nbEpoch = 400
+    nbEpoch = 800
     nbTry = 20
     display_interval = range(nbEpoch)[::6]
     
@@ -38,10 +38,14 @@ if __name__ == '__main__':
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = [PerceptronR0to1(nbInputs, learning_rate=lrate, momentum=momentum, 
+        seed(i)
+        first_order = [PerceptronR0to1(nbInputs, learning_rate=lrate, momentum=momentum,
                  temperature=1., init_w_randomly=True, enable_bias=True) for _ in range(nbOutputs)]
-        high_order_10 = MultilayerPerceptron(nbInputs, 3+nbInputs//4, nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)
-        high_order_10.init_weights_randomly(-1, 1)
+#        high_order_10 = MultilayerPerceptron(nbInputs, 3 + nbInputs // 4, nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)
+#        high_order_10.init_weights_randomly(-1, 1)
+        
+        high_order_10 = MultilayerPerceptronM(nbInputs, 3 + nbInputs // 4, nbOutputs, 1, learning_rate=lrate, momentum=momentum, grid=mode)
+        
 
         networks[i] = {'first_order' : first_order,
                         'high_order_10' : high_order_10}
@@ -49,6 +53,8 @@ if __name__ == '__main__':
     #3 curves
     err_plot = {'first_order' : [] ,
               'high_order_10' : []}
+
+    seed(100)
 
     #learning
     for epoch in range(nbEpoch):
