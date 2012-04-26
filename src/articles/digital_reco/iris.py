@@ -15,21 +15,25 @@ from data import DataFileR
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
+    nbr_network = 3
     momentum = 0.5
-    nbEpoch = 300
-    nbTry = 20
+    nbEpoch = 666
+    nbTry = 15
     display_interval = range(nbEpoch)[::5]
-    #seed(0)
+    
+    nbHidden = 5
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = MultilayerPerceptron(4, 10, 3, learning_rate=0.05, momentum=0.3, grid=mode)
-        high_order_h = MultilayerPerceptron(10, 10, 2, learning_rate=0.2, momentum=0.5, grid=mode)
+        seed(i)
+        first_order = MultilayerPerceptron(4, nbHidden, 3, learning_rate=0.05, momentum=0.5, grid=mode)
+        #first_order.init_weights_randomly(-1, 1)
         
-        first_order.init_weights_randomly(-1, 1)
+        high_order_h = MultilayerPerceptron(nbHidden, nbHidden*2, 2, learning_rate=0.2, momentum=0.5, grid=mode)
+        
+        
         high_order_h.init_weights_randomly(-1, 1)
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h}
@@ -37,7 +41,7 @@ if __name__ == '__main__':
     #create example
     examples = DataFileR("iris.txt", mode)
     
-    print(len(examples.inputs))
+    seed(100)
 
     #3 curves
     y_plot = {'first_order' : [] ,
@@ -86,9 +90,9 @@ if __name__ == '__main__':
     
 
     plt.title("Performance of first-order and higher-order networks")
-    plt.plot(display_interval , y_perfo['first_order'][::5], label="first-order network")
-    plt.plot(display_interval , y_perfo['high_order_h'][::5], label="high-order network (high learning rate)")
-    plt.plot(display_interval , y_perfo['high_order_l'][::5], label="proportion of high wagers")
+    plt.plot(display_interval , y_perfo['first_order'][::5], label="first-order network", linewidth=2)
+    plt.plot(display_interval , y_perfo['high_order_h'][::5], label="high-order network (high learning rate)", linewidth=2)
+    plt.plot(display_interval , y_perfo['high_order_l'][::5], label="proportion of high wagers", linewidth=2)
     plt.ylabel('SUCCESS RATIO')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))

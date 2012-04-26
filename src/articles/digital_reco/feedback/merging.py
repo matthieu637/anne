@@ -156,12 +156,12 @@ if __name__ == '__main__':
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        control = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode,
-                                       temperature=1, random=False, enable_bias=True)
+        seed(i)
+        control = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
         control.init_weights_randomly(-1, 1)
         
-        first_order = AdHock(control)
         high_order_h = MultilayerPerceptron(100, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
+        first_order = AdHock(control)
 #        high_order_h.init_weights_randomly(-1, 1)
         
         networks[i] = {'first_order' : first_order,
@@ -178,6 +178,8 @@ if __name__ == '__main__':
               'feedback' : [],
               'control': [],
               'diff': []}
+    
+    seed(100)
     
     #learning
     for epoch in range(nbEpoch):
@@ -240,9 +242,9 @@ if __name__ == '__main__':
     print("score : ", sum(y_perfo['diff']) / len(y_perfo['diff']))
 
     plt.title("Feedback by merging")
-    plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=1)
-    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
-    plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
+#    plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=1)
+#    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
+#    plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
     plt.plot(display_interval , y_perfo['control'][3::5], label="control network", linewidth=2)
     plt.plot(display_interval , y_perfo['feedback'][3::5], label="feedback", linewidth=2)
     plt.ylabel('SUCCESS RATIO')

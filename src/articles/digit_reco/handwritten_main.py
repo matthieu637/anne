@@ -10,12 +10,12 @@ Article implementation
 from multilayerp import MultilayerPerceptron
 from random import shuffle
 import matplotlib.pyplot as plt
-from data import DataFile
+from data import DataFile, DataFileR
 from utils import index_max, compare, compare_f
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 3
+    nbr_network = 5
     momentum = 0.9
     lrate = 0.1
     nbEpoch = 1000
@@ -24,22 +24,30 @@ if __name__ == '__main__':
     display_interval2 = [0, 25, 50, 100, 200, 500, 999]
     
     
+        #create inputs/outputs to learn
+#    examples = DataFile("digit_shape_16.txt")
+#    examples = DataFile("digit_handwritten_16.txt")
+    examples = DataFileR("iris.txt")
+    
+    nbInput = len(examples.inputs[0])
+    nbHidden = 16 * 4
+    nbHidden = 5
+    nbOutput = len(examples.outputs[0])
+    
     #create all networks
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = MultilayerPerceptron(16 * 16, 16 * 4, 10, learning_rate=lrate, momentum=momentum, grid=mode)
-        high_order_10 = MultilayerPerceptron(16 * 4, 16 * 4 * 2, 16 * 16 + 16 * 4 + 10, learning_rate=lrate, momentum=momentum, grid=mode)
-        high_order_5 = MultilayerPerceptron(16 * 4, 16 * 4, 16 * 16 + 16 * 4 + 10, learning_rate=lrate, momentum=momentum, grid=mode)
+        first_order = MultilayerPerceptron(nbInput, nbHidden, nbOutput, learning_rate=lrate, momentum=momentum, grid=mode)
+        high_order_10 = MultilayerPerceptron(nbHidden, nbHidden * 2, nbInput + nbHidden + nbOutput, learning_rate=lrate, momentum=momentum, grid=mode)
+        high_order_5 = MultilayerPerceptron(nbHidden, nbHidden, nbInput + nbHidden + nbOutput, learning_rate=lrate, momentum=momentum, grid=mode)
 
 
         networks[i] = {'first_order' : first_order,
                         'high_order_10' : high_order_10,
                         'high_order_5':high_order_5}
 
-    #create inputs/outputs to learn
-#    examples = DataFile("digit_shape_16.txt")
-    examples = DataFile("digit_handwritten_16.txt")
+
 
     #3 curves
     rms_plot = {'first_order' : [] ,
@@ -83,11 +91,11 @@ if __name__ == '__main__':
                 if(index_max(network['first_order'].stateOutputNeurons) != index_max(examples.outputs[ex])):
                     err_one_network['first_order'] += 1
 
-                err_one_network['high_order_20'] += 1 - compare(examples.inputs[ex], network['high_order_10'].stateOutputNeurons[0:16 * 16])
-                if( not compare_f(network['first_order'].stateHiddenNeurons, 
-                                  network['high_order_10'].stateOutputNeurons[16 * 16:16 * 16 + 16 * 4], 0.3) ):
+                err_one_network['high_order_20'] += 1 - compare(examples.inputs[ex], network['high_order_10'].stateOutputNeurons[0:nbInput])
+                if(not compare_f(network['first_order'].stateHiddenNeurons,
+                                  network['high_order_10'].stateOutputNeurons[nbInput:nbInput + nbHidden], 0.3)):
                     err_one_network['high_order_5'] += 1
-                if(index_max(network['high_order_10'].stateOutputNeurons[16 * 16 + 16 * 4:16 * 16 + 16 * 4 + 10]) != 
+                if(index_max(network['high_order_10'].stateOutputNeurons[nbInput + nbHidden:nbInput + nbHidden + nbOutput]) != 
                     index_max(network['first_order'].stateOutputNeurons)):
                     err_one_network['high_order_10'] += 1
 
@@ -99,9 +107,9 @@ if __name__ == '__main__':
             
 
         #add plot
-        rms_plot['first_order'].append(sum_rms['first_order']/ (nbTry * nbr_network))
-        rms_plot['high_order_10'].append(sum_rms['high_order_10']/ (nbTry * nbr_network))
-        rms_plot['high_order_5'].append(sum_rms['high_order_5']/ (nbTry * nbr_network))
+        rms_plot['first_order'].append(sum_rms['first_order'] / (nbTry * nbr_network))
+        rms_plot['high_order_10'].append(sum_rms['high_order_10'] / (nbTry * nbr_network))
+        rms_plot['high_order_5'].append(sum_rms['high_order_5'] / (nbTry * nbr_network))
 
         err_plot['first_order'].append(err_one_network['first_order'] / (nbTry * nbr_network))
         err_plot['high_order_10'].append(err_one_network['high_order_10'] / (nbTry * nbr_network))

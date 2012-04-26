@@ -90,7 +90,7 @@ def charge_to_indice(charge):
 def print_liste(l, n):
     i = 0
     while (i < len(l)) :
-        print("".join(["x" if l[j] < 0.5 else "." for j in range(i, i+n)]))
+        print("".join(["x" if l[j] >= 0.5 else "." for j in range(i, i+n)]))
         i += n
     
 if __name__ == '__main__':

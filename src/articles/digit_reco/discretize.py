@@ -10,7 +10,7 @@ Article implementation
 from multilayerp import MultilayerPerceptron
 from random import shuffle
 import matplotlib.pyplot as plt
-from data import DataFile
+from data import DataFile, DataFileR
 from mpl_toolkits.mplot3d import Axes3D
 from utils import index_max
 
@@ -34,39 +34,50 @@ if __name__ == '__main__':
     nbr_network = 1
     momentum = 0.9
     lrate = 0.1
-    nbShape = 10
+    nbShape = 3
     nbEpoch = 1000
+    nbTry = 10
     display_interval = range(nbEpoch)[::6]
     
+    
+    #create inputs/outputs to learn
+#    examples = DataFile("digit_shape.txt", mode)
+    
+    examples = DataFileR("iris.txt")
+    momentum = 0.2
+    
+    nbInputs = len(examples.inputs[0])
+    nbHidden = 5
+    nbOutputs = len(examples.outputs[0])
+    nbShape = nbOutputs
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
-        first_order = MultilayerPerceptron(20, 5, 10, learning_rate=lrate, momentum=momentum, grid=mode)
-        high_order_10 = MultilayerPerceptron(5, 10, 35, learning_rate=lrate, momentum=momentum, grid=mode)
+        first_order = MultilayerPerceptron(nbInputs, nbHidden, nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)
+        high_order_10 = MultilayerPerceptron(nbHidden, nbHidden*2, nbInputs+nbHidden+nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)
         
         networks[i] = {'first_order' : first_order,
                         'high_order_10' : high_order_10}
 
-    #create inputs/outputs to learn
-    examples = DataFile("digit_shape.txt", mode)
 
 
-    learned = [[0 for _ in range(10)] for _ in range(nbDiscre**5)]
+
+    learned = [[0 for _ in range(nbShape)] for _ in range(nbDiscre**nbHidden)]
 
     #3 curves
     dis = [[0 for _ in range(nbEpoch)] for _ in range(nbShape)]
     dis2 = [[0 for _ in range(nbEpoch)] for _ in range(nbShape)]
     div = [[0 for _ in range(nbEpoch)] for _ in range(nbShape)]
-    valid = [[] for _ in range(10)]
+    valid = [[] for _ in range(nbShape)]
 
     #learning
     for epoch in range(nbEpoch):
         for network in networks:
-            l_exx = list(range(nbShape))
+            l_exx = list(range(len(examples.inputs)))
             shuffle(l_exx)
-            for ex in l_exx:              
+            for ex in l_exx[0:nbTry]:              
                 #RMS
                 network['first_order'].calc_output(examples.inputs[ex])
                 
@@ -76,9 +87,12 @@ if __name__ == '__main__':
                 
                 network['high_order_10'].calc_output(network['first_order'].stateHiddenNeurons)
                 
-                learned[discretis(network['first_order'].stateHiddenNeurons)][ex] += 1
+                
 
                 im = index_max(examples.outputs[ex])
+                
+                learned[discretis(network['first_order'].stateHiddenNeurons)][im] += 1
+                
                 div[im][epoch] += 1
                 dis[im][epoch] += discretis(network['first_order'].stateHiddenNeurons)
                 dis2[im][epoch] += index_max(network['first_order'].stateOutputNeurons)
@@ -97,7 +111,7 @@ if __name__ == '__main__':
         print(epoch)
     
     #divided by the number of networks
-    for i in range(10):
+    for i in range(nbShape):
         for j in range(nbEpoch):
             if(div[i][j] != 0):
                 dis[i][j] /= div[i][j]
@@ -107,7 +121,7 @@ if __name__ == '__main__':
     
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    for j in range(10):
+    for j in range(nbShape):
         ax.scatter([dis[j][k] for k in valid[j]], [j] * len(valid[j]), valid[j], color=colors[j], marker='x')
 
     ax.set_xlabel('DISCRETIZED VALUE')
@@ -118,7 +132,7 @@ if __name__ == '__main__':
 
     fig = plt.figure()
     ax = fig.add_subplot(111, projection='3d')
-    for j in range(10):
+    for j in range(nbShape):
         ax.scatter([dis2[j][k] for k in valid[j]], [j] * len(valid[j]), valid[j], color=colors[j], marker='x')
 
     ax.set_xlabel('DISCRETIZED VALUE')
@@ -147,7 +161,7 @@ if __name__ == '__main__':
     for j in range(nbShape):
         plt.title('shape :%d' % j)
         plt.plot(valid[j], [dis[j][k] for k in valid[j]],  '.', label="hidden")
-        plt.plot(valid[j], [dis2[j][k]*(nbDiscre**5)/10 for k in valid[j]], '.', label="output")
+        plt.plot(valid[j], [dis2[j][k]*(nbDiscre**nbHidden)/nbShape for k in valid[j]], '.', label="output")
         
         plt.legend(loc='best', frameon=False)
         plt.show()
@@ -155,11 +169,11 @@ if __name__ == '__main__':
     stade = 0
     for i in range(len(learned)):
         r = max(learned[i])
-        if(r > 10):
+        if(r > nbShape):
             cl = list(learned[i])
             cl.remove(r)
-            if(max(cl) > 10):       
+            if(max(cl) > nbShape):       
                 stade += 1
-                plt.bar(range(stade*12+10)[stade*12::], learned[i])
+                plt.bar(range(stade*12+nbShape)[stade*12::], learned[i])
     plt.show()
     
