@@ -44,7 +44,7 @@ if __name__ == '__main__':
 #        high_order_10 = MultilayerPerceptron(nbInputs, 3 + nbInputs // 4, nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)
 #        high_order_10.init_weights_randomly(-1, 1)
         
-        high_order_10 = MultilayerPerceptronM(nbInputs, 3 + nbInputs // 4, nbOutputs, 1, learning_rate=lrate, momentum=momentum, grid=mode)
+        high_order_10 = MultilayerPerceptronM(nbInputs, 3 + nbInputs // 4, nbOutputs, 2, learning_rate=lrate, momentum=momentum, grid=mode)
         
 
         networks[i] = {'first_order' : first_order,

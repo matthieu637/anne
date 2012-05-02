@@ -6,7 +6,7 @@ Created on 30 March 2012
 
 '''
 
-from multilayerp import MultilayerPerceptron
+from multilayerp import MultilayerPerceptron, MultilayerPerceptronM
 from utils import index_max
 from random import shuffle
 from random import seed
@@ -17,21 +17,22 @@ if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
     nbr_network = 3
     momentum = 0.5
-    nbEpoch = 666
-    nbTry = 15
+    nbEpoch = 500
+    nbTry = 20
     display_interval = range(nbEpoch)[::5]
     
-    nbHidden = 5
+    nbHidden = 150
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
         seed(i)
-        first_order = MultilayerPerceptron(4, nbHidden, 3, learning_rate=0.05, momentum=0.5, grid=mode)
-        #first_order.init_weights_randomly(-1, 1)
+#        first_order = MultilayerPerceptron(4, nbHidden, 3, learning_rate=0.05, momentum=0.5, grid=mode)
+        first_order = MultilayerPerceptronM(4, nbHidden, 3, 1, learning_rate=0.05, momentum=0.05, grid=mode)
+        first_order.init_weights_randomly(-1, 1)
         
-        high_order_h = MultilayerPerceptron(nbHidden, nbHidden*2, 2, learning_rate=0.2, momentum=0.5, grid=mode)
+        high_order_h = MultilayerPerceptron(nbHidden, nbHidden, 2, learning_rate=0.1, momentum=0.15, grid=mode)
         
         
         high_order_h.init_weights_randomly(-1, 1)
@@ -65,7 +66,7 @@ if __name__ == '__main__':
                         if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]) \
                         else [1, mode]
                 
-                network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
+                network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons[0] )
 
                 if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo['first_order'] += 1
@@ -77,7 +78,7 @@ if __name__ == '__main__':
                     perfo['high_order_l'] += 1
                 
                 #learn
-                network['high_order_h'].train(network['first_order'].stateHiddenNeurons,
+                network['high_order_h'].train(network['first_order'].stateHiddenNeurons[0] ,
                                                cell)
                 network['first_order'].train(examples.inputs[ex],
                                              examples.outputs[ex])

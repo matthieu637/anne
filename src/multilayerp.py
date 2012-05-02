@@ -354,16 +354,14 @@ class MultilayerPerceptronM:
         self.calc_output(inputs)
         
         #build y the error vector to propagate
-        y = []
+        yy = [[] for _ in range(self._nbr_layer + 1)]
         for i in range(len(self.outputNeurons)) :
-            y.append(self.outputNeurons[i].calc_error_propagation(outputs[i]))
-        
-        yy = [[] for _ in range(self._nbr_layer)]
+            yy[self._nbr_layer].append(self.outputNeurons[i].calc_error_propagation(outputs[i]))
         
         for i in range(len(self.hiddenNeurons[self._nbr_layer - 1])):
             w_sum = 0.
             for j in range(len(self.outputNeurons)) :
-                w_sum += self.outputNeurons[j].weights[i] * y[j]
+                w_sum += self.outputNeurons[j].weights[i] * yy[self._nbr_layer][j]
             yy[self._nbr_layer - 1].append(self.hiddenNeurons[self._nbr_layer - 1][i].calc_error_propagation(w_sum))
         
         for l in sorted(range(self._nbr_layer - 1), reverse=True):
@@ -383,7 +381,7 @@ class MultilayerPerceptronM:
                 self.hiddenNeurons[l][i].update_weights(yy[l][i] , self.stateHiddenNeurons[l - 1])
  
         for i in range(len(self.outputNeurons)) :
-            self.outputNeurons[i].update_weights(y[i] , self.stateHiddenNeurons[self._nbr_layer - 1])
+            self.outputNeurons[i].update_weights(yy[self._nbr_layer][i] , self.stateHiddenNeurons[self._nbr_layer - 1])
             
         self._network_updated = True
         
