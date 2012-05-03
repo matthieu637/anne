@@ -1,6 +1,6 @@
 # -*- coding: UTF-8 -*-
 '''
-Created on 19 March 2012
+Created on 19 April 2012
 
 @author: Matthieu Zimmer
 
@@ -248,14 +248,6 @@ if __name__ == '__main__':
     plt.ylabel('SUCCESS RATIO')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
-    plt.legend(loc='best', frameon=False)
-    plt.show()
-    
-    
-    plt.title("Diff by merging")
-    plt.plot(display_interval , y_perfo['diff'][3::5], label="diff", linewidth=2)
-    plt.ylabel('SUCCESS RATIO')
-    plt.xlabel("EPOCHS")
     plt.legend(loc='best', frameon=False)
     plt.show()
     

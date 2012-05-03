@@ -8,7 +8,7 @@ Created on 19 March 2012
 
 from multilayerp import MultilayerPerceptron
 from utils import index_max, index_max_nth
-from random import shuffle
+from random import shuffle, seed
 import matplotlib.pyplot as plt
 from data import DataFile
 
@@ -24,13 +24,11 @@ if __name__ == '__main__':
     networks = [{} for _ in range(nbr_network)]
     
     for i in range(nbr_network):
+        seed(i)
         first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
-        high_order_h = MultilayerPerceptron(100, 100, 10, learning_rate=0.1, momentum=0.5, grid=mode)
-        
-        
         first_order.init_weights_randomly(-1, 1)
-        high_order_h.init_weights_randomly(-1, 1)
         
+        high_order_h = MultilayerPerceptron(100, 100, 10, learning_rate=0.1, momentum=0.5, grid=mode)
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h}
 
@@ -48,6 +46,8 @@ if __name__ == '__main__':
     stats2 = []
     max2 = [0 for _ in range(nbEpoch)]
     div = [0 for _ in range(nbEpoch)]
+    
+    seed(100)
     
     #learning
     for epoch in range(nbEpoch):
@@ -74,7 +74,7 @@ if __name__ == '__main__':
                 if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
                     perfo['first_order'] += 1
                     max2[epoch] += max(network['first_order'].stateOutputNeurons)
-                    print(max(network['first_order'].stateOutputNeurons))
+#                    print(max(network['first_order'].stateOutputNeurons))
                     div[epoch] += 1
                 perfo['max'] += max(network['first_order'].stateOutputNeurons)
 
@@ -172,11 +172,11 @@ if __name__ == '__main__':
 
     plt.title("Performance of first-order and higher-order networks with feedback ( nth W-T-A )")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
-    plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
+#    plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
     plt.plot(display_interval , y_perfo['feedback'][3::5], label="feedback", linewidth=2)
-    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
-    plt.plot(display_interval , y_perfo['max'][3::5], label="most active neuron", linewidth=2)
-    plt.plot(display_interval , max2[3::5], label="most active neuron (good answer)", linewidth=2)
+#    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
+#    plt.plot(display_interval , y_perfo['max'][3::5], label="most active neuron", linewidth=2)
+#    plt.plot(display_interval , max2[3::5], label="most active neuron (good answer)", linewidth=2)
     plt.ylabel('SUCCESS RATIO')
     plt.xlabel("EPOCHS")
     plt.axis((0, nbEpoch, 0, 1.))
