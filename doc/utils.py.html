@@ -82,8 +82,8 @@ NB_CORE <font color="#990000">=</font>&nbsp;<font color="#993399">4</font><br/>
 <b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">compare_f</font></b><font color="#990000">(</font>list_model<font color="#990000">,</font> list_test<font color="#990000">,</font> threshold<font color="#990000">=</font><font color="#993399">0.05</font><font color="#990000">):</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>list_model<font color="#990000">)):</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font><b><font color="#000000">abs</font></b><font color="#990000">(</font>list_model<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">-</font> list_test<font color="#990000">[</font>i<font color="#990000">])</font> <font color="#990000">&gt;</font> threshold<font color="#990000">):</font><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">0</font><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#993399">1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> False<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> True<br/>
 <br/>
 <b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font>n<font color="#990000">,</font> depth<font color="#990000">=</font>NB_CORE<font color="#990000">):</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;res <font color="#990000">=</font> <font color="#990000">[</font>n <font color="#990000">//</font> depth<font color="#990000">]</font> <font color="#990000">*</font> depth<br/>
@@ -100,6 +100,12 @@ NB_CORE <font color="#990000">=</font>&nbsp;<font color="#993399">4</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i <font color="#990000">+=</font> <font color="#993399">1</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;buffer <font color="#990000">+=</font> c<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> res<br/>
+<br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">print_liste</font></b><font color="#990000">(</font>l<font color="#990000">,</font> n<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;i <font color="#990000">=</font> <font color="#993399">0</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">while</font></b> <font color="#990000">(</font>i <font color="#990000">&lt;</font> <b><font color="#000000">len</font></b><font color="#990000">(</font>l<font color="#990000">))</font> <font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><font color="#FF0000">""</font><font color="#990000">.</font><b><font color="#000000">join</font></b><font color="#990000">([</font><font color="#FF0000">"x"</font> <b><font color="#0000FF">if</font></b> l<font color="#990000">[</font>j<font color="#990000">]</font> <font color="#990000">&gt;=</font> <font color="#993399">0.5</font> <b><font color="#0000FF">else</font></b> <font color="#FF0000">"."</font> <b><font color="#0000FF">for</font></b> j <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>i<font color="#990000">,</font> i<font color="#990000">+</font>n<font color="#990000">)]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;i <font color="#990000">+=</font> n<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 <b><font color="#0000FF">if</font></b>&nbsp;__name__ <font color="#990000">==</font> <font color="#FF0000">'__main__'</font><font color="#990000">:</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">multithread_repartition</font></b><font color="#990000">(</font><font color="#993399">42</font><font color="#990000">,</font> <font color="#993399">4</font><font color="#990000">))</font><br/>
@@ -115,5 +121,7 @@ NB_CORE <font color="#990000">=</font>&nbsp;<font color="#993399">4</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">index_max</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">print</font></b><font color="#990000">(</font><b><font color="#000000">last_index_max</font></b><font color="#990000">([</font><font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> <font color="#993399">0</font><font color="#990000">]))</font><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#000000">print_liste</font></b><font color="#990000">([</font><font color="#993399">0.1</font><font color="#990000">,</font> <font color="#993399">0.6</font><font color="#990000">,</font> <font color="#993399">0.4</font><font color="#990000">,</font> <font color="#993399">0.8</font><font color="#990000">],</font> <font color="#993399">2</font><font color="#990000">)</font><br/>
 </tt><br/>
 </body>

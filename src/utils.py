@@ -68,8 +68,8 @@ def compare(list_model, list_test, threshold=0.5):
 def compare_f(list_model, list_test, threshold=0.05):
     for i in range(len(list_model)):
         if(abs(list_model[i] - list_test[i]) > threshold):
-            return 0
-    return 1
+            return False
+    return True
 
 def multithread_repartition(n, depth=NB_CORE):
     res = [n // depth] * depth
@@ -86,6 +86,12 @@ def charge_to_indice(charge):
         i += 1
         buffer += c
     return res
+
+def print_liste(l, n):
+    i = 0
+    while (i < len(l)) :
+        print("".join(["x" if l[j] >= 0.5 else "." for j in range(i, i+n)]))
+        i += n
     
 if __name__ == '__main__':
     print(multithread_repartition(42, 4))
@@ -101,3 +107,5 @@ if __name__ == '__main__':
     
     print(index_max([1, 0, 0, 1, 0]))
     print(last_index_max([1, 0, 0, 1, 0]))
+
+    print_liste([0.1, 0.6, 0.4, 0.8], 2)
