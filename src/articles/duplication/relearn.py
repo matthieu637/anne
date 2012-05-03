@@ -7,7 +7,7 @@ Created on 22 March 2012
 Article implementation
 '''
 
-from multilayerp import MultilayerPerceptron
+from multilayerp import MultilayerPerceptron,MultilayerPerceptronM
 from random import shuffle
 from perceptron import PerceptronR0to1
 import matplotlib.pyplot as plt
@@ -56,7 +56,7 @@ if __name__ == '__main__':
         l[imax] = 1
     
     for i in range(nbr_network):
-        first_order = MultilayerPerceptron(nbInputs, nbHidden, nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)
+        first_order = MultilayerPerceptronM(nbInputs, nbHidden, nbOutputs, 2, learning_rate=lrate, momentum=momentum, grid=mode)
         high_order_10 = MultilayerPerceptron(nbHidden, nbHidden * 2, nbInputs+ nbHidden+ nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)
         control1 = deepcopy(first_order)
         control2 = deepcopy(high_order_10)
@@ -93,18 +93,18 @@ if __name__ == '__main__':
                                             examples.inputs[ex])
                 
                 entire_first_order = examples.inputs[ex] + \
-                                     network['first_order'].stateHiddenNeurons + \
+                                     network['first_order'].stateHiddenNeurons[1] + \
                                      network['first_order'].stateOutputNeurons
                                      
                 entire_first_order2 = examples.inputs[ex] + \
-                                     network['first_order_control'].stateHiddenNeurons + \
+                                     network['first_order_control'].stateHiddenNeurons[1] + \
                                      network['first_order_control'].stateOutputNeurons
                 
                 network['high_order_10'].calc_output(
-                                            network['first_order'].stateHiddenNeurons)
+                                            network['first_order'].stateHiddenNeurons[1])
                 
                 network['high_order_control'].calc_output(
-                                            network['first_order_control'].stateHiddenNeurons)
+                                            network['first_order_control'].stateHiddenNeurons[1])
                 
                 res = [network['perceptron'][i].calc_output(examples.inputs[ex]) for i in range(nbOutputs)]
 
@@ -126,9 +126,9 @@ if __name__ == '__main__':
                     err_one_network['high_order_control'] += 1
 
                 #learn
-                network['high_order_10'].train(network['first_order'].stateHiddenNeurons,
+                network['high_order_10'].train(network['first_order'].stateHiddenNeurons[1],
                                                entire_first_order)
-                network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons,
+                network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons[1],
                                                entire_first_order2)
                 
                 network['first_order'].train(examples.inputs[ex],
@@ -172,18 +172,18 @@ if __name__ == '__main__':
                                             examples.inputs[ex])
                 
                 entire_first_order = examples.inputs[ex] + \
-                                     network['first_order'].stateHiddenNeurons + \
+                                     network['first_order'].stateHiddenNeurons[1] + \
                                      network['first_order'].stateOutputNeurons
                                      
                 entire_first_order2 = examples.inputs[ex] + \
-                                     network['first_order_control'].stateHiddenNeurons + \
+                                     network['first_order_control'].stateHiddenNeurons[1] + \
                                      network['first_order_control'].stateOutputNeurons
                 
                 network['high_order_10'].calc_output(
-                                            network['first_order'].stateHiddenNeurons)
+                                            network['first_order'].stateHiddenNeurons[1])
                 
                 network['high_order_control'].calc_output(
-                                            network['first_order_control'].stateHiddenNeurons)
+                                            network['first_order_control'].stateHiddenNeurons[1])
                 
                 res = [network['perceptron'][i].calc_output(examples.inputs[ex]) for i in range(nbOutputs)]
 
@@ -205,9 +205,9 @@ if __name__ == '__main__':
                     err_one_network['high_order_control'] += 1
 
                 #learn
-                network['high_order_10'].train(network['first_order'].stateHiddenNeurons,
+                network['high_order_10'].train(network['first_order'].stateHiddenNeurons[1],
                                                entire_first_order)
-                network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons,
+                network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons[1],
                                                entire_first_order2)
                 
                 network['first_order'].train(examples.inputs[ex],
@@ -251,18 +251,18 @@ if __name__ == '__main__':
                                             examples.inputs[ex])
                 
                 entire_first_order = examples.inputs[ex] + \
-                                     network['first_order'].stateHiddenNeurons + \
+                                     network['first_order'].stateHiddenNeurons[1] + \
                                      network['first_order'].stateOutputNeurons
                                      
                 entire_first_order2 = examples.inputs[ex] + \
-                                     network['first_order_control'].stateHiddenNeurons + \
+                                     network['first_order_control'].stateHiddenNeurons[1] + \
                                      network['first_order_control'].stateOutputNeurons
                 
                 network['high_order_10'].calc_output(
-                                            network['first_order'].stateHiddenNeurons)
+                                            network['first_order'].stateHiddenNeurons[1])
                 
                 network['high_order_control'].calc_output(
-                                            network['first_order_control'].stateHiddenNeurons)
+                                            network['first_order_control'].stateHiddenNeurons[1])
                 
                 res = [network['perceptron'][i].calc_output(examples.inputs[ex]) for i in range(nbOutputs)]
 
@@ -284,9 +284,9 @@ if __name__ == '__main__':
                     err_one_network['high_order_control'] += 1
 
                 #learn
-                network['high_order_10'].train(network['first_order'].stateHiddenNeurons,
+                network['high_order_10'].train(network['first_order'].stateHiddenNeurons[1],
                                                entire_first_order)
-                network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons,
+                network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons[1],
                                                entire_first_order2)
                 
                 network['first_order'].train(examples.inputs[ex],
@@ -330,18 +330,18 @@ if __name__ == '__main__':
                                             examples.inputs[ex])
                 
                 entire_first_order = examples.inputs[ex] + \
-                                     network['first_order'].stateHiddenNeurons + \
+                                     network['first_order'].stateHiddenNeurons[1] + \
                                      network['first_order'].stateOutputNeurons
                                      
                 entire_first_order2 = examples.inputs[ex] + \
-                                     network['first_order_control'].stateHiddenNeurons + \
+                                     network['first_order_control'].stateHiddenNeurons[1] + \
                                      network['first_order_control'].stateOutputNeurons
                 
                 network['high_order_10'].calc_output(
-                                            network['first_order'].stateHiddenNeurons)
+                                            network['first_order'].stateHiddenNeurons[1])
                 
                 network['high_order_control'].calc_output(
-                                            network['first_order_control'].stateHiddenNeurons)
+                                            network['first_order_control'].stateHiddenNeurons[1])
                 
                 res = [network['perceptron'][i].calc_output(examples.inputs[ex]) for i in range(nbOutputs)]
 
@@ -363,9 +363,9 @@ if __name__ == '__main__':
                     err_one_network['high_order_control'] += 1
 
                 #learn
-                network['high_order_10'].train(network['first_order'].stateHiddenNeurons,
+                network['high_order_10'].train(network['first_order'].stateHiddenNeurons[1],
                                                entire_first_order)
-                network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons,
+                network['high_order_control'].train(network['first_order_control'].stateHiddenNeurons[1],
                                                entire_first_order2)
                 
                 network['first_order'].train(examples.inputs[ex],
