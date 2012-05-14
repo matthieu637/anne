@@ -21,7 +21,7 @@ if __name__ == '__main__':
     nbTry = 20
     display_interval = range(nbEpoch)[::5]
     
-    nbHidden = 150
+    nbHidden = 100
     
     #create all networks
     networks = [{} for _ in range(nbr_network)]
