@@ -7,8 +7,6 @@
 \usepackage{lmodern}
 \usepackage{xcolor}
 \usepackage{graphicx}
-\usepackage{pstricks}
-
 % \usepackage{lmodern}
 
 % \usepackage[noframe]{showframe}
@@ -49,7 +47,7 @@
 {\begin{list}{}{%
 \setlength{\labelwidth}{0em}% largeur de la boite englobant l'étiquette
 \setlength{\labelsep}{2pt}% espace entre l'entrée de l'item et l'étiquette
-\setlength{\leftmargin}{-15pt}% marge de gauche
+\setlength{\leftmargin}{-20pt}% marge de gauche
 \renewcommand{\makelabel}{\small\color{cloneBlue}{\textbullet}}}}%
 {\end{list}}
 
@@ -95,32 +93,30 @@
 \begin{frame}\transwipe
   \frametitle{La base de départ / Rappel}
   \begin{center}
-    \begin{pspicture}(0,5)
-      \rput[B](0,0){\includegraphics[height=150px]{../cleeremans_2007/digital_reco/schema.png}}
-      \rput[B](3,0.5){\tiny{Consciousness and metarepresentation : A computational sketch}}
-    \end{pspicture}
+  \includegraphics[height=150px]{../cleeremans_2007/digital_reco/schema.png}
   \end{center}
 
   \begin{center}
-    \begin{tabular}{lr}
-    \begin{minipage}{150px}
-      
-      \footnotesize\begin{minusitemize}
-      \item 7 entrées (afficheur digital)
-      \item le premier réseau discrime les 10 chiffres
-      \item winner-take-all sur les sorties
-      \end{minusitemize}
+  \begin{tabular}{lr}
+  \begin{minipage}{150px}
+    
+    \footnotesize\begin{minusitemize}
+     \item 7 entrées (afficheur digital)
+     \item le premier réseau discrime les 10 chiffres
+     \item winner-take-all sur les sorties
+    \end{minusitemize}
 
-      \end{minipage}
-      &
-      \begin{minipage}{170px}
-      \footnotesize\begin{noitemize}
-      \item la couche cachée du premier réseau sert d'entrée au second
-      \item le second réseau apprend à parier sur la qualité de la réponse du premier
-      \end{noitemize}
-      
     \end{minipage}
-    \end{tabular}
+    &
+    \begin{minipage}{170px}
+    \footnotesize\begin{noitemize}
+     \item la couche cachée du premier réseau sert d'entrée au second
+     \item le second réseau apprend à parier sur la qualité de la réponse du premier
+    \end{noitemize}
+    
+    \end{minipage}
+  \end{tabular}
+
   \end{center}
   
 \end{frame}
@@ -130,7 +126,6 @@
 \begin{frame}\transwipe
   \frametitle{Résultat sur la base d'entrée de l'article}
   \begin{center}
-  Performances de classification
   \begin{tabular}{cc}
   \hspace*{-1cm}
    \includegraphics[width=175px]{../cleeremans_2007/digital_reco/perf_wag.png}
@@ -141,28 +136,26 @@
 
   \begin{tabular}{lr}
   \begin{minipage}{170px}
-    \hspace*{-0.2cm}
-    \footnotesize Paramètre du second réseau :
+    e
     \footnotesize
       \begin{minusitemize}
-      \item poids initilisés sur [-0.25; 0.25]
-      \item momentum : 0
+      \item 7 entrées (afficheur digital)
+      \item le premier réseau discrime les 10 chiffres
       \item non exploitable
       \end{minusitemize}
     \end{minipage}
     &
     \begin{minipage}{170px}
-    \hspace*{0.2cm}
-    \footnotesize Paramètre du second réseau :
+%     \includegraphics[width=180px]{../cleeremans_2007/digital_reco/perf_boost.png}
     \footnotesize\begin{noitemize}
-     \item poids initilisés sur [-1; 1]
-     \item momentum : 0.5
-     \item exploitable
+     \item la couche cachée du premier réseau sert d'entrée au second
     \end{noitemize}
     
     \end{minipage}
   \end{tabular}
+
   \end{center}
+  
 \end{frame}
 
 
@@ -198,73 +191,6 @@
   \end{center}
   
 \end{frame}
-
-
-
-\begin{frame}\transwipe
-  \frametitle{Architectures de feedback}
-
-  \hspace*{-0.8cm}
-  \begin{tabular}{c|c|c}
-  \begin{minipage}[b]{.33\linewidth}
-   \includegraphics[width=100px]{base.png}
-   \\
-   \tiny Second neurone le plus élevé quand pari bas
-   \end{minipage}
-   
-   &
-   \begin{minipage}[b]{.33\linewidth}
-      \includegraphics[width=100px]{../pre-presentation/nth_wta.png}
-      \\
-   \tiny Second réseau enregistre l'indice (par activation) du neurone contenant la bonne réponse
-    \end{minipage}
-   &
-   \begin{minipage}[b]{.33\linewidth}
-         \includegraphics[width=100px]{base.png}
-      \\
-   \tiny Second réseau contrôle le taux d'apprentissage et le momentum du premier réseau
-    \end{minipage}
-    \\
-    \hline
-       \begin{minipage}[b]{.33\linewidth}
-         \includegraphics[width=100px]{base.png}
-      \\
-   \tiny Second réseau apprend et contenant le taux d'apprentissage et le momentum
-    \end{minipage}
-    &
-    \begin{minipage}[b]{.33\linewidth}
-         \includegraphics[width=100px]{../pre-presentation/thrid.png}
-      \\
-    \tiny 3ème réseau de perceptron
-    \end{minipage}
-    &
-        \begin{minipage}[b]{.33\linewidth}
-         \includegraphics[width=100px]{../pre-presentation/thrid_hidden.png}
-      \\
-    \tiny 3ème réseau de perceptron sur la couche cachée
-    \end{minipage}
-
-  \end{tabular}
-
-
-\end{frame}
-
-
-\begin{frame}\transwipe
-  \frametitle{Résultat concluants}
-  \framesubtitle{3ème réseau de perceptron}
-
-  
-\end{frame}
-
-
-\begin{frame}\transwipe
-  \frametitle{Résultat concluants}
-  \framesubtitle{3ème réseau de perceptron}
-
-  
-\end{frame}
-
 
 \begin{frame}\transwipe
   \frametitle{Limitation}
