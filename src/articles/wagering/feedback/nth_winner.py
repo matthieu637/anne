@@ -28,7 +28,7 @@ if __name__ == '__main__':
         first_order = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
         first_order.init_weights_randomly(-1, 1)
         
-        high_order_h = MultilayerPerceptron(100, 100, 10, learning_rate=0.1, momentum=0.5, grid=mode)
+        high_order_h = MultilayerPerceptron(100, 20, 10, learning_rate=0.1, momentum=0., grid=mode)
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h}
 

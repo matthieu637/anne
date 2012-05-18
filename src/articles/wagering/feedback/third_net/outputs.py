@@ -98,7 +98,7 @@ if __name__ == '__main__':
         print(epoch)
     
 
-    plt.title("Feedback with a third perceptron network")
+    plt.title("Feedback with a third perceptron network ( output FoN/SoN )")
     plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=2)
     if(DEBUG):
         plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
