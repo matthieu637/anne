@@ -1,5 +1,6 @@
 #ignored files
-*/.directory/
+.direcotory
+*.directory
 .settings/
 .project
 .pydevproject
@@ -16,3 +17,6 @@ __pycache__/
 *.dvi
 *.bbl
 *.blg
+*.nav
+*.toc
+*.out

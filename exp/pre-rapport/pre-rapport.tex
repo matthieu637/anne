@@ -1,7 +1,7 @@
 \documentclass[a4paper,12pt, twoside]{article}
 \usepackage[utf8x]{inputenc} %commentaire
 \usepackage[francais]{babel} %FR
-\usepackage[T1]{fontenc} 
+\usepackage[T1]{fontenc}
 
 \usepackage[pdftex]{graphicx} % img
 \usepackage{wrapfig}
@@ -18,7 +18,7 @@
 
 % Title Page
 \title{
-  \textbf{Mini-Rapport}
+  \textbf{Rapport}
   \\[5cm]
   Exploration de la notion de méta-apprentissage
   \\[3cm]
@@ -65,11 +65,13 @@
 %[ Alex Cleeremans, Bert Timmermans, Antoine Pasquali . (2007)]
 
 \newpage
+
+\part{Prendre conscience de ses performances}
 \section{Introduction}
 
 Notre intérêt s'est tourné vers l'article \cite{Cleeremans_2007} et ses 2 types de réseaux proposés.
 Dans un premier temps, nous avons cherché à reproduire et expliquer les résultats
-donnés, et ensuite à des solutions pour tirer profit des paris réalisés.
+donnés, et ensuite aux solutions pour tirer profit des paris réalisés.
 \newline
 Nous nous sommes également penchés sur \cite{Pasquali_2010} dont nous avons reproduit
 les expériences, mais leurs enjeux nous semblent encore vagues.
@@ -78,6 +80,7 @@ les expériences, mais leurs enjeux nous semblent encore vagues.
 \section{Dupliquer le premier réseau}
 
 \subsection{Les bases}
+
 En premier lieu, rappelons la structure des réseaux et les résultats de l'article :
 \begin{figure}[H]
 \begin{center}
@@ -179,7 +182,6 @@ Il n'est alors plus capable de reproduire la couche d'entrée ( qui a un poids t
 
 
 Tentons maintenant d'expliquer cette chute :
-
 \newline La première chose à comprendre est que l'augmentation
 du nombre de neurone n'a rien à voir avec cette perte. En effet, nous avons fait les 
 simulations avec les chiffres triviales (i.e. seulement 10 formes différentes) agrandit en $16 \times 16$
@@ -363,6 +365,11 @@ Ce que nous continuons d'étudier :
 \end{itemize}
 
 
+\newpage
+\part{Altérer son comportement}
+
+
+\newpage
 \bibliographystyle{apalike}
 \bibliography{biblio}
 

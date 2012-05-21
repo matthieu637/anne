@@ -1,5 +1,0 @@
-\beamer@endinputifotherversion {3.12pt}
-\select@language {french}
-\beamer@sectionintoc {1}{Am\IeC {\'e}lioration de l'apprentissage}{4}{0}{1}
-\beamer@sectionintoc {2}{Transfert de t\IeC {\^a}che}{11}{0}{2}
-\beamer@sectionintoc {3}{Conscience}{13}{0}{3}

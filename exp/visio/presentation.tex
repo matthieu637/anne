@@ -71,7 +71,7 @@
 
 
 
-\begin{frame}\transwipe
+\begin{frame}
  \frametitle{Inspiration : Conscience et méta-représentations}
  \framesubtitle{Articles}
  
@@ -85,14 +85,192 @@
 
 
 
-\begin{frame}\transwipe
+\begin{frame}
   \begin{center}{\Large Plan }\end{center}
   \tableofcontents[hideallsubsections]
 \end{frame}
 
+
+\section{Dupliquer le premier réseau}
+
+\begin{frame}
+  \frametitle{La base de départ / Rappel}
+  \begin{center}
+    \begin{pspicture}(0,5)
+      \rput[B](0,0){\includegraphics[height=150px]{../cleeremans_2007/digit_reco/digit_reco.png}}
+      \rput[B](3,0.5){\tiny{Consciousness and metarepresentation : A computational sketch}}
+    \end{pspicture}
+  \end{center}
+
+  \begin{center}
+    \begin{tabular}{lr}
+    \begin{minipage}{150px}
+      
+      \footnotesize\begin{minusitemize}
+      \item 20 entrées (représentant les chiffres)
+      \item le premier réseau discrime les 10 chiffres
+      \item winner-take-all sur les sorties
+      \end{minusitemize}
+
+      \end{minipage}
+      &
+      \begin{minipage}{170px}
+      \footnotesize\begin{noitemize}
+      \item la couche cachée du premier réseau sert d'entrée au second
+      \item le second réseau apprend à dupliquer toutes les couches du premier
+      \end{noitemize}
+      
+    \end{minipage}
+    \end{tabular}
+  \end{center}
+  
+\end{frame}
+
+\begin{frame}
+  \frametitle{Résultat sur la base d'entrée de l'article}
+  \begin{center}
+  \begin{tabular}{cc}
+  \hspace*{-1cm}
+   \includegraphics[width=185px]{../cleeremans_2007/digit_reco/rms.png}
+   &
+   \hspace*{-0.5cm}
+   \includegraphics[width=170px]{../cleeremans_2007/digit_reco/rms_ffa.png}
+  \end{tabular}
+  \end{center}
+
+\begin{itemize}
+ \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
+ \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Dans la couche cachée du FoN : les entrées du SoN}
+  \begin{center}
+   \includegraphics[width=185px]{../cleeremans_2007/digit_reco/discretize_cloud.png}
+  \end{center}
+
+\begin{itemize}
+ \item stabilisation très rapidement (autour de la 50\up{ième} époque en moyenne)
+ \item entrées peu variables et stable favorisant son apprentissage
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Passage à niveau}
+  \begin{center}
+  \includegraphics[height=150px]{../cleeremans_2007/digit_reco/schema_handwritten.png}
+  \end{center}
+
+  \begin{center}
+  \begin{tabular}{lr}
+  \begin{minipage}{150px}
+    
+    \footnotesize\begin{minusitemize}
+     \item chiffres manuscrits sur 256 neurones d'entrées
+     \item Le premier réseau discrime \textbf{1600 chiffres}
+     \item Winner-take-all sur les sorties
+    \end{minusitemize}
+
+    \end{minipage}
+    &
+    \begin{minipage}{170px}
+    \footnotesize\begin{noitemize}
+     \item la couche cachée du premier réseau sert d'entrée au second
+     \item le second réseau apprend à dupliquer toutes les couches du premier
+    \end{noitemize}
+    
+    \end{minipage}
+  \end{tabular}
+
+  \end{center}
+  
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Résultats}
+  \begin{center}
+  \begin{tabular}{cc}
+  \hspace*{-1cm}
+   \includegraphics[width=175px]{../cleeremans_2007/digit_reco/rms_ffa.png}
+   &
+   \hspace*{-0.5cm}
+   \includegraphics[width=170px]{../cleeremans_2007/digit_reco/rms_handwritten_ffa.png}
+  \end{tabular}
+  \end{center}
+
+\begin{itemize}
+ \item la couche cachée et la couche de sortie s'apprennent toujours bien
+ \item il n'arrive plus à dupliquer les entrées
+ \item ça fonctionne dans l'article car il n'y a que 10 entrées différentes
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Dans la couche cachée du FoN : les entrées du SoN}
+  \begin{center}
+   \includegraphics[height=160px]{../cleeremans_2007/digit_reco/discretize_minhand.png}
+  \end{center}
+
+\begin{itemize}
+ \item il existe différentes valeurs de la couche cachée, représentant le même nombre
+ \item une même valeur discrétisée peut correspondre à  plusieurs couleurs
+\end{itemize}
+\end{frame}
+
+
+\begin{frame}
+  \frametitle{Représentation interne}
+  
+    \begin{center}
+  \begin{tabular}{cc}
+  \hspace*{-1cm}
+   \includegraphics[width=130px]{../cleeremans_2007/digit_reco/schema_handwritten.png}
+   &
+   \includegraphics[width=150px]{../pre-rapport/metarepre.png}
+  \end{tabular}
+  \end{center}
+
+\begin{itemize}
+ \item il n'est pas si mauvais
+ \item factorisation et perte d'information dans la couche cachée du FoN
+\end{itemize}
+\end{frame}
+
+
+
+\begin{frame}
+  \frametitle{Changement de tâche avec blocage de l'apprentissage}
+  
+    \begin{center}
+  \begin{tabular}{cc}
+  \hspace*{-1cm}
+   \includegraphics[width=130px]{../cleeremans_2007/digit_reco/schema_handwritten.png}
+   &
+   \includegraphics[width=190px]{../cleeremans_2007/digit_reco/err_handwritten_relearn_2.png}
+  \end{tabular}
+  \end{center}
+\end{frame}
+
+
+% ----------------------------------------------------------------------------------------------------
+% ----------------------------------------------------------------------------------------------------
+% ----------------------------------------------------------------------------------------------------
+
+
+\begin{frame}
+\tableofcontents[hideallsubsections]
+\end{frame}
+
+
 \section{Amélioration de l'apprentissage}
 
-\begin{frame}\transwipe
+\begin{frame}
   \frametitle{La base de départ / Rappel}
   \begin{center}
     \begin{pspicture}(0,5)
@@ -127,7 +305,7 @@
 
 
 
-\begin{frame}\transwipe
+\begin{frame}
   \frametitle{Résultat sur la base d'entrée de l'article}
   \begin{center}
   Performances de classification
@@ -168,7 +346,7 @@
 
 
 
-\begin{frame}\transwipe
+\begin{frame}
   \frametitle{Passage à niveau}
   \begin{center}
   \includegraphics[height=150px]{base.png}
@@ -201,7 +379,7 @@
 
 
 
-\begin{frame}\transwipe
+\begin{frame}
   \frametitle{Architectures de feedback}
 
   \hspace*{-0.8cm}
@@ -227,9 +405,9 @@
     \\
     \hline
        \begin{minipage}[b]{.33\linewidth}
-         \includegraphics[width=100px]{base.png}
+         \includegraphics[width=100px]{../pre-presentation/merging.png}
       \\
-   \tiny Second réseau apprend et contenant le taux d'apprentissage et le momentum
+   \tiny Les sorties du second réseaux deviennent des entrées supplémentaires au premier
     \end{minipage}
     &
     \begin{minipage}[b]{.33\linewidth}
@@ -250,55 +428,83 @@
 \end{frame}
 
 
-\begin{frame}\transwipe
+\begin{frame}
   \frametitle{Résultat concluants}
   \framesubtitle{3ème réseau de perceptron}
-
   
+  \begin{tabular}{cc}
+  \hspace*{-1cm}
+   
+   \includegraphics[width=175px]{../pre-rapport/third_net.png}
+   &
+   \hspace*{-0.3cm}
+   \includegraphics[width=175px]{../pre-rapport/third_net_hidden.png}
+  \end{tabular}  
 \end{frame}
 
 
-\begin{frame}\transwipe
-  \frametitle{Résultat concluants}
-  \framesubtitle{3ème réseau de perceptron}
-
-  
-\end{frame}
-
-
-\begin{frame}\transwipe
-  \frametitle{Limitation}
-
-\end{frame}
-
-\begin{frame}\transwipe
-  \frametitle{Conclusion}
- En performances
- 
- En terme d'interprétation
-\end{frame}
-
-
-\section{Transfert de tâche}
-\begin{frame}\transwipe
+\begin{frame}
+  \frametitle{Limitations}
+  Le nombre de neurone dans la couche cachée du FoN déterminent beaucoup les performances :
+  \begin{itemize}
+   \item si il est ``normal'', le second réseau n'arrivera pas à parier efficacement, et se contente de 
+   parier haut
+   \item si il est élevé, le second réseau parie correctement, mais le premier réseau est détérioré.
+   \newline
+   De sorte que même avec l'augmentation de performance du SoN, il ne dépasse pas un FoN bien réglé
+  \end{itemize}
 
 \end{frame}
 
-\begin{frame}\transwipe
-
+\begin{frame}
+  \frametitle{Limitations}
+  \begin{center}
+    \includegraphics[height=220px]{../cleeremans_2007/digit_reco/bad_full.png}
+  \end{center}
 \end{frame}
-\section{Conscience}
-\begin{frame}\transwipe
 
-\end{frame}
+% \begin{frame}
+%   \frametitle{Conclusion}
+%  En performances
+%  
+%  En terme d'interprétation
+% \end{frame}
 
+
+
+
+% \section{Transfert de tâche}
+% \begin{frame}
+% 
+% \end{frame}
+% 
+% \begin{frame}
+% 
+% \end{frame}
+% \section{Conscience}
+% \begin{frame}
+% 
+% \end{frame}
+
+
+
+
+
+
+% 
+% 
+% --------------------------------------------------------------------------------------------
+% --------------------------------------------------------------------------------------------
+% --------------------------------------------------------------------------------------------
+% --------------------------------------------------------------------------------------------
+% --------------------------------------------------------------------------------------------
 % \section[Sujet 1 : Jeu vidéo]{Sujet 1 : Jeu vidéo}
 % 
 % % \subsection[titre cour2t1]{titre long long long 1}
 % 
 % 
 % \subsection[ ]{ }
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 1 : Jeu vidéo C++ en pseudo-3D (isométrique)}
 %  \framesubtitle{Introduction}
 %   \begin{itemize}[<+->]
@@ -324,7 +530,7 @@
 % \end{frame}
 % 
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 1 : Jeu vidéo C++ en pseudo-3D (isométrique)}
 %  \framesubtitle{Jeu 2D}
 %  \begin{center}
@@ -332,7 +538,7 @@
 %  \end{center}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 1 : Jeu vidéo C++ en pseudo-3D (isométrique)}
 %  \framesubtitle{Jeu 3D}
 %  \begin{center}
@@ -341,19 +547,19 @@
 % \end{frame}
 % 
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 1 : Jeu vidéo C++ en pseudo-3D (isométrique)}
 %  \framesubtitle{Perspective Isométrique}
 %  \includegraphics[height=196px]{data/wakfu_screen3.jpg}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 1 : Jeu vidéo C++ en pseudo-3D (isométrique)}
 %  \framesubtitle{SFML vs CEGUI}
 %  \includegraphics[height=196px]{data/wakfu_screen3.jpg}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 1 : Jeu vidéo C++ en pseudo-3D (isométrique)}
 %  \framesubtitle{Découpage}
 %  \begin{center}
@@ -361,7 +567,7 @@
 %   \end{center}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 1 : Jeu vidéo C++ en pseudo-3D (isométrique)}
 %  \framesubtitle{Intérêts}
 %   \begin{itemize}[<+->]
@@ -375,7 +581,7 @@
 %   \end{itemize}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 1 : Jeu vidéo C++ en pseudo-3D (isométrique)}
 %  \framesubtitle{Conclusion}
 %   \begin{itemize}[<+->]
@@ -396,7 +602,7 @@
 % \section[Sujet 2 : IHM]{Sujet 2 : IHM}
 % 
 % \subsection[ ]{ }
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 2 : IHM (interface homme-machine) virtuelle}
 %  \framesubtitle{Introduction}
 %   \begin{itemize}[<+->]
@@ -412,7 +618,7 @@
 %   \end{itemize}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 2 : IHM (interface homme-machine) virtuelle}
 %  \framesubtitle{C'est quoi?}
 %  \begin{center}
@@ -420,7 +626,7 @@
 %   \end{center}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 2 : IHM (interface homme-machine) virtuelle}
 %  \framesubtitle{Structure}
 %  \begin{center}
@@ -428,7 +634,7 @@
 %   \end{center}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 2 : IHM (interface homme-machine) virtuelle}
 %  \framesubtitle{Intérêts}
 %  \begin{center}
@@ -440,7 +646,7 @@
 %     \end{itemize}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 2 : IHM (interface homme-machine) virtuelle}
 %  \framesubtitle{Conclusion}
 %   \begin{itemize}[<+->]
@@ -463,7 +669,7 @@
 % \section[Sujet 3 : Serveur]{Sujet 3 : Serveur}
 % 
 % \subsection[ ]{ }
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 3 : Vulgarisation de serveur (+décentralisation)}
 %  \framesubtitle{Introduction}
 %   \begin{itemize}[<+->]
@@ -480,7 +686,7 @@
 %   \end{itemize}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 3 : Vulgarisation de serveur (+décentralisation)}
 %  \framesubtitle{Structure}
 %  \begin{center}
@@ -488,7 +694,7 @@
 %  \end{center}
 % \end{frame}
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 3 : Vulgarisation de serveur (+décentralisation)}
 %  \framesubtitle{Aller plus loin}
 %  Décentraliser les services
@@ -501,7 +707,7 @@
 % \end{frame}
 % 
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 3 : Vulgarisation de serveur (+décentralisation)}
 %  \framesubtitle{Conclusion}
 %   \begin{itemize}[<+->]
@@ -523,7 +729,7 @@
 % \section[Sujet 4 : Dialogues]{Sujet 4 : Dialogues}
 % 
 % \subsection[ ]{ }
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 4 : Dialogues non instantanés par prévisions}
 %  \framesubtitle{Introduction}
 %   \begin{itemize}[<+->]
@@ -541,7 +747,7 @@
 % \end{frame}
 % 
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 4 : Dialogues non instantanés par prévisions}
 %  \framesubtitle{Structure}
 %  \begin{center}
@@ -550,7 +756,7 @@
 % \end{frame}
 % 
 % 
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Sujet 4 : Dialogues non instantanés par prévisions}
 %  \framesubtitle{Conclusion}
 %   \begin{itemize}[<+->]
@@ -572,7 +778,7 @@
 % \section[Récapitulatif]{Récapitulatif}
 % 
 % \subsection[ ]{ }
-% \begin{frame}\transwipe
+% \begin{frame}
 %  \frametitle{Différences}
 %  \begin{center}
 %   \begin{tabular}{|l|c|c|c|}
