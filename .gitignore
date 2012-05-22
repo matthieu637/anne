@@ -20,3 +20,4 @@ __pycache__/
 *.nav
 *.toc
 *.out
+*.snm
