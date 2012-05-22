@@ -41,6 +41,9 @@ class DataFile():
             print(self.inputs)
             raise Exception(path + " wrong data file")
         
+        self.ninputs = len(self.inputs[0])
+        self.noutputs = len(self.outputs[0])
+        
     def _read_data(self, name):
         rfile = open(name, "r")
         
