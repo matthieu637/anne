@@ -52,14 +52,15 @@ if __name__ == '__main__':
 #    exit()
     
     #create inputs/outputs to learn
-    examples = DataFile("digit_shape.txt", mode)
+    examples = DataFile("digit_handwritten_16.txt", mode)
+#    examples = DataFile("digit_shape.txt", mode)
 #    examples = DataFile("digit_shape_16.txt", mode)
     
 #    examples = DataFileR("iris.txt")
     momentum = 0.9
     
     nbInputs = len(examples.inputs[0])
-    nbHidden = 5
+    nbHidden = 10
     nbOutputs = len(examples.outputs[0])
     nbShape = nbOutputs
     
