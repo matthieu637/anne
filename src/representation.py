@@ -12,6 +12,7 @@ import matplotlib.cm as cm
 from simulation import Simulation
 import numpy as np
 from perceptron import PerceptronR0to1, Perceptron
+from utils import index_max
 
 
 def graph_network(neurons_top, neurons_down, width):
@@ -19,25 +20,32 @@ def graph_network(neurons_top, neurons_down, width):
     fig = plt.figure()
     plt.clf()
     
-    for i in range(len(neurons_top)):
-        build_matrice(neurons_top[i].weights, neurons_down, width, fig, 431 + i)
+    for i in range(len(neurons_top[0])):
+        w = []
+        for j in range(len(neurons_top)):
+            w.append(build_matrice(neurons_top[j][i].weights, neurons_down[j]))
+        r = [0. for _ in range(len(w[0]))]
+        for l in w:
+            for k in range(len(r)):
+                r[k] += l[k]
+        show_repr(r, width, fig, 250 + i, i)
 
     plt.show()
 
 
 
-def build_matrice(weightl, nlist, width, fig, num):
+def build_matrice(weightl, nlist):
     weights = [0. for _ in range(len(nlist[0].weights))]
     
     for i in range(len(weights)):
         wsum = 0
         for j in range(len(nlist)):
-            wsum += nlist[j].weights[i] * weightl[j] + nlist[j].bias
+            wsum += weightl[j] * (nlist[j].weights[i] - nlist[j].bias )
         weights[i] += wsum
     
-    show_repr(weights, width, fig, num)
+    return weights
 
-def show_repr(weightl, width, fig, num):
+def show_repr(weightl, width, fig, num, title):
     matrice = [[] for i in range(len(weightl)//width)]
     
     vmax = max(weightl)
@@ -48,40 +56,27 @@ def show_repr(weightl, width, fig, num):
             nw =  (weightl[j*width + i] - vmin) * (1./(vmax - vmin))
             matrice[j].append(round(nw, 2))
     
-    ax = fig.add_subplot(num)
+    ax = fig.add_subplot(num, title=title)
     ax.set_aspect(1)
     res = ax.imshow(np.array(matrice), cmap=cm.gist_gray_r, 
                     interpolation='nearest')
     
-    height = len(weightl)//width
-#    
-#    for y in range(height):
-#        for x in range(width):
-#            ax.annotate(str(round( 1 - matrice[y][x], 2)), xy=(x, y), 
-#                        horizontalalignment='center',
-#                        verticalalignment='center')
-#
-#    cb = fig.colorbar(res)
-    alphabet = '123456'
-    plt.xticks(range(width), alphabet[:width])
-    plt.yticks(range(height), alphabet[:height])
-
-
-    
+    plt.xticks([])
+    plt.yticks([])
 
     
 if __name__ == '__main__':    
     mode = MultilayerPerceptron.R0to1
     nbr_network = 1
     momentum = 0.9
-    lrate = 0.2
-    nbr_try = 10
-    nbr_epoch = 1000
+    lrate = 0.1
+    nbr_try = 50
+    nbr_epoch = 200
     
 #   Data Sample Declaration
     def data():
-#        return DataFile("digit_handwritten_16.txt", mode)
-        return DataFile("digit_shape.txt", mode)
+        return DataFile("digit_handwritten_16.txt", mode)
+#        return DataFile("digit_shape.txt", mode)
     
 #   Network Declaration
     def FoN2(inputs, outputs):
@@ -117,16 +112,21 @@ if __name__ == '__main__':
 #    for i in range(10):
 #        build_matrice(sim.networks[0]['FoN'].outputNeurons[i].weights, sim.networks[0]['FoN'].hiddenNeurons, 4)
 
-    width = 4
+    width = 16
 
 #    MLP
-    graph_network(sim.networks[0]['FoN2'].outputNeurons, sim.networks[0]['FoN2'].hiddenNeurons, width)
+    on = []
+    hn = []
+    for net in sim.networks:
+        on.append(net['FoN2'].outputNeurons)
+        hn.append(net['FoN2'].hiddenNeurons)
+    graph_network(on, hn, width)
 
 #    Perceptron
     fig = plt.figure()
     plt.clf()
     
     for i in range(10):
-        show_repr(sim.networks[0]['FoN'][i].weights, width, fig, 430 + i)
+        show_repr(sim.networks[0]['FoN'][i].weights, width, fig, 250 + i, i)
     
     plt.show()
