@@ -12,7 +12,8 @@ import matplotlib.cm as cm
 from simulation import Simulation
 import numpy as np
 from perceptron import PerceptronR0to1, Perceptron
-from utils import index_max
+import sys
+import time
 
 
 def graph_network(neurons_top, neurons_down, width):
@@ -30,6 +31,8 @@ def graph_network(neurons_top, neurons_down, width):
                 r[k] += l[k]
         show_repr(r, width, fig, 250 + i, i)
 
+    path = "/tmp/pyplot.%s.%s.png" % (sys.argv[0], time.strftime("%m-%d-%H-%M-%S", time.localtime()) )
+    plt.savefig(path)
     plt.show()
 
 
@@ -75,8 +78,8 @@ if __name__ == '__main__':
     
 #   Data Sample Declaration
     def data():
-        return DataFile("digit_handwritten_16.txt", mode)
-#        return DataFile("digit_shape.txt", mode)
+#        return DataFile("digit_handwritten_16.txt", mode)
+        return DataFile("digit_shape.txt", mode)
     
 #   Network Declaration
     def FoN2(inputs, outputs):
@@ -112,7 +115,7 @@ if __name__ == '__main__':
 #    for i in range(10):
 #        build_matrice(sim.networks[0]['FoN'].outputNeurons[i].weights, sim.networks[0]['FoN'].hiddenNeurons, 4)
 
-    width = 16
+    width = 4
 
 #    MLP
     on = []

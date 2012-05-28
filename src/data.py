@@ -85,6 +85,24 @@ class DataFile():
         llist[pos].extend(data)
 
 class DataFileR(DataFile):
+    def __init__(self, path, bound=0, rules=default_file_rules):
+        DataFile.__init__(self, path, bound, rules)
+
+        #normalization
+        vmin = min(self.inputs[0])
+        vmax = max(self.inputs[0])
+        for i in range(len(self.inputs)):
+            lvmin = min(self.inputs[i])
+            lvmax = max(self.inputs[i])
+            if(lvmin < vmin):
+                vmin = lvmin
+            if(lvmax > vmax):
+                vmax = lvmax
+        
+        for i in range(len(self.inputs)):
+            for j in range(self.ninputs):
+                self.inputs[i][j] = (self.inputs[i][j] - vmin) / (vmax - vmin)
+    
     def _line_to_list(self, line):
         lfloat = []
         lstring = line.replace("\n", "").split(" ")
