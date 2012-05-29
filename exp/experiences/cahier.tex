@@ -1,0 +1,55 @@
+\documentclass[a4paper,12pt]{article}
+\usepackage[utf8x]{inputenc} %commentaire
+\usepackage[francais]{babel} %FR
+\usepackage[T1]{fontenc}
+\usepackage{fancyhdr}
+
+\usepackage[pdftex]{graphicx} % img
+\usepackage{wrapfig}
+\usepackage{float}
+
+\usepackage{algpseudocode}
+
+\usepackage[top=2cm, bottom=2cm, left=2.5cm, right=2.5cm]{geometry} %Réduire les marges
+
+
+% Style Page
+\pagestyle{fancy} % entêtes
+% \fancyhf{}
+
+\setlength{\headheight}{15pt}
+\renewcommand{\sectionmark}[1]{\markright{#1}} 
+\lhead{ \rightmark }
+
+\sloppy % ne pas faire déborder les lignes dans la marge
+
+
+\title{
+  \textbf{Cahier d'expériences}
+  \\[5cm]
+  Exploration de la notion de méta-apprentissage
+  \\[3cm]
+  \textit{
+  Dans quelle mesure un système apprenant peut prendre conscience de ses performances
+  et altérer son comportement ?}
+}
+
+
+\author{
+  \\[3cm]
+  Yann Boniface, Alain Dutech, Nicolas Rougier \\
+  Matthieu Zimmer}
+
+\begin{document}
+  \maketitle
+  \newpage
+
+  \begin{center}{\Large Plan }\end{center}
+  \tableofcontents
+  \newpage
+
+  \input{expA1}
+\end{document}
+
+
+
