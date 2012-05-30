@@ -1,0 +1,7 @@
+#!/bin/bash
+
+ls *.aux | while read file
+do 
+	bibtex $file
+done
+

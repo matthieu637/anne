@@ -1,4 +1,4 @@
-\section{Expérience A1} 
+\section{Expérience D4} 
   \subsection{Résumé}
     Reproduction et approfondissement des résultats de la première expérience 1 dans l'article 
     \cite{Cleeremans_2007}. 
@@ -22,7 +22,7 @@
 
     \paragraph{Schéma}
       \begin{center}
-	\includegraphics[width=220px]{data/expA1/schema.png}
+	\includegraphics[width=220px]{data/expD4/schema.png}
       \end{center}
       
     \paragraph{Paramètres}
@@ -55,12 +55,7 @@
     \paragraph{Principaux}
       Analyse des performances
       \begin{center}
-	\begin{tabular}{lr}
-	  \hspace*{-1cm}
-	  \includegraphics[width=250px]{data/expA1/rms.png}
-	  &
-	  \includegraphics[width=250px]{data/expA1/err.png} 
-	\end{tabular}
+	\includegraphics[width=250px]{data/expD1/perff.png}
       \end{center}
       \subparagraph{Notes}
 	\begin{itemize}
@@ -74,13 +69,13 @@
 	  \item le second réseau apprend plus rapidement que le premier
 	\end{itemize}
     \paragraph{Secondaires}
-      Discrétisation de la couche cachée du premier réseau
+      RMS
       \begin{center}
 	\begin{tabular}{lr}
 	  \hspace*{-1cm}
-	  \includegraphics[width=250px]{data/expA1/discretize_cloud.png}
+	  \includegraphics[width=250px]{data/expD1/rms.png}
 	  &
-	  \includegraphics[width=250px]{data/expA1/discretize.png} 
+	  \includegraphics[width=250px]{data/expD1/perf.png} 
 	\end{tabular}
       \end{center} 
       \subparagraph{Notes}
@@ -92,36 +87,6 @@
 	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 
 	le tout permettant au second réseau d'avoir des entrées très peu variables, favorisant
 	son apprentissage.
-    \paragraph{Secondaires}
-      Représentations au travers des poids du premier réseau
-      \begin{center}
-	Couche cachée \\
-	\includegraphics[width=250px]{data/expA1/representation_hidden.png}
-      \end{center}
-      \begin{center}
-	Couche de sortie \\
-	\includegraphics[width=250px]{data/expA1/representation.png}
-      \end{center} 
-      \subparagraph{Notes}
-	\begin{itemize}
-	  \item plus une case est noire, plus sa présence est importante pour le chiffre en question
-	  \item plus une case est blanche, plus son absence est importante
-	\end{itemize}
-      \subparagraph{Conclusion}
-	Il est assez difficile d'y distinquer les chiffres, mais cela semble suffisant pour le réseau
-	qui a un taux de reconnaissance de 100\%.
-    \paragraph{Secondaires}
-      Prototypes à l'intérieur de la première partie de la couche de sortie du second réseau
-      \begin{center}
-	\includegraphics[width=250px]{data/expA1/prototype.png}
-      \end{center} 
-      \subparagraph{Notes}
-	\begin{itemize}
-	  \item 
-	\end{itemize}
-      \subparagraph{Conclusion}
-	Le peu d'entrées permet l'apprentissage par-coeur de chaque forme.
-	
 
 
   \subsection{Conclusion}

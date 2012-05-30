@@ -1,0 +1,20 @@
+\paragraph{Descente de gradient} \cite{Touzet_1992} \\
+  Construction de l'erreur : 
+    \begin{center}
+      $y_{i} = f'(a_i) \times ( d_i - x_i ) \ si\ i\ neurone\ de\ sortie $ \\
+      $y_{i} = f'(a_i) \times \sum \limits_{k} ( w_{ki} \times y_k )\ si\ i\ neurone\ cache $
+    \end{center}
+  Mise à jour des poids :
+    \begin{center}
+      $w_{ij}(t+1) = w_{ij}(t) + learning\_rate \times y_{i} \times x_j + momentum \times 
+      (w_{ij}(t) - w_{ij}(t-1) )$
+    \end{center}
+  Variables : 
+    \begin{center}
+      $\left\lbrace \begin{array}{lll} 
+	f : fonction\ sigmoide \\
+	x_i : valeur\ du\ neurone\ i\\
+	d_i : valeur\ desire pour\ le\ neurone\ i\\
+	a_i : somme\ pondere\ des\ poids\ du\ neurone\ i
+      \end{array} \right.$
+    \end{center}
