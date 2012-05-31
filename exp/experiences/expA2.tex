@@ -1,18 +1,17 @@
-\section{Expérience A2} 
-  \subsection{Résumé}
-    Reproduction et approfondissement des résultats de la première expérience 1 dans l'article 
-    \cite{Cleeremans_2007}. 
-
-  
-  \subsection{But}
+\section{Expérience A2} \label{expA2}
+  \subsection{Objectif}
     Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
-    un réseau de neurone connexionniste, en particulier sur des perceptrons multicouches.
-  
-  
+    un réseau de neurone connexionniste, plus particulièrement sur des perceptrons multicouches.
+    
+    Dans l'optique d'éprouver la première expérience de l'article \cite{Cleeremans_2007} sur des
+    données plus réelles, il sagit, dans un premier temps, de montrer qu'une augmentation du 
+    nombre de neurones, et qu'un simple agrandissement des chiffres en entrées, 
+    n'affecte pas fondamentalement le fonctionnement du réseau.
+
   \subsection{Architecture}
     \paragraph{Description}
       Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
-      par 20 neurones d'entrées. Il est composé d'une couche cachée de 5 neurones.
+      par 256 (16x16) neurones d'entrées. Il est composé d'une couche cachée de 64 neurones.
       
       Un second réseau de perceptron multicouche apprend à dupliquer toutes les couches du premier
       réseau en n'ayant que sa couche cachée en entrée.
@@ -30,9 +29,9 @@
 	\begin{tabular}{lr}
 	  \begin{minipage}{220px}
 	    \begin{itemize}
-	      \item momentum : 0.9 sur les 2 réseau
-	      \item taux d'apprentissage : 0.1 sur les 2 réseau
-	      \item 10 chiffres différents présentés
+	      \item momentum : 0.9 sur les 2 réseaux
+	      \item taux d'apprentissage : 0.1 sur les 2 réseaux
+	      \item \textbf{10 formes} de chiffres différents présentées (shuffle)
 	      \item apprentissage 10 (formes) x 1000 (époques)
 	      \item utilisation de biais
 	    \end{itemize}
@@ -64,14 +63,17 @@
       \end{center}
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item les courbes SoN layer représentent les erreurs (du second réseaux) des couches du premier à reproduire 
+	  \item formule utilisée pour RMS (cf. Formules~\nameref{rms})
+	  \item les courbes SoN layer représentent les erreurs (du second réseaux) sur les couches à reproduire 
 	  \item la courbe RMS verte (SoN) est la somme des 3 courbes SoN layer
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
+	  \item le premier réseau réussit à apprendre sa tâche de classification
 	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
 	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
 	  \item le second réseau apprend plus rapidement que le premier
+	  \item l'augmentation du nombre de neurone ne change pas les tendances des courbes
 	\end{itemize}
     \paragraph{Secondaires}
       Discrétisation de la couche cachée du premier réseau
@@ -86,7 +88,7 @@
       \subparagraph{Notes}
 	\begin{itemize}
 	  \item une couleur équivaut à un chiffre présenté
-	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes)
+	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes~\nameref{discretize})
 	\end{itemize}
       \subparagraph{Conclusion}
 	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 
@@ -108,8 +110,8 @@
 	  \item plus une case est blanche, plus son absence est importante
 	\end{itemize}
       \subparagraph{Conclusion}
-	Il est assez difficile d'y distinquer les chiffres, mais cela semble suffisant pour le réseau
-	qui a un taux de reconnaissance de 100\%.
+      Il est intéréssant de remarquer qu'au vu du peu d'entrée, le réseau cible des neurones très précis.
+      Pour le chiffre 2, par exemple, seul 3 lignes sont ciblées.
     \paragraph{Secondaires}
       Prototypes à l'intérieur de la première partie de la couche de sortie du second réseau
       \begin{center}
@@ -117,7 +119,7 @@
       \end{center} 
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item 
+	  \item Il sagit de la moyenne des réponses du second réseaux sur toutes les entrées
 	\end{itemize}
       \subparagraph{Conclusion}
 	Le peu d'entrées permet l'apprentissage par-coeur de chaque forme.
@@ -125,7 +127,8 @@
 
 
   \subsection{Conclusion}
-  
+    L'augmentation du nombre de neurones dans le réseau, et l'augmentation de la taille des entrées
+    ne modifient pas l'attitude du réseau.
   
 
   \newpage 

@@ -1,18 +1,14 @@
 \section{Expérience A3} 
-  \subsection{Résumé}
-    Reproduction et approfondissement des résultats de la première expérience 1 dans l'article 
-    \cite{Cleeremans_2007}. 
-
-  
-  \subsection{But}
+  \subsection{Objectif}
     Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
-    un réseau de neurone connexionniste, en particulier sur des perceptrons multicouches.
-  
-  
+    un réseau de neurone connexionniste, plus particulièrement sur des perceptrons multicouches.
+    
+    Réalisation de la première expérience de l'article \cite{Cleeremans_2007} sur des données réelles.
+    
   \subsection{Architecture}
     \paragraph{Description}
       Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
-      par 20 neurones d'entrées. Il est composé d'une couche cachée de 5 neurones.
+      par 256 (16x16) neurones d'entrées. Il est composé d'une couche cachée de 64 neurones.
       
       Un second réseau de perceptron multicouche apprend à dupliquer toutes les couches du premier
       réseau en n'ayant que sa couche cachée en entrée.
@@ -32,9 +28,8 @@
 	    \begin{itemize}
 	      \item momentum : 0.9 sur les 2 réseau
 	      \item taux d'apprentissage : 0.1 sur les 2 réseau
-	      \item 10 chiffres différents présentés
+	      \item \textbf{1600 formes} de chiffres différents présentées (shuffle) \cite{Handwritten_256}
 	      \item apprentissage 10 (formes) x 1000 (époques)
-	      \item utilisation de biais
 	    \end{itemize}
 	  \end{minipage}
 	  &
@@ -44,6 +39,7 @@
 	      \item taux d'apprentissage constant
 	      \item entrées valent 0 ou 1
 	      \item sigmoïde à température 1
+	      \item utilisation de biais
 	    \end{itemize}
 	  \end{minipage}
 	\end{tabular}
@@ -64,14 +60,16 @@
       \end{center}
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item les courbes SoN layer représentent les erreurs (du second réseaux) des couches du premier à reproduire 
+	  \item formule utilisée pour RMS (cf. Formules~\nameref{rms})
+	  \item les courbes SoN layer représentent les erreurs (du second réseaux) sur les couches à reproduire 
 	  \item la courbe RMS verte (SoN) est la somme des 3 courbes SoN layer
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
-	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
-	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
-	  \item le second réseau apprend plus rapidement que le premier
+	  \item le premier réseau réussit à apprendre sa tâche de classification
+	  \item la couche cachée et la couche de sortie posent peu de problèmes d'apprentissage
+	  \item le second réseau a du mal à reproduire les entrées
+	  \item le second réseau apprend maintenant (vs \nameref{expA1}, \nameref{expA2}) moins rapidement que le premier
 	\end{itemize}
     \paragraph{Secondaires}
       Discrétisation de la couche cachée du premier réseau
@@ -86,12 +84,16 @@
       \subparagraph{Notes}
 	\begin{itemize}
 	  \item une couleur équivaut à un chiffre présenté
-	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes)
+	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes~\nameref{discretize})
 	\end{itemize}
       \subparagraph{Conclusion}
-	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 
-	le tout permettant au second réseau d'avoir des entrées très peu variables, favorisant
-	son apprentissage.
+	Nous pouvons maintenant expliquer les raisons provoquant le mauvais apprentissage des entrées par le second réseau :
+	
+	Pour un seul chiffre présenté, il existe différentes valeurs de la couche cachée le représentant ( factorisation 
+	dans la couche cachée du premier réseau). Le second réseau ne peut donc pas apprendre toutes les entrées.
+	
+	Une même valeur discretisée peut correspondre à plusieurs couleurs (différents nombres) ce qui augmentent la 
+	difficulté d'apprentissage.
     \paragraph{Secondaires}
       Représentations au travers des poids du premier réseau
       \begin{center}
@@ -108,8 +110,7 @@
 	  \item plus une case est blanche, plus son absence est importante
 	\end{itemize}
       \subparagraph{Conclusion}
-	Il est assez difficile d'y distinquer les chiffres, mais cela semble suffisant pour le réseau
-	qui a un taux de reconnaissance de 100\%.
+	On arrive, sans trop de mal, à distinguer les chiffres.
     \paragraph{Secondaires}
       Prototypes à l'intérieur de la première partie de la couche de sortie du second réseau
       \begin{center}
@@ -117,10 +118,15 @@
       \end{center} 
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item 
+	  \item Il sagit de la moyenne des réponses du second réseaux sur toutes les entrées
 	\end{itemize}
       \subparagraph{Conclusion}
-	Le peu d'entrées permet l'apprentissage par-coeur de chaque forme.
+	Il est intéressant de constaté que malgrès la difficulté de la tâche, ces prototypes émergent.
+	
+	Et que contrairement à ce qu'indique les performances, les chiffres sont bien distincts.
+      
+	On peut, par ailleurs, conjecturer que plus la couche cachée du premier réseau est petite, plus les prototypes 
+	seront factorisés (ie. personnels au réseau).
 	
 
 
