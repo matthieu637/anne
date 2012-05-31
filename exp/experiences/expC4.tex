@@ -1,12 +1,11 @@
-\section{Expérience C4}
+\section{Expérience C4} \label{expC4}
   \subsection{Objectif}
-    Reproduction et approfondissement des résultats de la première expérience 1 dans l'article 
-    \cite{Cleeremans_2007}. 
+    Comprendre de quelles manières un réseau de neurone connexionniste peut parier sur ses propres résultats
+    à partir de ses représentations personnelles.
 
-  
-  
-    Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
-    un réseau de neurone connexionniste, en particulier sur des perceptrons multicouches.
+    
+    Réalisation de la seconde expérience de l'article \cite{Cleeremans_2007} sur des données réelles
+    non linéairement séparables à l'aide de plusieurs couches dans le perceptron.
   
   
   \subsection{Architecture}
@@ -28,7 +27,7 @@
     \paragraph{Paramètres}
       \begin{center}
 	\begin{tabular}{lr}
-	  \begin{minipage}{220px}
+	  \begin{minipage}{230px}
 	    \begin{itemize}
 	      \item momentum : 0.9 sur les 2 réseau
 	      \item taux d'apprentissage : 0.1 sur les 2 réseau
@@ -38,7 +37,7 @@
 	    \end{itemize}
 	  \end{minipage}
 	  &
-	  \begin{minipage}{205px}
+	  \begin{minipage}{230px}
 	    \begin{itemize}
 	      \item poids initialisés sur [-0.25 ; 0.25]
 	      \item taux d'apprentissage constant
