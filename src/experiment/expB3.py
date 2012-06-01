@@ -23,7 +23,7 @@ if __name__ == '__main__':
     nbr_try = 10
     nbr_epoch = 1000
     nbOutputs = 3
-    nbr_hidden = 10
+    nbr_hidden = 5
     
     def newtask(l):
         imax = index_max(l)
@@ -137,6 +137,7 @@ if __name__ == '__main__':
         plt.title('Classification error of first-order and high-order networks')
         plt.ylabel('ERROR')
         plt.xlabel("EPOCHS")
+        plt.axis((0, nbr_epoch*4, -0.01, 1.01))
     
     
     sim = Simulation(nbr_epoch, 0, data, nbr_network, [FoN, SoN, FoN2, SoN2])
@@ -167,7 +168,7 @@ if __name__ == '__main__':
     
     
     sim.plot(48, 'FoN_rms', ['FoN_err', 'SoN_err_input', 'SoN_err_hidden', 'SoN_err_output'],
-             ["FoN ( winner take all )" , "SoN input layer ( x > 0.5 => activation )", "SoN hidden layer ( | x - o | <= 0.3 )",
+             ["FoN ( winner take all )" , "SoN input layer ( | x - o | <= 0.3 )", "SoN hidden layer ( | x - o | <= 0.3 )",
                         "SoN output layer ( winner take all )"],
              [3, 2, 2 , 2 ], moregraph2)
     
@@ -176,6 +177,6 @@ if __name__ == '__main__':
              [3, 3, 2, 2 , 2 ], moregraph1)
     
     sim.plot(48, 'FoN_rms', ['FoN2_err', 'SoN2_err_input', 'SoN2_err_hidden', 'SoN2_err_output'],
-             ["FoN ( winner take all )" , "SoN input layer ( x > 0.5 => activation )", "SoN hidden layer ( | x - o | <= 0.3 )",
+             ["FoN ( winner take all )" , "SoN input layer ( | x - o | <= 0.3 )", "SoN hidden layer ( | x - o | <= 0.3 )",
                         "SoN output layer ( winner take all )"],
              [3, 2, 2 , 2 ], moregraph2)

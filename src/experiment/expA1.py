@@ -7,10 +7,9 @@ Created on 27 May 2012
 from multilayerp import MultilayerPerceptron
 from data import DataFile
 from utils import index_max, compare, compare_f
-from representation import graph_network
-
-
+from representation import graph_network, graph_networkhidden
 from simulation import Simulation
+import matplotlib.pyplot as plt
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
@@ -20,6 +19,7 @@ if __name__ == '__main__':
     nbr_try = 10
     nbr_epoch = 1000
     width = 4
+    Hwidth = 4
     discretize = 4
     point = 12
     
@@ -99,6 +99,9 @@ if __name__ == '__main__':
     
     sim.custom_plot([Simulation.DISCRETIZE, Simulation.PROTOTYPE])
     
+    #Representations hidden
+    graph_networkhidden(sim.networks[0]['FoN'], Hwidth, 151)
+    
     #Representations
     on = []
     hn = []
@@ -106,4 +109,6 @@ if __name__ == '__main__':
         on.append(net['FoN'].outputNeurons)
         hn.append(net['FoN'].hiddenNeurons)
     graph_network(on, hn, width)
+
     
+

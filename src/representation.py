@@ -15,6 +15,23 @@ from perceptron import PerceptronR0to1, Perceptron
 import sys
 import time
 
+def graph_networkhidden(network, Hwidth, start_num):
+    fig = plt.figure()
+    plt.clf()
+    
+    for i in range(len(network.hiddenNeurons)):
+        try:
+            s = list(start_num)
+            s[2] += i
+            show_repr(network.hiddenNeurons[i].weights, Hwidth, fig, s, "")
+        except TypeError:
+            show_repr(network.hiddenNeurons[i].weights, Hwidth, fig, start_num, i)
+            
+    
+    path = "/tmp/pyplot.%s.%s.png" % (sys.argv[0], time.strftime("%m-%d-%H-%M-%S", time.localtime()) )
+    plt.savefig(path)
+    plt.show()
+
 
 def graph_network(neurons_top, neurons_down, width):
     
@@ -59,7 +76,10 @@ def show_repr(weightl, width, fig, num, title):
             nw =  (weightl[j*width + i] - vmin) * (1./(vmax - vmin))
             matrice[j].append(round(nw, 2))
     
-    ax = fig.add_subplot(num, title=title)
+    try:
+        ax = fig.add_subplot(num[0], num[1], num[2], title=title)
+    except TypeError:
+        ax = fig.add_subplot(num, title=title)
     ax.set_aspect(1)
     res = ax.imshow(np.array(matrice), cmap=cm.gist_gray_r, 
                     interpolation='nearest')

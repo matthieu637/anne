@@ -7,14 +7,12 @@ Created on 27 May 2012
 from multilayerp import MultilayerPerceptron
 from data import DataFile
 from utils import index_max, compare, compare_f
-from representation import graph_network
-
-
+from representation import graph_network,graph_networkhidden
 from simulation import Simulation
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
+    nbr_network = 1
     momentum = 0.9
     lrate = 0.1
     nbr_try = 10
@@ -98,6 +96,10 @@ if __name__ == '__main__':
              [3, 2, 2, 2 ], moregraph2)
     
     sim.custom_plot([Simulation.DISCRETIZE, Simulation.PROTOTYPE])
+    
+    #Representations hidden
+    graph_networkhidden(sim.networks[0]['FoN'], width, (8,8,1))
+    
     
     #Representations
     on = []

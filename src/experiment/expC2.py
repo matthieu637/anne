@@ -19,14 +19,14 @@ if __name__ == '__main__':
     nbr_network = 5
     momentum = 0.5
     lrate = 0.15
-    nbr_try = 10
+    nbr_try = 50
     nbr_epoch = 300
     point = 3
     nbHidden = 20
     
 #   Data Sample Declaration
     def data():
-        return DataFile("digit_shape.txt", mode)
+        return DataFile("digit_handwritten_16.txt", mode)
     
 #   Network Declaration
     def FoN(inputs, outputs):
@@ -36,9 +36,7 @@ if __name__ == '__main__':
         m.init_weights_randomly(-1, 1)
         return m
     def SoN(inputs, outputs):
-        n = MultilayerPerceptron(nbHidden, 20, 2, learning_rate=0.15, momentum=0.5, grid=mode)
-        n.init_weights_randomly(-1, 1)
-        return n
+        return MultilayerPerceptron(nbHidden, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
     
 #   Work on one step
     def step_propagation(network, inputs, outputs):

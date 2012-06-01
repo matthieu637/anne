@@ -89,7 +89,7 @@ if __name__ == '__main__':
                 
 #                [ network['high_order_h'][i].train(f_success) for i in range(6)]
 
-                if(epoch < nbEpoch/2):
+                if(epoch > nbEpoch/2):
                     [ network['high_order_h'][i].train(f_success) for i in range(3)]
                     network['first_order'].set_learning_rate(l)
                     network['first_order'].set_momentum(m)

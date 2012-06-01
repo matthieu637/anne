@@ -17,10 +17,10 @@ class tmpObject:
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
-    momentum = 0.9
+    nbr_network = 2
+    momentum = 0.5
     lrate = 0.1
-    nbr_try = 50
+    nbr_try = 20
     nbr_epoch = 1000
     nbOutputs = 10
     
@@ -136,6 +136,7 @@ if __name__ == '__main__':
         plt.title('Classification error of first-order and high-order networks')
         plt.ylabel('ERROR')
         plt.xlabel("EPOCHS")
+        plt.axis((0, nbr_epoch*4, -0.01, 1.01))
     
     
     sim = Simulation(nbr_epoch, 0, data, nbr_network, [FoN, SoN, FoN2, SoN2])

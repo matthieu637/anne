@@ -80,9 +80,13 @@ class Simulation():
         
         display_interval = range(len(self.plots[init_key]))[::decoup]
         for i in range(len(lplots)):
-            plt.plot(display_interval, [self.plots[lplots[i]][j] for j in display_interval],
-             label=titles[i],
-             linewidth=linewidths[i])
+            if(lplots[i]=='feedback'):
+                plt.plot(display_interval, [self.plots[lplots[i]][j] for j in display_interval],
+                 label=titles[i], linewidth=linewidths[i], color='red')
+            else :
+                plt.plot(display_interval, [self.plots[lplots[i]][j] for j in display_interval],
+                 label=titles[i],
+                 linewidth=linewidths[i])
         
         more(plt)
 
@@ -195,5 +199,19 @@ class Simulation():
             elif(self.plots['discretize_valid'][ishape][len(self.plots['discretize_valid'][ishape]) - 1] != self.lepoch):
                 self.plots['discretize_valid'][ishape].append(self.lepoch)
                 
-        
+    def prototypes(self):
+        lplot = [[0. for _ in range(self.examples.ninputs)] for _ in range(self.examples.noutputs)]
+        for i in range(self.examples.noutputs):
+            for j in range(self.examples.ninputs):
+                for k in range(len(self.examples.inputs)):
+                    if(i == index_max(self.examples.outputs[k])):
+                        lplot[i][j] += self.examples.inputs[k][j]
+                    
+        fig = plt.figure()
+        plt.clf()
+        for i in range(self.examples.noutputs):
+            rpr.show_repr(lplot[i], 16, fig, 250 + i, i)
+        path = "/tmp/pyplot.%s.%s.png" % (sys.argv[0], time.strftime("%m-%d-%H-%M-%S", time.localtime()))
+        plt.savefig(path)
+        plt.show()
     

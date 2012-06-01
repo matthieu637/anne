@@ -21,7 +21,7 @@ if __name__ == '__main__':
     nbr_epoch = 1000
     width = 4
     discretize = 4
-    nbr_hidden = 10
+    nbr_hidden = 5
     
 #   Data Sample Declaration
     def data():

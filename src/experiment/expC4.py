@@ -4,8 +4,8 @@ Created on 27 May 2012
 @author: Matthieu Zimmer
 '''
 
-from multilayerp import MultilayerPerceptron
-from data import DataFile
+from multilayerp import MultilayerPerceptron, MultilayerPerceptronM
+from data import DataFileR
 from utils import index_max
 import representation
 from simulation import Simulation
@@ -16,34 +16,34 @@ class tmpObject:
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
+    nbr_network = 1
     momentum = 0.5
     lrate = 0.15
-    nbr_try = 10
+    nbr_try = 30
     nbr_epoch = 300
     point = 3
-    nbHidden = 20
+    nbHidden = 160
     
 #   Data Sample Declaration
     def data():
-        return DataFile("digit_shape.txt", mode)
+        return DataFileR("iris.txt", mode)
     
 #   Network Declaration
     def FoN(inputs, outputs):
         seed(tmpObject.i)
         tmpObject.i=tmpObject.i+1
-        m = MultilayerPerceptron(inputs, nbHidden, outputs, learning_rate=lrate, momentum=momentum, grid=mode)
+        m = MultilayerPerceptronM(inputs, nbHidden, outputs, 3, learning_rate=lrate, momentum=momentum, grid=mode)
         m.init_weights_randomly(-1, 1)
         return m
     def SoN(inputs, outputs):
-        n = MultilayerPerceptron(nbHidden, 20, 2, learning_rate=0.15, momentum=0.5, grid=mode)
+        n = MultilayerPerceptron(nbHidden+inputs, 20, 2, learning_rate=0.1, momentum=0.5, grid=mode)
         n.init_weights_randomly(-1, 1)
         return n
     
 #   Work on one step
     def step_propagation(network, inputs, outputs):
         network['FoN'].calc_output(inputs)
-        network['SoN'].calc_output(network['FoN'].stateHiddenNeurons)
+        network['SoN'].calc_output(network['FoN'].stateHiddenNeurons[1]+inputs)
         
     def step_statictics(simu, network, plot, inputs, outputs):
         cell = [0., 0.]
@@ -54,7 +54,7 @@ if __name__ == '__main__':
 
         #rms
         simu.rms('FoN', inputs, outputs)
-        simu.rms('SoN', network['FoN'].stateHiddenNeurons, cell)
+        simu.rms('SoN', network['FoN'].stateHiddenNeurons[1]+inputs, cell)
         
         #err
         simu.perf('FoN', outputs)
@@ -71,7 +71,7 @@ if __name__ == '__main__':
         else:
             cell = [1, 0.]
         #Learning
-        network['SoN'].train(network['FoN'].stateHiddenNeurons, cell)
+        network['SoN'].train(network['FoN'].stateHiddenNeurons[1]+inputs, cell)
         network['FoN'].train(inputs, outputs)
         
     

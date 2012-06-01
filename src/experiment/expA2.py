@@ -7,7 +7,7 @@ Created on 27 May 2012
 from multilayerp import MultilayerPerceptron
 from data import DataFile
 from utils import index_max, compare, compare_f
-from representation import graph_network
+from representation import graph_network, graph_networkhidden
 
 
 from simulation import Simulation
@@ -94,9 +94,13 @@ if __name__ == '__main__':
     sim.plot(12, 'FoN_rms', ['FoN_err', 'SoN_err_input', 'SoN_err_hidden', 'SoN_err_output'],
              ["FoN ( winner take all )" , "SoN input layer ( x > 0.5 => activation )", "SoN hidden layer ( | x - o | <= 0.3 )",
                         "SoN output layer ( winner take all )"],
-             [2, 1, 1 , 1 ], moregraph2)
+             [3, 2, 2 , 2 ], moregraph2)
     
     sim.custom_plot([Simulation.DISCRETIZE, Simulation.PROTOTYPE])
+    
+    #Representations hidden
+    graph_networkhidden(sim.networks[0]['FoN'], width, (8,8,1))
+    
     
     #Representations
     on = []

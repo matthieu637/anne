@@ -6,7 +6,7 @@ Created on 27 May 2012
 
 from multilayerp import MultilayerPerceptron
 from data import DataFile
-from utils import index_max
+from utils import index_max, index_max_nth
 import representation
 from simulation import Simulation
 from random import seed
@@ -19,14 +19,14 @@ if __name__ == '__main__':
     nbr_network = 5
     momentum = 0.5
     lrate = 0.15
-    nbr_try = 10
+    nbr_try = 50
     nbr_epoch = 300
     point = 3
-    nbHidden = 20
+    nbHidden = 100
     
 #   Data Sample Declaration
     def data():
-        return DataFile("digit_shape.txt", mode)
+        return DataFile("digit_handwritten_16.txt", mode)
     
 #   Network Declaration
     def FoN(inputs, outputs):
@@ -36,9 +36,7 @@ if __name__ == '__main__':
         m.init_weights_randomly(-1, 1)
         return m
     def SoN(inputs, outputs):
-        n = MultilayerPerceptron(nbHidden, 20, 2, learning_rate=0.15, momentum=0.5, grid=mode)
-        n.init_weights_randomly(-1, 1)
-        return n
+        return MultilayerPerceptron(nbHidden, 20, 10, learning_rate=0.1, momentum=0., grid=mode)
     
 #   Work on one step
     def step_propagation(network, inputs, outputs):
@@ -46,11 +44,11 @@ if __name__ == '__main__':
         network['SoN'].calc_output(network['FoN'].stateHiddenNeurons)
         
     def step_statictics(simu, network, plot, inputs, outputs):
-        cell = [0., 0.]
-        if index_max(network['FoN'].stateOutputNeurons) == index_max(outputs):
-            cell = [0., 1]
-        else:
-            cell = [1, 0.]
+        cell = [0 for _ in range(10)]
+        for k in range(10):
+            if index_max_nth(network['FoN'].stateOutputNeurons, k) == index_max(outputs):
+                cell[k] = 1
+                break
 
         #rms
         simu.rms('FoN', inputs, outputs)
@@ -61,15 +59,19 @@ if __name__ == '__main__':
         simu.perf('SoN', cell)
         
         #wager ratio
-        if(index_max(network['SoN'].stateOutputNeurons) == 1):
+        if(index_max(network['SoN'].stateOutputNeurons) == 0):
             plot['high_wager'] += 1
+        
+        #feedback
+        if(index_max_nth(network['FoN'].stateOutputNeurons, index_max(network['SoN'].stateOutputNeurons)) == index_max(outputs)):
+            plot['feedback'] += 1
 
     def step_learn(network, inputs, outputs):
-        cell = [0., 0.]
-        if index_max(network['FoN'].stateOutputNeurons) == index_max(outputs):
-            cell = [0., 1]
-        else:
-            cell = [1, 0.]
+        cell = [0 for _ in range(10)]
+        for k in range(10):
+            if index_max_nth(network['FoN'].stateOutputNeurons, k) == index_max(outputs):
+                cell[k] = 1
+                break
         #Learning
         network['SoN'].train(network['FoN'].stateHiddenNeurons, cell)
         network['FoN'].train(inputs, outputs)
@@ -85,10 +87,16 @@ if __name__ == '__main__':
         plt.ylabel('ERROR')
         plt.xlabel("EPOCHS")
         plt.axis((0, nbr_epoch, 0, 1.01))
+        
+    def moregraph3(plt):
+        plt.title('Classification performance of first-order and feedback networks')
+        plt.ylabel('ERROR')
+        plt.xlabel("EPOCHS")
+        plt.axis((0, nbr_epoch, 0, 1.01))
     
     
     sim = Simulation(nbr_epoch, 0, data, nbr_network, [FoN, SoN])
-    sim.dgraph(['FoN_rms', 'SoN_rms', 'FoN_perf', 'SoN_perf', 'high_wager'], [])
+    sim.dgraph(['FoN_rms', 'SoN_rms', 'FoN_perf', 'SoN_perf', 'high_wager', 'feedback'], [])
     seed(100)
     sim.launch(nbr_try, step_propagation, step_statictics, step_learn)
     
@@ -98,5 +106,9 @@ if __name__ == '__main__':
     
     sim.plot(point, 'FoN_rms', ['FoN_perf', 'SoN_perf', 'high_wager'],
              ["FoN ( winner take all )" , "SoN (wagering) ", "High wager"],
-             [3, 3, 2, ], moregraph2)
+             [3, 3, 2 ], moregraph2)
+    
+    sim.plot(point, 'FoN_perf', ['FoN_perf', 'feedback'],
+             ["FoN" , "Feedback"],
+             [3, 3 ], moregraph3)
         
