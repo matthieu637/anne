@@ -1,28 +1,30 @@
 \section{Expérience D1} 
   \subsection{Objectif}
-    Reproduction et approfondissement des résultats de la première expérience 1 dans l'article 
-    \cite{Cleeremans_2007}. 
-
+    En utilisant la seconde architecture de \cite{Cleeremans_2007}, 
+    comprendre de quelles manières un réseau de neurone connexionniste peut, à partir de ses propres paris
+    sur son résultat, améliorer son comportement.
   
   
-    Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
-    un réseau de neurone connexionniste, en particulier sur des perceptrons multicouches.
-  
-  
+     
   \subsection{Architecture}
     \paragraph{Description}
       Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
-      par 20 neurones d'entrées. Il est composé d'une couche cachée de 5 neurones.
+      par 256 (16x16) neurones d'entrées. Il est composé d'une couche cachée de 100 neurones.
       
-      Un second réseau de perceptron multicouche apprend à dupliquer toutes les couches du premier
-      réseau en n'ayant que sa couche cachée en entrée.
+      Un second réseau de perceptron multicouche apprend à parier sur la qualité de la réponse
+      du premier réseau à partir de sa couche cachée.
       
       L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
       couche cachée du premier réseau.
+      
+      Lorsque le second réseau parie haut, la réponse du premier réseau est gardée, à l'inverse,
+      lorsqu'il parie bas, c'est le second neurone le plus élevé du premier réseau qui sera 
+      la réponse.
+
 
     \paragraph{Schéma}
       \begin{center}
-	\includegraphics[width=220px]{data/expC1/schema.png}
+	\includegraphics[width=250px]{data/expD1/schema.png}
       \end{center}
       
     \paragraph{Paramètres}
@@ -30,17 +32,20 @@
 	\begin{tabular}{lr}
 	  \begin{minipage}{230px}
 	    \begin{itemize}
-	      \item momentum : 0.9 sur les 2 réseau
-	      \item taux d'apprentissage : 0.1 sur les 2 réseau
-	      \item 10 chiffres différents présentés
-	      \item apprentissage 10 (formes) x 1000 (époques)
+	      \item momentum : 0.5 sur le premier réseau
+	      \item momentum : 0. sur le second réseau
+	      \item taux d'apprentissage : 0.15 sur les 2 réseau
+	      \item \textbf{1600 formes} de chiffres différents présentées (shuffle) \cite{Handwritten_256}
+	      \item apprentissage 50 (formes) x 300 (époques)
 	      \item utilisation de biais
+	      
 	    \end{itemize}
 	  \end{minipage}
 	  &
 	  \begin{minipage}{230px}
 	    \begin{itemize}
-	      \item poids initialisés sur [-0.25 ; 0.25]
+	      \item poids initialisés sur [-1 ; 1] pour le premier réseau
+	      \item poids initialisés sur [-0.25 ; 0.25] pour le second réseau
 	      \item taux d'apprentissage constant
 	      \item entrées valent 0 ou 1
 	      \item sigmoïde à température 1
