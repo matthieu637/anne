@@ -1,18 +1,22 @@
-# -*- coding: UTF-8 -*-
 '''
-Created on 19 March 2012
+Created on 27 May 2012
 
 @author: Matthieu Zimmer
-
 '''
 
-from perceptron import PerceptronR0to1
 from multilayerp import MultilayerPerceptron
-from utils import index_max, randmm
-from random import shuffle, seed
-import matplotlib.pyplot as plt
+from perceptron import PerceptronR0to1
 from data import DataFile
+from utils import index_max, randmm
+import representation
+from simulation import Simulation
+from random import seed
 from copy import deepcopy
+
+
+
+
+
 
 class AdHockP(PerceptronR0to1):
     def __init__(self, control):
@@ -28,7 +32,7 @@ class AdHockP(PerceptronR0to1):
         for w in control.weights:
             self.weights.append(w)
         
-        for _ in range(8):
+        for _ in range(20):
             self.weights.append(randmm(-1, 1))
         
         self.bias = control.bias
@@ -96,6 +100,13 @@ class AdHock(MultilayerPerceptron):
         self.stateHiddenNeurons = []
         self._last_inputs = []
         self._network_updated = True
+    def calc_SE_range(self, inputs, outputs, imin, imax):
+        #self.calc_output(inputs)
+        
+        s = 0.
+        for i in range(imin, imax):
+            s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
+        return s
 
     def calc_hidden(self, inputs):
         #determine the state of hidden neurons
@@ -143,112 +154,124 @@ def ampli(l, n):
         ll[i] = max(l) if index_max(l) == 1 else min(l)
     return ll
 
+
+
+
+
+
+
+class tmpObject:
+    i = 0
+    control = None
+
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
+    nbr_network = 1
     momentum = 0.5
-    nbEpoch = 201
-    nbTry = 50
-    display_interval = range(nbEpoch)[3::5]
-    seed(100)
+    lrate = 0.15
+    nbr_try = 50
+    nbr_epoch = 300
+    point = 3
+    nbHidden = 100
     
-    #create all networks
-    networks = [{} for _ in range(nbr_network)]
+#   Data Sample Declaration
+    def data():
+        return DataFile("digit_handwritten_16.txt", mode)
     
-    for i in range(nbr_network):
-        seed(i)
-        control = MultilayerPerceptron(16 * 16, 100, 10, learning_rate=0.15, momentum=momentum, grid=mode)
-        control.init_weights_randomly(-1, 1)
+#   Network Declaration
+    def control(inputs, outputs):
+        seed(tmpObject.i)
+        tmpObject.i = tmpObject.i + 1
+        tmpObject.control = MultilayerPerceptron(inputs, nbHidden, outputs, learning_rate=lrate, momentum=momentum, grid=mode)
+        tmpObject.control.init_weights_randomly(-1, 1)
+        return tmpObject.control
+    def FoN(inputs, outputs):
+        return AdHock(tmpObject.control)
+    def SoN(inputs, outputs):
+        return MultilayerPerceptron(nbHidden, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
+
+    
+#   Work on one step
+    def step_propagation(network, inputs, outputs):
+        network['control'].calc_output(inputs)
+        network['FoN'].calc_hidden(inputs)
+        network['SoN'].calc_output(network['FoN'].stateHiddenNeurons)
+        network['FoN'].calc_output([0] * 20)
         
-        high_order_h = MultilayerPerceptron(100, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
-        first_order = AdHock(control)
         
-        networks[i] = {'first_order' : first_order,
-                    'high_order_h' : high_order_h,
-                    'control': control}
+    def step_statictics(simu, network, plot, inputs, outputs):
 
-    #create example
-    examples = DataFile("digit_handwritten_16.txt", mode)
 
-    #3 curves
-    y_perfo = {'first_order' : [] ,
-              'high_order_h' : [],
-              'wager_proportion': [],
-              'feedback' : [],
-              'control': [],
-              'diff': []}
+        #rms
+        simu.rms('control', inputs, outputs)
+        
+        
+        #err
+        simu.perf('control', outputs)
+        
+
+        network['FoN'].calc_output(ampli(network['SoN'].stateOutputNeurons, 20))
+        cell = [0., 0.]
+        if index_max(network['FoN'].stateOutputNeurons) == index_max(outputs):
+            cell = [0., 1]
+        else:
+            cell = [1, 0.]
+        simu.perf('SoN', cell)
+        simu.rms('SoN', network['FoN'].stateHiddenNeurons, cell)
+        #wager ratio
+        if(index_max(network['SoN'].stateOutputNeurons) == 1):
+            plot['high_wager'] += 1
+
+       
+        simu.rms('FoN', None, outputs)
+        simu.perf('FoN', outputs)
+
+    def step_learn(network, inputs, outputs):
+        cell = [0., 0.]
+        if index_max(network['FoN'].stateOutputNeurons) == index_max(outputs):
+            cell = [0., 1]
+        else:
+            cell = [1, 0.]
+        #Learning
+        tmp = list(network['FoN'].stateHiddenNeurons)
+        network['FoN'].train(inputs, outputs, ampli(network['SoN'].stateOutputNeurons, 20))
+        
+        network['SoN'].train(tmp, cell)
+        network['control'].train(inputs, outputs)
+        
     
+    def moregraph1(plt):
+        plt.title('Error RMS error of first-order and high-order networks')
+        plt.ylabel('RMS ERROR')
+        plt.xlabel("EPOCHS")
+        
+    def moregraph2(plt):
+        plt.title('Classification performance of first-order and high-order networks')
+        plt.ylabel('ERROR')
+        plt.xlabel("EPOCHS")
+        plt.axis((0, nbr_epoch, 0, 1.01))
+        
+    def moregraph3(plt):
+        plt.title('Classification performance of first-order and control networks')
+        plt.ylabel('ERROR')
+        plt.xlabel("EPOCHS")
+        plt.axis((0, nbr_epoch, 0, 1.01))
+    
+    
+    sim = Simulation(nbr_epoch, 0, data, nbr_network, [control, FoN, SoN])
+    sim.dgraph(['FoN_rms', 'SoN_rms', 'FoN_perf', 'SoN_perf', 'high_wager', 'control_rms', 'control_perf'], [])
     seed(100)
+    sim.launch(nbr_try, step_propagation, step_statictics, step_learn)
     
-    #learning
-    for epoch in range(nbEpoch):
-        perfo = {'first_order' : 0. ,
-                 'high_order_h' : 0.,
-                 'wager_proportion': 0.,
-                 'feedback' : 0.,
-                 'control': 0.,
-                 'diff': 0.}
-        for network in networks:
-            l_exx = list(range(len(examples.inputs)))
-            shuffle(l_exx)
-            for ex in l_exx[0:nbTry]:
-                network['control'].calc_output(examples.inputs[ex])
-                network['first_order'].calc_hidden(examples.inputs[ex])
-                network['high_order_h'].calc_output(network['first_order'].stateHiddenNeurons)
-                network['first_order'].calc_output([0] * 8)
-                
-                cell = [0, 1] \
-                        if index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex]) \
-                        else [1, 0]
-                
-                if(index_max(network['control'].stateOutputNeurons) == index_max(examples.outputs[ex])):
-                    perfo['control'] += 1
-                if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
-                    perfo['first_order'] += 1
-                if(index_max(network['high_order_h'].stateOutputNeurons) == index_max(cell)):
-                    perfo['high_order_h'] += 1
-
-                if(index_max(network['high_order_h'].stateOutputNeurons) == 1):
-                    perfo['wager_proportion'] += 1
-                    
-                
-                cell2 = [0, 0]
-                network['first_order'].calc_output(ampli(network['high_order_h'].stateOutputNeurons, 8))
-                if(index_max(network['first_order'].stateOutputNeurons) == index_max(examples.outputs[ex])):
-                    perfo['feedback'] += 1
-                    cell2[1] = 1
-                else :
-                    cell2[0] = 1
-                
-                
-                #learn
-#                print(control.hiddenNeurons[0].weights[0])
-                tmp = list(network['first_order'].stateHiddenNeurons)
-                network['first_order'].train(examples.inputs[ex],
-                             examples.outputs[ex], ampli(network['high_order_h'].stateOutputNeurons, 8))
-                
-                
-                network['high_order_h'].train(tmp, cell2)
-#                print(control.hiddenNeurons[0].weights[0])
-                network['control'].train(examples.inputs[ex], examples.outputs[ex])
-
-        perfo['diff'] = (perfo['feedback'] - perfo['control'])
-        for k in y_perfo.keys():
-            y_perfo[k].append(perfo[k] / (nbTry * nbr_network))
-
-        print(epoch)
+    sim.plot(point, 'FoN_rms', ['FoN_rms', 'SoN_rms', 'control_rms'],
+             ["FoN" , "SoN", "Control"],
+             [3, 3, 3 ], moregraph1)
     
-    print("score : ", sum(y_perfo['diff']) / len(y_perfo['diff']))
-
-    plt.title("Feedback by merging")
-#    plt.plot(display_interval , y_perfo['first_order'][3::5], label="first-order network", linewidth=1)
-#    plt.plot(display_interval , y_perfo['high_order_h'][3::5], label="high-order network (high learning rate)")
-#    plt.plot(display_interval , y_perfo['wager_proportion'][3::5], label="proportion of high wagers")
-    plt.plot(display_interval , y_perfo['control'][3::5], label="control network", linewidth=2)
-    plt.plot(display_interval , y_perfo['feedback'][3::5], label="feedback", linewidth=2)
-    plt.ylabel('SUCCESS RATIO')
-    plt.xlabel("EPOCHS")
-    plt.axis((0, nbEpoch, 0, 1.))
-    plt.legend(loc='best', frameon=False)
-    plt.show()
+    sim.plot(point, 'FoN_rms', ['FoN_perf', 'SoN_perf', 'high_wager'],
+             ["FoN ( winner take all )" , "SoN (wagering) ", "High wager"],
+             [3, 3, 2 ], moregraph2)
     
+    sim.plot(point, 'FoN_perf', ['FoN_perf', 'control_perf'],
+             ["FoN" , "Control"],
+             [3, 3 ], moregraph3)
+        
