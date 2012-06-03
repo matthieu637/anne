@@ -4,7 +4,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.1.2
-lastDocument=expC4.tex
+lastDocument=cahier.tex
 masterDocument=
 name=cahier
 pkg_extIsRegExp=false
@@ -211,7 +211,7 @@ archive=true
 column=0
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=67
 mode=LaTeX
 open=true
 order=0
@@ -228,13 +228,13 @@ order=-1
 
 [item:expA1.tex]
 archive=true
-column=37
+column=18
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=24
 mode=LaTeX
-open=false
-order=1
+open=true
+order=6
 
 [item:expA2.tex]
 archive=true
@@ -258,13 +258,13 @@ order=-1
 
 [item:expA4.tex]
 archive=true
-column=0
+column=24
 encoding=UTF-8
 highlight=LaTeX
-line=11
+line=0
 mode=LaTeX
-open=false
-order=-1
+open=true
+order=5
 
 [item:expB1.tex]
 archive=true
@@ -288,60 +288,60 @@ order=-1
 
 [item:expC1.tex]
 archive=true
-column=36
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=11
 mode=LaTeX
 open=false
 order=-1
 
 [item:expC2.tex]
 archive=true
-column=0
+column=53
 encoding=UTF-8
 highlight=LaTeX
-line=111
+line=33
 mode=LaTeX
-open=false
-order=-1
+open=true
+order=4
 
 [item:expC3.tex]
 archive=true
-column=0
+column=23
 encoding=UTF-8
 highlight=LaTeX
-line=2
+line=1
 mode=LaTeX
 open=true
 order=2
 
 [item:expC4.tex]
 archive=true
-column=53
+column=15
 encoding=UTF-8
 highlight=LaTeX
-line=23
+line=81
 mode=LaTeX
 open=true
 order=1
 
 [item:expD1.tex]
 archive=true
-column=4
+column=11
 encoding=UTF-8
 highlight=LaTeX
-line=76
+line=102
 mode=LaTeX
-open=false
-order=1
+open=true
+order=3
 
 [item:expD2.tex]
 archive=true
-column=14
+column=37
 encoding=UTF-8
 highlight=LaTeX
-line=78
+line=0
 mode=LaTeX
 open=false
 order=2
@@ -358,10 +358,10 @@ order=3
 
 [item:expD4.tex]
 archive=true
-column=44
+column=9
 encoding=UTF-8
 highlight=LaTeX
-line=32
+line=71
 mode=LaTeX
 open=false
 order=4
@@ -378,17 +378,17 @@ order=-1
 
 [item:rms.tex]
 archive=true
-column=27
+column=23
 encoding=UTF-8
 highlight=LaTeX
 line=0
 mode=LaTeX
-open=false
-order=-1
+open=true
+order=7
 
 [view-settings,view=0,item:cahier.tex]
 CursorColumn=0
-CursorLine=0
+CursorLine=67
 JumpList=
 ViMarks=
 
@@ -399,8 +399,8 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expA1.tex]
-CursorColumn=37
-CursorLine=0
+CursorColumn=18
+CursorLine=24
 JumpList=
 ViMarks=
 
@@ -417,8 +417,8 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expA4.tex]
-CursorColumn=0
-CursorLine=11
+CursorColumn=24
+CursorLine=0
 JumpList=
 ViMarks=
 
@@ -435,38 +435,38 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expC1.tex]
-CursorColumn=36
-CursorLine=0
+CursorColumn=0
+CursorLine=11
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expC2.tex]
-CursorColumn=0
-CursorLine=111
+CursorColumn=53
+CursorLine=33
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expC3.tex]
-CursorColumn=0
-CursorLine=2
+CursorColumn=23
+CursorLine=1
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expC4.tex]
-CursorColumn=53
-CursorLine=23
+CursorColumn=15
+CursorLine=81
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expD1.tex]
-CursorColumn=4
-CursorLine=76
+CursorColumn=11
+CursorLine=102
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expD2.tex]
-CursorColumn=14
-CursorLine=78
+CursorColumn=37
+CursorLine=0
 JumpList=
 ViMarks=
 
@@ -477,8 +477,8 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expD4.tex]
-CursorColumn=44
-CursorLine=32
+CursorColumn=9
+CursorLine=71
 JumpList=
 ViMarks=
 
@@ -489,7 +489,7 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:rms.tex]
-CursorColumn=27
+CursorColumn=23
 CursorLine=0
 JumpList=
 ViMarks=
