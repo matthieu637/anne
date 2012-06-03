@@ -1,0 +1,70 @@
+ digraph G {
+  node[shape=rect];
+  //rankdir = LR;
+  rankdir = TB;
+  
+  R1 -> R2;
+  R1 -> R3;
+
+
+  R2 -> A1 [label="duplication"];
+  A3 -> A2 [label="preuve"]
+  A1 -> A3 [label="passage données réelles"]
+  A3 -> A4 [label="données non linéairement séparable"]
+
+
+  A1 -> B [label="essai représentations"]
+  A3 -> B [label="essai représentations"]
+  A4 -> B [label="essai représentations"]
+
+
+  R3 -> C1 [label="duplication"];
+  C1 -> C2 [label="passage données réelles"]
+  C2 -> C3 [label="données non linéairement séparable"]
+  C3 -> C4 [label="plus de couche"]
+
+
+  C2 -> D1 [label="second gagnant"]
+  D1 -> D2 [label="nième gagnant"]
+  C2 -> D3 [label="auto supervision"]
+  D3 -> D4 [label="gestion learning rate & momentum"]
+
+  C2 -> F [label="3eme réseau"]
+
+  F -> G [label="peaufiné"]
+
+  subgraph clusterA{
+    label="Expérience 1"
+    A1; A2; A3; A4;
+  }
+
+  subgraph clusterB{
+    label="Changement de tâche"
+    B [label="B1-3"]
+  }
+
+  subgraph clusterC{
+    label="Expérience 2"
+    C1; C2; C3; C4;
+  }
+
+  subgraph clusterD{
+    label="Tentatives d'exploitation"
+    D1; D2; D3; D4;
+  }
+
+  subgraph clusterF{
+    label="3ème réseau"
+    F [label="F1-6"]
+  }
+
+  subgraph clusterG{
+    label="fusion"
+    G [label="G1-2"]
+  }
+
+
+  R1 [label="Cleeremans 2007"];
+  R2 [label="Expérience 1 (duplication)"];
+  R3 [label="Expérience 2 (paris)"];
+}

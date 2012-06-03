@@ -40,7 +40,7 @@
 	      \item taux d'apprentissage : 0.15 sur le premier réseau
 	      \item taux d'apprentissage : 0.1 sur 2\up{ème} et \up{ème} réseau
 	      \item \textbf{1600 formes} de chiffres différents présentées (shuffle) \cite{Handwritten_256}
-	      \item apprentissage 50 (formes) x 300 (époques)
+	      
 	      
 	    \end{itemize}
 	  \end{minipage}
@@ -53,6 +53,7 @@
 	      \item entrées valent 0 ou 1
 	      \item sigmoïde à température 1
 	      \item utilisation de biais
+	      \item apprentissage 50 (formes) x 300 (époques)
 	    \end{itemize}
 	  \end{minipage}
 	\end{tabular}
@@ -98,10 +99,10 @@
   quand même à avoir une hausse de performance.
   
   Pour résoudre le problème de temps d'apprentissage des 50 premières époques et du 3\up{ème} réseau supplémentaire,
-  l'expérience G1.
+  l'\nameref{expG1}.
   
   
-  Evidamment, comme nous l'avons montré dans les expériences C, il faut un nombre élevé de neurone dans la couche cachée du premier réseau.
+  Évidemment, comme nous l'avons montré dans les expériences C, il faut un nombre élevé de neurone dans la couche cachée du premier réseau.
   Cette hausse de performance ne peut dépasser les performances d'un réseau optimal.
   
   

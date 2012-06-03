@@ -1,0 +1,29 @@
+ digraph G {
+  node[shape=rect];
+  rankdir = TB;
+  
+
+  R2 -> A1 [label="duplication"];
+  A3 -> A2 [label="preuve"]
+  A1 -> A3 [label="passage données réelles"]
+  A3 -> A4 [label="données non linéairement séparable"]
+
+
+  A1 -> B [label="essai représentations"]
+  A3 -> B [label="essai représentations"]
+  A4 -> B [label="essai représentations"]
+
+  subgraph clusterA{
+    label="Expérience 1"
+    A1; A2; A3; A4;
+  }
+
+  subgraph clusterB{
+    label="Changement de tâche"
+    B [label="B1-3"]
+  }
+
+
+  R2 [label="Cleeremans 2007 : Expérience 1 (duplication)"];
+
+}

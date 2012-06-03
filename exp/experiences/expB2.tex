@@ -1,0 +1,107 @@
+\section{Expérience B2} 
+  \subsection{Objectif}
+    Reproduction et approfondissement des résultats de la première expérience 1 dans l'article 
+    \cite{Cleeremans_2007}. 
+
+  
+  
+    Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
+    un réseau de neurone connexionniste, en particulier sur des perceptrons multicouches.
+  
+  
+  \subsection{Architecture}
+    \paragraph{Description}
+      Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
+      par 256 (16x16) neurones d'entrées. Il est composé d'une couche cachée de 64 neurones.
+      
+      Un second réseau de perceptron multicouche apprend à dupliquer toutes les couches du premier
+      réseau en n'ayant que sa couche cachée en entrée.
+      
+      L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
+      couche cachée du premier réseau.
+
+    \paragraph{Schéma}
+      \begin{center}
+	\includegraphics[width=220px]{data/expA3/schema.png}
+      \end{center}
+      
+    \paragraph{Paramètres}
+      \begin{center}
+	\begin{tabular}{lr}
+	  \begin{minipage}{230px}
+	    \begin{itemize}
+	      \item momentum : 0.9 sur les 2 réseaux
+	      \item taux d'apprentissage : 0.1 sur les 2 réseaux
+	      \item \textbf{1600 formes} de chiffres différents présentées (shuffle) \cite{Handwritten_256}
+	      \item apprentissage 10 (formes) x 1000 (époques)
+	    \end{itemize}
+	  \end{minipage}
+	  &
+	  \begin{minipage}{230px}
+	    \begin{itemize}
+	      \item poids initialisés sur [-0.25 ; 0.25]
+	      \item taux d'apprentissage constant
+	      \item entrées valent 0 ou 1
+	      \item sigmoïde à température 1
+	      \item utilisation de biais
+	    \end{itemize}
+	  \end{minipage}
+	\end{tabular}
+      \end{center}
+
+  
+  \newpage
+  \subsection{Résultats}
+    \paragraph{Principaux}
+      Analyse des performances
+      \begin{center}
+	\begin{tabular}{lr}
+	  \hspace*{-1cm}
+	  \includegraphics[width=250px]{data/expB2/err.png}
+	  &
+	  \includegraphics[width=250px]{data/expB2/err_block.png} 
+	\end{tabular}
+      \end{center}
+      \subparagraph{Notes}
+	\begin{itemize}
+	  \item les courbes SoN layer représentent les erreurs (du second réseaux) des couches du premier à reproduire 
+	  \item la courbe RMS verte (SoN) est la somme des 3 courbes SoN layer
+	\end{itemize}
+      \subparagraph{Conclusion}
+	\begin{itemize}
+	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
+	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
+	  \item le second réseau apprend plus rapidement que le premier
+	\end{itemize}
+    \paragraph{Secondaires}
+      RMS
+      \begin{center}
+	\begin{tabular}{lr}
+	  \hspace*{-1cm}
+	  \includegraphics[width=250px]{data/expB2/rms.png}
+	  &
+	  \includegraphics[width=250px]{data/expB2/rms_block.png} 
+	\end{tabular}
+      \end{center} 
+      \subparagraph{Notes}
+	\begin{itemize}
+	  \item une couleur équivaut à un chiffre présenté
+	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes)
+	\end{itemize}
+      \subparagraph{Conclusion}
+	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 
+	le tout permettant au second réseau d'avoir des entrées très peu variables, favorisant
+	son apprentissage.
+
+  \subsection{Conclusion}
+  
+  
+
+  \newpage 
+  \subsection{Formules}
+    \input{rms}
+    \input{discretize}
+    \input{gradient}
+
+\bibliographystyle{../pre-rapport/apalike}
+\bibliography{../pre-rapport/biblio}

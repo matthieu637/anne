@@ -1,0 +1,43 @@
+ digraph G {
+  node[shape=rect];
+  //rankdir = LR;
+  rankdir = TB;
+
+  R3 -> C1 [label="duplication"];
+  C1 -> C2 [label="passage données réelles"]
+  C2 -> C3 [label="données non linéairement séparable"]
+  C3 -> C4 [label="plus de couche"]
+
+
+  C2 -> D1 [label="second gagnant"]
+  D1 -> D2 [label="nième gagnant"]
+  C2 -> D3 [label="auto supervision"]
+  D3 -> D4 [label="gestion learning rate & momentum"]
+
+  C2 -> F [label="tentative 3ème réseau"]
+
+  F -> G [label="peaufiné"]
+
+
+  subgraph clusterC{
+    label="Expérience 2"
+    C1; C2; C3; C4;
+  }
+
+  subgraph clusterD{
+    label="Tentatives d'exploitation"
+    D1; D2; D3; D4;
+  }
+
+  subgraph clusterF{
+    label="3ème réseau"
+    F [label="F1-6"]
+  }
+
+  subgraph clusterG{
+    label="fusion"
+    G [label="G1-2"]
+  }
+
+  R3 [label="Cleeremans 2007 : Expérience 2 (paris)"];
+}
