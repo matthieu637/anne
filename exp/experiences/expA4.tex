@@ -4,7 +4,7 @@
     un réseau de neurone connexionniste, plus particulièrement sur des perceptrons multicouches.
     
     Réalisation de la première expérience de l'article \cite{Cleeremans_2007} sur des données réelles
-    et non linéairement sépérables.
+    et non linéairement séparables.
 
   
   \subsection{Architecture}
@@ -94,13 +94,13 @@
 	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes~\nameref{discretize})
 	\end{itemize}
       \subparagraph{Conclusion}
-	Les données n'étant pas linéairement sépérables, leur passage dans une seule couche rend la tâche d'apprentissage
+	Les données n'étant pas linéairement séparables, leur passage dans une seule couche rend la tâche d'apprentissage
 	du second réseau plus complexe.
 	
 	On peut voir plusieurs points de différentes couleurs aux mêmes endroits (ie. pour la même couche cachée).
 
   \subsection{Conclusion}
-  Le passage sur des données non linéairement sépérables se passent bien.
+  Le passage sur des données non linéairement séparables se passent bien.
   
   Comme il l'est dit dans \cite{Cleeremans_2007}, cette architecture tente d'abolir les problèmes des réseaux connexionnistes
   classiques à avoir un semblant de conscience.
@@ -113,6 +113,8 @@
    le fait que ce second réseau n'affecte pas l'apprentissage du premier (ie. pour ne pas retomber dans la châine de causalité)
    \\[0.2cm]
   \end{itemize}
+  
+  Dans l'\nameref{expB3}, nous avons expérimenté les représentations et le transfert de tâche.
   
 
   \newpage 

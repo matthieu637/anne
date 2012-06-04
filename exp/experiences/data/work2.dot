@@ -6,7 +6,7 @@
   R2 -> A1 [label="duplication"];
   A3 -> A2 [label="preuve"]
   A1 -> A3 [label="passage données réelles"]
-  A3 -> A4 [label="données non linéairement séparable"]
+  A3 -> A4 [label="données non linéairement séparables"]
 
 
   A1 -> B [label="essai représentations"]
