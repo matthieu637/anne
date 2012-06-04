@@ -66,10 +66,14 @@
 	  \item formule utilisée pour RMS (cf. Formules~\nameref{rms})
 	  \item les courbes SoN layer représentent les erreurs (du second réseaux) sur les couches à reproduire 
 	  \item la courbe RMS verte (SoN) est la somme des 3 courbes SoN layer
+	  \item l'erreur de classification représente le taux de mauvaises réponses pour les 10 formes présentées sur une époque
+	  \item pour SoN input layer et hidden layer, un winner-take-all n'est pas possible (ce n'est pas de la classification, 
+	  mais une duplication), il y a donc un seuil d'erreur qui ne doit pas être dépassé par un seul neurone
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
 	  \item le premier réseau réussit à apprendre sa tâche de classification
+	  \item le second réseau réussit à apprendre sa tâche de duplication
 	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
 	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
 	  \item le second réseau apprend plus rapidement que le premier
@@ -91,6 +95,9 @@
 	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes~\nameref{discretize})
 	\end{itemize}
       \subparagraph{Conclusion}
+	On peut voir ici, qu'un simple perceptron permet de résoudre le problème ; puisqu'à la fin,
+        aucunes des couleurs n'est superposées à une autre.
+      
 	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 
 	le tout permettant au second réseau d'avoir des entrées très peu variables, favorisant
 	son apprentissage.
@@ -108,6 +115,7 @@
 	\begin{itemize}
 	  \item plus une case est noire, plus sa présence est importante pour le chiffre en question
 	  \item plus une case est blanche, plus son absence est importante
+	  \item c'est seulement lorsqu'elle est grise qu'elle n'est pas prise en compte
 	\end{itemize}
       \subparagraph{Conclusion}
       Il est intéréssant de remarquer qu'au vu du peu d'entrée, le réseau cible des neurones très précis.
@@ -122,13 +130,17 @@
 	  \item Il sagit de la moyenne des réponses du second réseaux sur toutes les entrées
 	\end{itemize}
       \subparagraph{Conclusion}
-	Le peu d'entrées permet l'apprentissage par-coeur de chaque forme.
+	Le peu d'entrées permet l'apprentissage par-coeur de chaque forme. À tel point qu'on ne peut pas vraiment
+	parler de prototype.
 	
 
 
   \subsection{Conclusion}
     L'augmentation du nombre de neurones dans le réseau, et l'augmentation de la taille des entrées
     ne modifient pas l'attitude du réseau.
+    
+    Au vu des résultats secondaires qui nous montre que la tâche est vraiment facile, dans l'\nameref{expA3},
+    nous nous sommes intéréssé à la même architecture mais sur des données réelles.
   
 
   \newpage 
