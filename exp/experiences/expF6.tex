@@ -17,8 +17,8 @@
       L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
       couche cachée du premier réseau.
       
-      Un troisième réseau de perceptron apprend la solution à partir des sorties des 2 premiers 
-      réseau. Son apprentissage n'affecte aucun des 2 sous réseaux.
+      Un troisième réseau de perceptron apprend la solution à partir de la couche cachée et de la 
+      couche de sortie du second réseau. Son apprentissage n'affecte aucun des 2 sous réseaux.
 
 
     \paragraph{Schéma}
@@ -34,7 +34,7 @@
 	      \item momentum : 0.5 sur le premier réseau
 	      \item momentum : 0. sur le 2\up{ème} et 3\up{ème} réseau
 	      \item taux d'apprentissage : 0.15 sur le premier réseau
-	      \item taux d'apprentissage : 0.1 sur 2\up{ème} et \up{ème} réseau
+	      \item taux d'apprentissage : 0.1 sur 2\up{ème} et 3\up{ème} réseau
 	      \item \textbf{1600 formes} de chiffres différents présentées (shuffle) \cite{Handwritten_256}
 	      
 	      
@@ -68,7 +68,7 @@
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
-	  \item il faut attendre les 50 premières époques pour que le 3\up{ème} réseau puisse profiter d'une hausse de performance
+	  \item il n'y a jamais de hausse de performance, la perte d'information est trop élevée
 	\end{itemize}
     \paragraph{Secondaires}
       Analyse des performances sous-jacentes
@@ -86,22 +86,13 @@
 	  \item la courbe rouge représente le taux de paris haut du second réseau
 	\end{itemize}
       \subparagraph{Conclusion}
-	Les bonnes performances du second réseau permettent une l'augmentation de performance du 3\up{ème} réseau.
+	Même les bonnes performances du second réseau ne permettent une augmentation du 3\up{ème} réseau.
 	On retrouve toujours la chûte puis la remontée du second réseau.
 
 
   \subsection{Conclusion}
-  La mise en place de ce 3\up{ème} réseau permet une légère hausse de performance. Il est intéressant de voir qu'uniquement
-  grâce à un chiffre donné ( sortie du premier réseau ) et grâce à un paris ( sortie du 2\up{ème} réseau ), on arrive 
-  quand même à avoir une hausse de performance.
-  
-  Pour résoudre le problème de temps d'apprentissage des 50 premières époques et du 3\up{ème} réseau supplémentaire,
-  l'expérience G1.
-  
-  
-  Évidemment, comme nous l'avons montré dans les expériences C, il faut un nombre élevé de neurone dans la couche cachée du premier réseau.
-  Cette hausse de performance ne peut dépasser les performances d'un réseau optimal.
-  
+  Il n'y a jamais de hausse de performance avec cette architecture, la perte d'information subit à travers
+  les paris dans le second réseau est trop élevée pour pouvoir retrouver les chiffres.
   
 
   \newpage 
