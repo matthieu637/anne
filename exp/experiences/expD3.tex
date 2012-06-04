@@ -1,24 +1,22 @@
 \section{Expérience D3} 
   \subsection{Objectif}
-    Reproduction et approfondissement des résultats de la première expérience 1 dans l'article 
-    \cite{Cleeremans_2007}. 
-
-  
-  
-    Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
-    un réseau de neurone connexionniste, en particulier sur des perceptrons multicouches.
+    En partant de la seconde architecture de \cite{Cleeremans_2007}, 
+    comprendre de quelles manières un réseau de neurone connexionniste peut, à partir de ses propres paris
+    sur son résultat, améliorer son comportement.
   
   
   \subsection{Architecture}
     \paragraph{Description}
       Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
-      par 20 neurones d'entrées. Il est composé d'une couche cachée de 5 neurones.
+      par 256 (16x16) neurones d'entrées. Il est composé d'une couche cachée de 100 neurones.
       
-      Un second réseau de perceptron multicouche apprend à dupliquer toutes les couches du premier
-      réseau en n'ayant que sa couche cachée en entrée.
+      Un second réseau de perceptron multicouche apprend à parier sur la qualité de la réponse
+      du premier réseau à partir de sa couche cachée.
       
       L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
       couche cachée du premier réseau.
+      
+      Lorsque le second réseau parie bas, le taux d'apprentissage 
 
     \paragraph{Schéma}
       \begin{center}
@@ -30,18 +28,19 @@
 	\begin{tabular}{lr}
 	  \begin{minipage}{230px}
 	    \begin{itemize}
-	      \item momentum : 0.9 sur les 2 réseaux
-	      \item taux d'apprentissage : 0.1 sur les 2 réseaux
-	      \item 10 chiffres différents présentés
-	      \item apprentissage 10 (formes) x 1000 (époques)
+	      \item momentum : 0. sur le second réseau
+	      \item taux d'apprentissage : 0.15 sur les second réseau
+	      \item \textbf{1600 formes} de chiffres différents présentées (shuffle) \cite{Handwritten_256}
+	      \item apprentissage 50 (formes) x 300 (époques)
 	      \item utilisation de biais
+	      
 	    \end{itemize}
 	  \end{minipage}
 	  &
 	  \begin{minipage}{230px}
 	    \begin{itemize}
-	      \item poids initialisés sur [-0.25 ; 0.25]
-	      \item taux d'apprentissage constant
+	      \item poids initialisés sur [-1 ; 1] pour le premier réseau
+	      \item poids initialisés sur [-0.25 ; 0.25] pour le second réseau
 	      \item entrées valent 0 ou 1
 	      \item sigmoïde à température 1
 	    \end{itemize}
@@ -59,8 +58,7 @@
       \end{center}
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item les courbes SoN layer représentent les erreurs (du second réseaux) des couches du premier à reproduire 
-	  \item la courbe RMS verte (SoN) est la somme des 3 courbes SoN layer
+	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 50 formes présentées sur une époque
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
@@ -80,8 +78,9 @@
       \end{center} 
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item une couleur équivaut à un chiffre présenté
-	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes)
+	  \item la courbe rouge représentent le taux de paris hauts du second réseau
+	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 50 formes présentées sur une époque
+	  \item formule utilisée pour RMS (cf. Formules~\nameref{rms})
 	\end{itemize}
       \subparagraph{Conclusion}
 	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 

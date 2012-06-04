@@ -1,25 +1,22 @@
 \section{Expérience D4} 
   \subsection{Objectif}
-    Reproduction et approfondissement des résultats de la première expérience 1 dans l'article 
-    \cite{Cleeremans_2007}. 
-
-  
-  
-    Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
-    un réseau de neurone connexionniste, en particulier sur des perceptrons multicouches.
+    En partant de la seconde architecture de \cite{Cleeremans_2007}, 
+    comprendre de quelles manières un réseau de neurone connexionniste peut, à partir de ses propres paris
+    sur son résultat, améliorer son comportement.
   
   
   \subsection{Architecture}
     \paragraph{Description}
       Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
-      par 20 neurones d'entrées. Il est composé d'une couche cachée de 5 neurones.
+      par 256 (16x16) neurones d'entrées. Il est composé d'une couche cachée de 100 neurones.
       
-      Un second réseau de perceptron multicouche apprend à dupliquer toutes les couches du premier
-      réseau en n'ayant que sa couche cachée en entrée.
+      Un second réseau de perceptron apprend par renforcement le taux d'apprentissage et le
+      momentum idéale en fonction des représentations du premier réseau. Ces paramètres sont 
+      encodé sur 3 neurones de façon binaire. Au final, le taux d'apprentissage est définit 
+      sur [0.1 ; 0.35] et le momentum sur [0.2 ; 0.85].
       
       L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
       couche cachée du premier réseau.
-
     \paragraph{Schéma}
       \begin{center}
 	\includegraphics[width=220px]{data/expD4/schema.png}
@@ -31,19 +28,18 @@
 	  \begin{minipage}{230px}
 	    \begin{itemize}
 	      \item momentum : 0.9 sur les 2 réseaux
-	      \item taux d'apprentissage : 0.1 sur les 2 réseaux
-	      \item 10 chiffres différents présentés
-	      \item apprentissage 10 (formes) x 1000 (époques)
-	      \item utilisation de biais
+	      \item \textbf{1600 formes} de chiffres différents présentées (shuffle) \cite{Handwritten_256}
+	      \item apprentissage 50 (formes) x 300 (époques)
+	      
 	    \end{itemize}
 	  \end{minipage}
 	  &
 	  \begin{minipage}{230px}
 	    \begin{itemize}
 	      \item poids initialisés sur [-0.25 ; 0.25]
-	      \item taux d'apprentissage constant
 	      \item entrées valent 0 ou 1
 	      \item sigmoïde à température 1
+	      \item utilisation de biais
 	    \end{itemize}
 	  \end{minipage}
 	\end{tabular}
@@ -64,17 +60,16 @@
       \end{center} 
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item les courbes SoN layer représentent les erreurs (du second réseaux) des couches du premier à reproduire 
-	  \item la courbe RMS verte (SoN) est la somme des 3 courbes SoN layer
+	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 50 formes présentées sur une époque
+	  \item momentum et learning rate sont la moyenne des paramètres appliquées au premier réseau sur une époque
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
-	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
-	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
-	  \item le second réseau apprend plus rapidement que le premier
+	  \item il y a une légère hausse de performance par rapport à un réseau de base, elle est plus accentuée lorsque le nombre de neurones dans
+	  la couche cachée est élevé
 	\end{itemize}
     \paragraph{Secondaires}
-      RMS
+       Analyse des performances RMS
       \begin{center}
 	\begin{tabular}{lr}
 	  \hspace*{-1cm}
@@ -85,17 +80,14 @@
       \end{center} 
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item une couleur équivaut à un chiffre présenté
-	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes)
+	  \item formule utilisée pour RMS (cf. Formules~\nameref{rms})
 	\end{itemize}
       \subparagraph{Conclusion}
-	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 
-	le tout permettant au second réseau d'avoir des entrées très peu variables, favorisant
-	son apprentissage.
-
+	Le RMS ne nous dit pas grand chose de plus que la performance de classification.
 
   \subsection{Conclusion}
-  
+  L'expérience est plutôt concluente, mais le système d'encodage/décodage du perceptron à apprentissage par renforcement 
+  peut probablement être amélioré.
   
 
   \newpage 

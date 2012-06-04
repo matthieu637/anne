@@ -10,15 +10,14 @@
   
   \subsection{Architecture}
     \paragraph{Description}
-      Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
-      par 20 neurones d'entrées. Il est composé d'une couche cachée de 5 neurones.
+      Un premier réseau de perceptron multicouche apprend à discrétiser des fleurs caractérisées
+      par 4 neurones d'entrées qui représentent taille et largeur de la pétale et la sépale. 
+      Il est composé de plusieurs couche cachée de 5 neurones.
       
-      Un second réseau de perceptron multicouche apprend à dupliquer toutes les couches du premier
-      réseau en n'ayant que sa couche cachée en entrée.
+      Un second réseau de perceptron multicouche apprend à parier sur la qualité de la réponse
+      du premier réseau à partir de ses couche cachées et de sa couche d'entrée.
       
-      L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
-      couche cachée du premier réseau.
-
+      L'apprentissage du second réseau, n'affecte pas le premier réseau.
     \paragraph{Schéma}
       \begin{center}
 	\includegraphics[width=220px]{data/expC4/schema.png}
@@ -63,18 +62,22 @@
       \end{center}
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item les courbes SoN layer représentent les erreurs (du second réseaux) des couches du premier à reproduire 
-	  \item la courbe RMS verte (SoN) est la somme des 3 courbes SoN layer
+	  \item la courbe rouge représentent le taux de paris hauts du second réseau
+	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 50 formes présentées sur une époque
 	\end{itemize}
       \subparagraph{Conclusion}
-	\begin{itemize}
-	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
-	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
-	  \item le second réseau apprend plus rapidement que le premier
-	\end{itemize}
+      Peut importe l'architecture choisi (2 couches cachées, 1 couches cachée, 2 couches cachées + entrées), les performances sont 
+      sensiblement les mêmes. 
+      
+      Le second réseau n'arrive pas à tirer partit des représentations du premier réseau et se contente de partier hauts à chaque fois
+      au boût d'un moment.
 
   \subsection{Conclusion}
-  
+    Lors du passage sur des données réelles non linéairement séparables, l'utilité du second réseau
+    s'écroule, les représentations ne sont plus exploitées, même avec plusieurs couches.
+    
+    
+    Il faut continuer les essaies pour réussir à le faire fonctionner.	
   
 
   \newpage 

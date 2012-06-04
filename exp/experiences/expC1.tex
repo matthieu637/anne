@@ -68,7 +68,7 @@
       \subparagraph{Notes}
 	\begin{itemize}
 	  \item la courbe rouge représentent le taux de paris hauts du second réseau
-	  \item la performance de classification représente le taux de bonnes réponses pour les 10 formes présentées sur une époque
+	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 10 formes présentées sur une époque
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
@@ -105,10 +105,23 @@
 	des 0.5.
 
   \subsection{Conclusion}
-  Cette architecture ouvre des possibilités d'amélioration de l'apprentissage.
-  Elle permet au réseau de détecter lui même un nombre de neurones trop important dans la couche cachée.
+    Comme il l'est dit dans \cite{Cleeremans_2007}, cette architecture tente d'abolir les problèmes des réseaux connexionnistes
+  classiques à avoir un semblant de conscience.
   
-  On pourrait, par exemple, imaginer un réseau s'autorégulant.
+  À savoir :
+  \begin{itemize}
+   \item qu'ils ne savent pas qu'ils peuvent se trouver dans différents états, et qu'ils ne traitent pas leurs propres états : 
+   d'où la présence de ce second réseau qui tente de traiter ses états et d'apprendre qu'il en a plusieurs
+   \item des représentations rentant bloquées dans la chaîne de causalité de la tâche à apprendre : d'où
+   le fait que ce second réseau n'affecte pas l'apprentissage du premier (ie. pour ne pas retomber dans la chaîne de causalité)
+   \item qu'ils n'ont pas les connaissances conscientes des raisons de leurs décisions : on essaye de les y sensibiliser avec les paris
+   \\[0.2cm]
+  \end{itemize}
+  
+  
+  Par ailleurs, cette architecture ouvre des possibilités d'amélioration de l'apprentissage.
+  Elle permet au réseau de détecter lui même un nombre de neurones trop important dans la couche cachée.
+  On pourrait, par exemple, imaginer un réseau autorégulant son nombre de neurone.
   
   L'expérience suivante (\nameref{expC2}) retente l'expérience sur des données réelles.
 

@@ -71,6 +71,7 @@
       \end{center}
       \subparagraph{Notes}
 	\begin{itemize}
+	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 50 formes présentées sur une époque
 	  \item la courbe rouge représentent le taux de paris hauts du second réseau
 	\end{itemize}
       \subparagraph{Conclusion}
@@ -105,17 +106,31 @@
 	\end{itemize}
       \subparagraph{Conclusion}
 	On remarque que le second réseau apprend et désapprend. De plus, il reste toujours sous la barre
-	des 50\%.
+	des 0.5.
 
 
   \subsection{Conclusion}
+      Comme il l'est dit dans \cite{Cleeremans_2007}, cette architecture tente d'abolir les problèmes des réseaux connexionnistes
+    classiques à avoir un semblant de conscience.
+    
+    À savoir :
+    \begin{itemize}
+    \item qu'ils ne savent pas qu'ils peuvent se trouver dans différents états, et qu'ils ne traitent pas leurs propres états : 
+    d'où la présence de ce second réseau qui tente de traiter ses états et d'apprendre qu'il en a plusieurs
+    \item des représentations rentant bloquées dans la chaîne de causalité de la tâche à apprendre : d'où
+    le fait que ce second réseau n'affecte pas l'apprentissage du premier (ie. pour ne pas retomber dans la chaîne de causalité)
+    \item qu'ils n'ont pas les connaissances conscientes des raisons de leurs décisions : on essaye de les y sensibiliser avec les paris
+    \\[0.2cm]
+    \end{itemize}
+  
     Le passage sur des données réelles ne modifient pas le comportement du réseau.
     
     
-    Cette architecture ouvre des possibilités d'amélioration de l'apprentissage.
+    Par ailleurs, cette architecture ouvre des possibilités d'amélioration de l'apprentissage.
     Elle permet au réseau de détecter lui même un nombre de neurones trop important dans la couche cachée.
-  
-    On pourrait, par exemple, imaginer un réseau s'autorégulant.
+    On pourrait, par exemple, imaginer un réseau autorégulant son nombre de neurone.
+    
+    Toutes les expériences F et G découlent de cette architecture.
   
 
   \newpage 

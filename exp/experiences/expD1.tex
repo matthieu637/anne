@@ -64,17 +64,15 @@
       \end{center}
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item les courbes SoN layer représentent les erreurs (du second réseaux) des couches du premier à reproduire 
-	  \item la courbe RMS verte (SoN) est la somme des 3 courbes SoN layer
+	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 50 formes présentées sur une époque
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
-	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
-	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
-	  \item le second réseau apprend plus rapidement que le premier
+	  \item l'architecture n'arrive pas à obtenir une augmentation de performance, ce qui veut dire que la bonne réponse ne se trouve pas dans
+	  le second neurone le plus élevé (lorsque la réponse n'est pas dans le premier).
 	\end{itemize}
     \paragraph{Secondaires}
-      RMS
+      Analyse des performances sous-jacentes
       \begin{center}
 	\begin{tabular}{lr}
 	  \hspace*{-1cm}
@@ -85,13 +83,12 @@
       \end{center} 
       \subparagraph{Notes}
 	\begin{itemize}
-	  \item une couleur équivaut à un chiffre présenté
-	  \item une valeur discretisée correspond à un certain encodage de la couche cachée (cf Algorithmes)
+	  \item la courbe rouge représentent le taux de paris hauts du second réseau
+	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 50 formes présentées sur une époque
+	  \item formule utilisée pour RMS (cf. Formules~\nameref{rms})
 	\end{itemize}
       \subparagraph{Conclusion}
-	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 
-	le tout permettant au second réseau d'avoir des entrées très peu variables, favorisant
-	son apprentissage.
+	Les performances du second réseau sont respectables ceci prouve bien l'hypothèse précédente.
 
 
   \subsection{Conclusion}
