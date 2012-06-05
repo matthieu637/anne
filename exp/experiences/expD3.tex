@@ -16,11 +16,13 @@
       L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
       couche cachée du premier réseau.
       
-      Lorsque le second réseau parie bas, le taux d'apprentissage 
+      Lorsque le second réseau parie bas, le taux d'apprentissage du premier réseau est augmenté
+      et le momentum est diminué. À l'inverse, lorsqu'il parie haut, c'est que la forme est déjà
+      apprise, le taux d'apprentissage sera faible et le momentum élevé.
 
     \paragraph{Schéma}
       \begin{center}
-	\includegraphics[width=220px]{data/expC1/schema.png}
+	\includegraphics[width=250px]{data/expD1/schema.png}
       \end{center}
       
     \paragraph{Paramètres}
@@ -59,12 +61,12 @@
       \subparagraph{Notes}
 	\begin{itemize}
 	  \item la performance de classification représente le taux de bonnes réponses (winner-take-all) pour les 50 formes présentées sur une époque
+	  \item momentum et learning rate sont la moyenne des paramètres appliquées au premier réseau sur une époque
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
-	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
-	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
-	  \item le second réseau apprend plus rapidement que le premier
+	  \item On obtient une hausse de performance
+	  \item Comme la règle le défini, à la fin (ie. paris hauts) le momentum est élevé et le taux d'apprentissage faible
 	\end{itemize}
     \paragraph{Secondaires}
       Analyse des performances sous-jacentes
@@ -83,13 +85,15 @@
 	  \item formule utilisée pour RMS (cf. Formules~\nameref{rms})
 	\end{itemize}
       \subparagraph{Conclusion}
-	Les neurones se stabilisent très rapidement (autour de la 50\up{ième} époque en moyenne), 
-	le tout permettant au second réseau d'avoir des entrées très peu variables, favorisant
-	son apprentissage.
+	Il faut se méfier du RMS, car même si l'erreur globale sur un neurone est plus faible avec control, 
+	durant la classification on cherche juste le neurone le plus actif.
 
 
   \subsection{Conclusion}
-  
+    L'expérience est plutôt concluente, le bémol vient du fait que c'est l'humain qui règle le comportement du réseau : le taux d'apprentissage/momentum
+    à utiliser dans tel ou tel cas.
+    
+    Dans l'\nameref{expD4}, nous allons tenter de laisser le réseau le faire lui même.
   
 
   \newpage 
