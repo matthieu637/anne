@@ -21,7 +21,11 @@ if __name__ == '__main__':
     nbr_network = 5
     momentum = 0.5
     lrate = 0.15
+<<<<<<< HEAD:src/articles/duplication/p_vs_mlp.py
     nbEpoch = 800
+=======
+    nbEpoch = 1500
+>>>>>>> master:src/articles/duplication/p_vs_mlp.py
     nbTry = 20
     display_interval = range(nbEpoch)[::6]
     
@@ -44,7 +48,11 @@ if __name__ == '__main__':
 #        high_order_10 = MultilayerPerceptron(nbInputs, 3 + nbInputs // 4, nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)
 #        high_order_10.init_weights_randomly(-1, 1)
         
+<<<<<<< HEAD:src/articles/duplication/p_vs_mlp.py
         high_order_10 = MultilayerPerceptronM(nbInputs, 3 + nbInputs // 4, nbOutputs, 2, learning_rate=lrate, momentum=momentum, grid=mode)
+=======
+        high_order_10 = MultilayerPerceptronM(nbInputs, 3 + nbInputs // 4, nbOutputs, 1, learning_rate=lrate, momentum=momentum, grid=mode)
+>>>>>>> master:src/articles/duplication/p_vs_mlp.py
         
 
         networks[i] = {'first_order' : first_order,

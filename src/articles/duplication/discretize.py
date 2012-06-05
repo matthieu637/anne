@@ -16,10 +16,10 @@ from utils import index_max
 
 nbDiscre = 4
 
-def nbdis(nb, nbDiscretized):
-    for i in range(nbDiscretized):
+def nbdis(nb, nbDiscretized=nbDiscre):
+    for i in range(1, nbDiscretized+1):
         if(nb <= i/nbDiscretized):
-            return i
+            return i-1
     return nbDiscretized-1
 
     
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     display_interval = range(nbEpoch)[::6]
     
     
+<<<<<<< HEAD:src/articles/duplication/discretize.py
     #create inputs/outputs to learn
 #    examples = DataFile("digit_shape.txt", mode)
     
@@ -48,6 +49,29 @@ if __name__ == '__main__':
     
     nbInputs = len(examples.inputs[0])
     nbHidden = 5
+=======
+#    print(discretis([0,0,0,0,0.88]))
+#    print(discretis([0.25,0,0,0,0.]))
+#    print(discretis([0,0.25,0,0,0.]))
+#    print(discretis([0,0,0.44,0.55,0.45]))
+#    print(nbdis(0.2))
+#    print(nbdis(0.4))
+#    print(nbdis(0.6))
+#    print(nbdis(0.8))
+#    
+#    exit()
+    
+    #create inputs/outputs to learn
+    examples = DataFile("digit_handwritten_16.txt", mode)
+#    examples = DataFile("digit_shape.txt", mode)
+#    examples = DataFile("digit_shape_16.txt", mode)
+    
+#    examples = DataFileR("iris.txt")
+    momentum = 0.9
+    
+    nbInputs = len(examples.inputs[0])
+    nbHidden = 10
+>>>>>>> master:src/articles/duplication/discretize.py
     nbOutputs = len(examples.outputs[0])
     nbShape = nbOutputs
     
