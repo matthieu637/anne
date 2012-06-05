@@ -162,7 +162,6 @@ if __name__ == '__main__':
         
         high_order_h = MultilayerPerceptron(100, 20, 2, learning_rate=0.1, momentum=0., grid=mode)
         first_order = AdHock(control)
-#        high_order_h.init_weights_randomly(-1, 1)
         
         networks[i] = {'first_order' : first_order,
                     'high_order_h' : high_order_h,

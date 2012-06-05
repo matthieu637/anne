@@ -30,10 +30,10 @@
 <br/>
 nbDiscre <font color="#990000">=</font>&nbsp;<font color="#993399">4</font><br/>
 <br/>
-<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">nbdis</font></b><font color="#990000">(</font>nb<font color="#990000">,</font> nbDiscretized<font color="#990000">):</font><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>nbDiscretized<font color="#990000">):</font><br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">nbdis</font></b><font color="#990000">(</font>nb<font color="#990000">,</font> nbDiscretized<font color="#990000">=</font>nbDiscre<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">1</font><font color="#990000">,</font> nbDiscretized<font color="#990000">+</font><font color="#993399">1</font><font color="#990000">):</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">if</font></b><font color="#990000">(</font>nb <font color="#990000">&lt;=</font> i<font color="#990000">/</font>nbDiscretized<font color="#990000">):</font><br/>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> i<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> i<font color="#990000">-</font><font color="#993399">1</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> nbDiscretized<font color="#990000">-</font><font color="#993399">1</font><br/>
 <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
@@ -54,6 +54,7 @@ nbDiscre <font color="#990000">=</font>&nbsp;<font color="#993399">4</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;display_interval <font color="#990000">=</font> <b><font color="#000000">range</font></b><font color="#990000">(</font>nbEpoch<font color="#990000">)[::</font><font color="#993399">6</font><font color="#990000">]</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<font color="#990000">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</font>&nbsp;HEAD<font color="#990000">:</font>src<font color="#990000">/</font>articles<font color="#990000">/</font>duplication<font color="#990000">/</font>discretize<font color="#990000">.</font>py<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#create inputs/outputs to learn</font></i><br/>
 <i><font color="#9A1900">#    examples = DataFile("digit_shape.txt", mode)</font></i><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
@@ -62,6 +63,29 @@ nbDiscre <font color="#990000">=</font>&nbsp;<font color="#993399">4</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;nbInputs <font color="#990000">=</font> <b><font color="#000000">len</font></b><font color="#990000">(</font>examples<font color="#990000">.</font>inputs<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">])</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;nbHidden <font color="#990000">=</font> <font color="#993399">5</font><br/>
+<font color="#990000">=======</font><br/>
+<i><font color="#9A1900">#    print(discretis([0,0,0,0,0.88]))</font></i><br/>
+<i><font color="#9A1900">#    print(discretis([0.25,0,0,0,0.]))</font></i><br/>
+<i><font color="#9A1900">#    print(discretis([0,0.25,0,0,0.]))</font></i><br/>
+<i><font color="#9A1900">#    print(discretis([0,0,0.44,0.55,0.45]))</font></i><br/>
+<i><font color="#9A1900">#    print(nbdis(0.2))</font></i><br/>
+<i><font color="#9A1900">#    print(nbdis(0.4))</font></i><br/>
+<i><font color="#9A1900">#    print(nbdis(0.6))</font></i><br/>
+<i><font color="#9A1900">#    print(nbdis(0.8))</font></i><br/>
+<i><font color="#9A1900">#    </font></i><br/>
+<i><font color="#9A1900">#    exit()</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#create inputs/outputs to learn</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;examples <font color="#990000">=</font> <b><font color="#000000">DataFile</font></b><font color="#990000">(</font><font color="#FF0000">"digit_handwritten_16.txt"</font><font color="#990000">,</font> mode<font color="#990000">)</font><br/>
+<i><font color="#9A1900">#    examples = DataFile("digit_shape.txt", mode)</font></i><br/>
+<i><font color="#9A1900">#    examples = DataFile("digit_shape_16.txt", mode)</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<i><font color="#9A1900">#    examples = DataFileR("iris.txt")</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;momentum <font color="#990000">=</font> <font color="#993399">0.9</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nbInputs <font color="#990000">=</font> <b><font color="#000000">len</font></b><font color="#990000">(</font>examples<font color="#990000">.</font>inputs<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">])</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nbHidden <font color="#990000">=</font> <font color="#993399">10</font><br/>
+<font color="#990000">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</font>&nbsp;master<font color="#990000">:</font>src<font color="#990000">/</font>articles<font color="#990000">/</font>duplication<font color="#990000">/</font>discretize<font color="#990000">.</font>py<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;nbOutputs <font color="#990000">=</font> <b><font color="#000000">len</font></b><font color="#990000">(</font>examples<font color="#990000">.</font>outputs<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">])</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;nbShape <font color="#990000">=</font> nbOutputs<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>

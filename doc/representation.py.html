@@ -1,0 +1,171 @@
+<html>
+<head>
+  <script type="text/javascript"
+  src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+  MathJax.Hub.Config({
+    tex2jax: {
+      inlineMath: [ ['$','$'], ["\\(","\\)"] ],
+      processEscapes: true
+    }
+  });
+  </script>
+  <script type="text/javascript" src="mathjax/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+</head>
+<body style="font-size:1.15em">
+<tt><i><font color="#9A1900"># -*- coding: UTF-8 -*-</font></i><br/>
+<i><font color="#9A1900">'''</font></i><br/>
+<i><font color="#9A1900">Created on 22 May 2012</font></i><br/>
+<br/>
+<i><font color="#9A1900">@author: Matthieu Zimmer</font></i><br/>
+<br/>
+<i><font color="#9A1900">'''</font></i><br/>
+<b><font color="#000080">from</font></b>&nbsp;multilayerp <b><font color="#000080">import</font></b> MultilayerPerceptron<br/>
+<b><font color="#000080">from</font></b>&nbsp;data <b><font color="#000080">import</font></b> DataFile<br/>
+<b><font color="#000080">import</font></b>&nbsp;matplotlib<font color="#990000">.</font>pyplot as plt<br/>
+<b><font color="#000080">import</font></b>&nbsp;matplotlib<font color="#990000">.</font>cm as cm<br/>
+<b><font color="#000080">from</font></b>&nbsp;simulation <b><font color="#000080">import</font></b> Simulation<br/>
+<b><font color="#000080">import</font></b>&nbsp;numpy as np<br/>
+<b><font color="#000080">from</font></b>&nbsp;perceptron <b><font color="#000080">import</font></b> PerceptronR0to1<font color="#990000">,</font> Perceptron<br/>
+<b><font color="#000080">import</font></b>&nbsp;sys<br/>
+<b><font color="#000080">import</font></b>&nbsp;time<br/>
+<br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">graph_networkhidden</font></b><font color="#990000">(</font>network<font color="#990000">,</font> Hwidth<font color="#990000">,</font> start_num<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;fig <font color="#990000">=</font> plt<font color="#990000">.</font><b><font color="#000000">figure</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">clf</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>network<font color="#990000">.</font>hiddenNeurons<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">try</font></b><font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s <font color="#990000">=</font> <b><font color="#000000">list</font></b><font color="#990000">(</font>start_num<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;s<font color="#990000">[</font><font color="#993399">2</font><font color="#990000">]</font> <font color="#990000">+=</font> i<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#000000">show_repr</font></b><font color="#990000">(</font>network<font color="#990000">.</font>hiddenNeurons<font color="#990000">[</font>i<font color="#990000">].</font>weights<font color="#990000">,</font> Hwidth<font color="#990000">,</font> fig<font color="#990000">,</font> s<font color="#990000">,</font> <font color="#FF0000">""</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">except</font></b> TypeError<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#000000">show_repr</font></b><font color="#990000">(</font>network<font color="#990000">.</font>hiddenNeurons<font color="#990000">[</font>i<font color="#990000">].</font>weights<font color="#990000">,</font> Hwidth<font color="#990000">,</font> fig<font color="#990000">,</font> start_num<font color="#990000">,</font> i<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;path <font color="#990000">=</font> <font color="#FF0000">"/tmp/pyplot.%s.%s.png"</font> <font color="#990000">%</font> <font color="#990000">(</font>sys<font color="#990000">.</font>argv<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">],</font> time<font color="#990000">.</font><b><font color="#000000">strftime</font></b><font color="#990000">(</font><font color="#FF0000">"%m-%d-%H-%M-%S"</font><font color="#990000">,</font> time<font color="#990000">.</font><b><font color="#000000">localtime</font></b><font color="#990000">())</font> <font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">savefig</font></b><font color="#990000">(</font>path<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">show</font></b><font color="#990000">()</font><br/>
+<br/>
+<br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">graph_network</font></b><font color="#990000">(</font>neurons_top<font color="#990000">,</font> neurons_down<font color="#990000">,</font> width<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;fig <font color="#990000">=</font> plt<font color="#990000">.</font><b><font color="#000000">figure</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">clf</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>neurons_top<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">])):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;w <font color="#990000">=</font> <font color="#990000">[]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> j <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>neurons_top<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;w<font color="#990000">.</font><b><font color="#000000">append</font></b><font color="#990000">(</font><b><font color="#000000">build_matrice</font></b><font color="#990000">(</font>neurons_top<font color="#990000">[</font>j<font color="#990000">][</font>i<font color="#990000">].</font>weights<font color="#990000">,</font> neurons_down<font color="#990000">[</font>j<font color="#990000">]))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r <font color="#990000">=</font> <font color="#990000">[</font><font color="#993399">0</font><font color="#990000">.</font> <b><font color="#0000FF">for</font></b> _ <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>w<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">]))]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> l <b><font color="#0000FF">in</font></b> w<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> k <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>r<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;r<font color="#990000">[</font>k<font color="#990000">]</font> <font color="#990000">+=</font> l<font color="#990000">[</font>k<font color="#990000">]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#000000">show_repr</font></b><font color="#990000">(</font>r<font color="#990000">,</font> width<font color="#990000">,</font> fig<font color="#990000">,</font> <font color="#993399">250</font> <font color="#990000">+</font> i<font color="#990000">,</font> i<font color="#990000">)</font><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;path <font color="#990000">=</font> <font color="#FF0000">"/tmp/pyplot.%s.%s.png"</font> <font color="#990000">%</font> <font color="#990000">(</font>sys<font color="#990000">.</font>argv<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">],</font> time<font color="#990000">.</font><b><font color="#000000">strftime</font></b><font color="#990000">(</font><font color="#FF0000">"%m-%d-%H-%M-%S"</font><font color="#990000">,</font> time<font color="#990000">.</font><b><font color="#000000">localtime</font></b><font color="#990000">())</font> <font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">savefig</font></b><font color="#990000">(</font>path<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">show</font></b><font color="#990000">()</font><br/>
+<br/>
+<br/>
+<br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">build_matrice</font></b><font color="#990000">(</font>weightl<font color="#990000">,</font> nlist<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;weights <font color="#990000">=</font> <font color="#990000">[</font><font color="#993399">0</font><font color="#990000">.</font> <b><font color="#0000FF">for</font></b> _ <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>nlist<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">].</font>weights<font color="#990000">))]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>weights<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wsum <font color="#990000">=</font> <font color="#993399">0</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> j <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>nlist<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;wsum <font color="#990000">+=</font> weightl<font color="#990000">[</font>j<font color="#990000">]</font> <font color="#990000">*</font> <font color="#990000">(</font>nlist<font color="#990000">[</font>j<font color="#990000">].</font>weights<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">-</font> nlist<font color="#990000">[</font>j<font color="#990000">].</font>bias <font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;weights<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">+=</font> wsum<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> weights<br/>
+<br/>
+<b><font color="#0000FF">def</font></b>&nbsp;<b><font color="#000000">show_repr</font></b><font color="#990000">(</font>weightl<font color="#990000">,</font> width<font color="#990000">,</font> fig<font color="#990000">,</font> num<font color="#990000">,</font> title<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;matrice <font color="#990000">=</font> <font color="#990000">[[]</font> <b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>weightl<font color="#990000">)//</font>width<font color="#990000">)]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;vmax <font color="#990000">=</font> <b><font color="#000000">max</font></b><font color="#990000">(</font>weightl<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;vmin <font color="#990000">=</font> <b><font color="#000000">min</font></b><font color="#990000">(</font>weightl<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> j <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>weightl<font color="#990000">)//</font>width<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>width<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;nw <font color="#990000">=</font>  <font color="#990000">(</font>weightl<font color="#990000">[</font>j<font color="#990000">*</font>width <font color="#990000">+</font> i<font color="#990000">]</font> <font color="#990000">-</font> vmin<font color="#990000">)</font> <font color="#990000">*</font> <font color="#990000">(</font><font color="#993399">1</font><font color="#990000">./(</font>vmax <font color="#990000">-</font> vmin<font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;matrice<font color="#990000">[</font>j<font color="#990000">].</font><b><font color="#000000">append</font></b><font color="#990000">(</font><b><font color="#000000">round</font></b><font color="#990000">(</font>nw<font color="#990000">,</font> <font color="#993399">2</font><font color="#990000">))</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">try</font></b><font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ax <font color="#990000">=</font> fig<font color="#990000">.</font><b><font color="#000000">add_subplot</font></b><font color="#990000">(</font>num<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">],</font> num<font color="#990000">[</font><font color="#993399">1</font><font color="#990000">],</font> num<font color="#990000">[</font><font color="#993399">2</font><font color="#990000">],</font> title<font color="#990000">=</font>title<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">except</font></b> TypeError<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ax <font color="#990000">=</font> fig<font color="#990000">.</font><b><font color="#000000">add_subplot</font></b><font color="#990000">(</font>num<font color="#990000">,</font> title<font color="#990000">=</font>title<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;ax<font color="#990000">.</font><b><font color="#000000">set_aspect</font></b><font color="#990000">(</font><font color="#993399">1</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;res <font color="#990000">=</font> ax<font color="#990000">.</font><b><font color="#000000">imshow</font></b><font color="#990000">(</font>np<font color="#990000">.</font><b><font color="#000000">array</font></b><font color="#990000">(</font>matrice<font color="#990000">),</font> cmap<font color="#990000">=</font>cm<font color="#990000">.</font>gist_gray_r<font color="#990000">,</font> <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;interpolation<font color="#990000">=</font><font color="#FF0000">'nearest'</font><font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">xticks</font></b><font color="#990000">([])</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">yticks</font></b><font color="#990000">([])</font><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<b><font color="#0000FF">if</font></b>&nbsp;__name__ <font color="#990000">==</font> <font color="#FF0000">'__main__'</font><font color="#990000">:</font>    <br/>
+&nbsp;&nbsp;&nbsp;&nbsp;mode <font color="#990000">=</font> MultilayerPerceptron<font color="#990000">.</font>R0to1<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nbr_network <font color="#990000">=</font> <font color="#993399">1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;momentum <font color="#990000">=</font> <font color="#993399">0.9</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;lrate <font color="#990000">=</font> <font color="#993399">0.1</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nbr_try <font color="#990000">=</font> <font color="#993399">50</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nbr_epoch <font color="#990000">=</font> <font color="#993399">200</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<i><font color="#9A1900">#   Data Sample Declaration</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">data</font></b><font color="#990000">():</font><br/>
+<i><font color="#9A1900">#        return DataFile("digit_handwritten_16.txt", mode)</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <b><font color="#000000">DataFile</font></b><font color="#990000">(</font><font color="#FF0000">"digit_shape.txt"</font><font color="#990000">,</font> mode<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<i><font color="#9A1900">#   Network Declaration</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">FoN2</font></b><font color="#990000">(</font>inputs<font color="#990000">,</font> outputs<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <b><font color="#000000">MultilayerPerceptron</font></b><font color="#990000">(</font>inputs<font color="#990000">,</font> inputs<font color="#990000">//</font><font color="#993399">4</font><font color="#990000">,</font> outputs<font color="#990000">,</font> learning_rate<font color="#990000">=</font>lrate<font color="#990000">,</font> momentum<font color="#990000">=</font>momentum<font color="#990000">,</font> grid<font color="#990000">=</font>mode<font color="#990000">)</font><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">FoN</font></b><font color="#990000">(</font>inputs<font color="#990000">,</font> outputs<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">return</font></b> <font color="#990000">[</font><b><font color="#000000">PerceptronR0to1</font></b><font color="#990000">(</font>inputs<font color="#990000">,</font> learning_rate<font color="#990000">=</font><font color="#993399">0.2</font><font color="#990000">,</font> momentum<font color="#990000">=</font><font color="#993399">0.3</font><font color="#990000">,</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;temperature<font color="#990000">=</font><font color="#993399">1</font><font color="#990000">.,</font> ntype<font color="#990000">=</font>Perceptron<font color="#990000">.</font>OUTPUT<font color="#990000">,</font> init_w_randomly<font color="#990000">=</font>True<font color="#990000">,</font> enable_bias<font color="#990000">=</font>True<font color="#990000">)</font> <b><font color="#0000FF">for</font></b> _ <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font>outputs<font color="#990000">)]</font><br/>
+<br/>
+<i><font color="#9A1900">#   Work on one step</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">step_propagation</font></b><font color="#990000">(</font>network<font color="#990000">,</font> inputs<font color="#990000">,</font> outputs<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;network<font color="#990000">[</font><font color="#FF0000">'FoN2'</font><font color="#990000">].</font><b><font color="#000000">calc_output</font></b><font color="#990000">(</font>inputs<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">pass</font></b><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">step_statictics</font></b><font color="#990000">(</font>simu<font color="#990000">,</font> network<font color="#990000">,</font> plot<font color="#990000">,</font> inputs<font color="#990000">,</font> outputs<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#rms</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">pass</font></b><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">def</font></b> <b><font color="#000000">step_learn</font></b><font color="#990000">(</font>network<font color="#990000">,</font> inputs<font color="#990000">,</font> outputs<font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#Learning</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;network<font color="#990000">[</font><font color="#FF0000">'FoN2'</font><font color="#990000">].</font><b><font color="#000000">train</font></b><font color="#990000">(</font>inputs<font color="#990000">,</font> outputs<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><b><font color="#000000">len</font></b><font color="#990000">(</font>outputs<font color="#990000">)):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;network<font color="#990000">[</font><font color="#FF0000">'FoN'</font><font color="#990000">][</font>i<font color="#990000">].</font><b><font color="#000000">train</font></b><font color="#990000">(</font>inputs<font color="#990000">,</font> outputs<font color="#990000">[</font>i<font color="#990000">])</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;sim <font color="#990000">=</font> <b><font color="#000000">Simulation</font></b><font color="#990000">(</font>data<font color="#990000">,</font> nbr_network<font color="#990000">,</font> <font color="#990000">[</font>FoN<font color="#990000">,</font> FoN2<font color="#990000">])</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;sim<font color="#990000">.</font><b><font color="#000000">dgraph</font></b><font color="#990000">([</font><font color="#FF0000">'FoN_rms'</font><font color="#990000">])</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;sim<font color="#990000">.</font><b><font color="#000000">launch</font></b><font color="#990000">(</font>nbr_epoch<font color="#990000">,</font> nbr_try<font color="#990000">,</font> step_propagation<font color="#990000">,</font> step_statictics<font color="#990000">,</font> step_learn<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<i><font color="#9A1900">#show_repr(sim.networks[0]['FoN'].hiddenNeurons[0].weights, 4)</font></i><br/>
+<br/>
+<i><font color="#9A1900">#    for i in range(10):</font></i><br/>
+<i><font color="#9A1900">#        build_matrice(sim.networks[0]['FoN'].outputNeurons[i].weights, sim.networks[0]['FoN'].hiddenNeurons, 4)</font></i><br/>
+<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;width <font color="#990000">=</font> <font color="#993399">4</font><br/>
+<br/>
+<i><font color="#9A1900">#    MLP</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;on <font color="#990000">=</font> <font color="#990000">[]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;hn <font color="#990000">=</font> <font color="#990000">[]</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> net <b><font color="#0000FF">in</font></b> sim<font color="#990000">.</font>networks<font color="#990000">:</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;on<font color="#990000">.</font><b><font color="#000000">append</font></b><font color="#990000">(</font>net<font color="#990000">[</font><font color="#FF0000">'FoN2'</font><font color="#990000">].</font>outputNeurons<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;hn<font color="#990000">.</font><b><font color="#000000">append</font></b><font color="#990000">(</font>net<font color="#990000">[</font><font color="#FF0000">'FoN2'</font><font color="#990000">].</font>hiddenNeurons<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#000000">graph_network</font></b><font color="#990000">(</font>on<font color="#990000">,</font> hn<font color="#990000">,</font> width<font color="#990000">)</font><br/>
+<br/>
+<i><font color="#9A1900">#    Perceptron</font></i><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;fig <font color="#990000">=</font> plt<font color="#990000">.</font><b><font color="#000000">figure</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">clf</font></b><font color="#990000">()</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#0000FF">for</font></b> i <b><font color="#0000FF">in</font></b> <b><font color="#000000">range</font></b><font color="#990000">(</font><font color="#993399">10</font><font color="#990000">):</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<b><font color="#000000">show_repr</font></b><font color="#990000">(</font>sim<font color="#990000">.</font>networks<font color="#990000">[</font><font color="#993399">0</font><font color="#990000">][</font><font color="#FF0000">'FoN'</font><font color="#990000">][</font>i<font color="#990000">].</font>weights<font color="#990000">,</font> width<font color="#990000">,</font> fig<font color="#990000">,</font> <font color="#993399">250</font> <font color="#990000">+</font> i<font color="#990000">,</font> i<font color="#990000">)</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+&nbsp;&nbsp;&nbsp;&nbsp;plt<font color="#990000">.</font><b><font color="#000000">show</font></b><font color="#990000">()</font><br/>
+</tt><br/>
+</body>

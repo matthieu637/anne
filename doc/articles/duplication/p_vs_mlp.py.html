@@ -35,7 +35,11 @@
 &nbsp;&nbsp;&nbsp;&nbsp;nbr_network <font color="#990000">=</font> <font color="#993399">5</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;momentum <font color="#990000">=</font> <font color="#993399">0.5</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;lrate <font color="#990000">=</font> <font color="#993399">0.15</font><br/>
+<font color="#990000">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</font>&nbsp;HEAD<font color="#990000">:</font>src<font color="#990000">/</font>articles<font color="#990000">/</font>duplication<font color="#990000">/</font>p_vs_mlp<font color="#990000">.</font>py<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;nbEpoch <font color="#990000">=</font> <font color="#993399">800</font><br/>
+<font color="#990000">=======</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;nbEpoch <font color="#990000">=</font> <font color="#993399">1500</font><br/>
+<font color="#990000">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</font>&nbsp;master<font color="#990000">:</font>src<font color="#990000">/</font>articles<font color="#990000">/</font>duplication<font color="#990000">/</font>p_vs_mlp<font color="#990000">.</font>py<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;nbTry <font color="#990000">=</font> <font color="#993399">20</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;display_interval <font color="#990000">=</font> <b><font color="#000000">range</font></b><font color="#990000">(</font>nbEpoch<font color="#990000">)[::</font><font color="#993399">6</font><font color="#990000">]</font><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;<br/>
@@ -58,7 +62,11 @@
 <i><font color="#9A1900">#        high_order_10 = MultilayerPerceptron(nbInputs, 3 + nbInputs // 4, nbOutputs, learning_rate=lrate, momentum=momentum, grid=mode)</font></i><br/>
 <i><font color="#9A1900">#        high_order_10.init_weights_randomly(-1, 1)</font></i><br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
+<font color="#990000">&lt;&lt;&lt;&lt;&lt;&lt;&lt;</font>&nbsp;HEAD<font color="#990000">:</font>src<font color="#990000">/</font>articles<font color="#990000">/</font>duplication<font color="#990000">/</font>p_vs_mlp<font color="#990000">.</font>py<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;high_order_10 <font color="#990000">=</font> <b><font color="#000000">MultilayerPerceptronM</font></b><font color="#990000">(</font>nbInputs<font color="#990000">,</font> <font color="#993399">3</font> <font color="#990000">+</font> nbInputs <font color="#990000">//</font> <font color="#993399">4</font><font color="#990000">,</font> nbOutputs<font color="#990000">,</font> <font color="#993399">2</font><font color="#990000">,</font> learning_rate<font color="#990000">=</font>lrate<font color="#990000">,</font> momentum<font color="#990000">=</font>momentum<font color="#990000">,</font> grid<font color="#990000">=</font>mode<font color="#990000">)</font><br/>
+<font color="#990000">=======</font><br/>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;high_order_10 <font color="#990000">=</font> <b><font color="#000000">MultilayerPerceptronM</font></b><font color="#990000">(</font>nbInputs<font color="#990000">,</font> <font color="#993399">3</font> <font color="#990000">+</font> nbInputs <font color="#990000">//</font> <font color="#993399">4</font><font color="#990000">,</font> nbOutputs<font color="#990000">,</font> <font color="#993399">1</font><font color="#990000">,</font> learning_rate<font color="#990000">=</font>lrate<font color="#990000">,</font> momentum<font color="#990000">=</font>momentum<font color="#990000">,</font> grid<font color="#990000">=</font>mode<font color="#990000">)</font><br/>
+<font color="#990000">&gt;&gt;&gt;&gt;&gt;&gt;&gt;</font>&nbsp;master<font color="#990000">:</font>src<font color="#990000">/</font>articles<font color="#990000">/</font>duplication<font color="#990000">/</font>p_vs_mlp<font color="#990000">.</font>py<br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<br/>
 <br/>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;networks<font color="#990000">[</font>i<font color="#990000">]</font> <font color="#990000">=</font> <font color="#990000">{</font><font color="#FF0000">'first_order'</font> <font color="#990000">:</font> first_order<font color="#990000">,</font><br/>
