@@ -166,7 +166,7 @@ class tmpObject:
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 1
+    nbr_network = 5
     momentum = 0.5
     lrate = 0.15
     nbr_try = 50

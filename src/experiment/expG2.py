@@ -100,6 +100,13 @@ class AdHock(MultilayerPerceptron):
         self.stateHiddenNeurons = []
         self._last_inputs = []
         self._network_updated = True
+    def calc_SE_range(self, inputs, outputs, imin, imax):
+        #self.calc_output(inputs)
+        
+        s = 0.
+        for i in range(imin, imax):
+            s += (self.stateOutputNeurons[i] - outputs[i]) ** 2
+        return s
 
     def calc_hidden(self, inputs):
         #determine the state of hidden neurons
@@ -138,6 +145,9 @@ class AdHock(MultilayerPerceptron):
             self.outputNeurons[i].update_weights_2(outputs[i], len(self.stateHiddenNeurons), addition, self.stateHiddenNeurons)
             
         self._network_updated = True
+        
+
+
 
 
 
@@ -147,7 +157,7 @@ class tmpObject:
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 1
+    nbr_network = 5
     momentum = 0.5
     lrate = 0.15
     nbr_try = 50
@@ -181,29 +191,30 @@ if __name__ == '__main__':
         
         
     def step_statictics(simu, network, plot, inputs, outputs):
+
+
+        #rms
+        simu.rms('control', inputs, outputs)
+        
+        
+        #err
+        simu.perf('control', outputs)
+        
+
+        network['FoN'].calc_output(network['SoN'].stateHiddenNeurons)
         cell = [0., 0.]
         if index_max(network['FoN'].stateOutputNeurons) == index_max(outputs):
             cell = [0., 1]
         else:
             cell = [1, 0.]
-
-        #rms
-        simu.rms('control', inputs, outputs)
-        simu.rms('SoN', network['FoN'].stateHiddenNeurons, cell)
-        
-        #err
-        simu.perf('control', outputs)
         simu.perf('SoN', cell)
-        
+        simu.rms('SoN', network['FoN'].stateHiddenNeurons, cell)
         #wager ratio
         if(index_max(network['SoN'].stateOutputNeurons) == 1):
             plot['high_wager'] += 1
 
-
-        network['FoN'].calc_output(network['SoN'].stateHiddenNeurons)
-        
-        if(index_max(network['FoN'].stateOutputNeurons) == index_max(outputs)):
-            plot['FoN_rms'] += 1
+       
+        simu.rms('FoN', None, outputs)
         simu.perf('FoN', outputs)
 
     def step_learn(network, inputs, outputs):

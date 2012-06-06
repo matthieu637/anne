@@ -73,15 +73,15 @@ if __name__ == '__main__':
             
         #momentum & lrate
         tmp = list(network['SoN'].stateOutputNeurons)
-        if(tmp == 0):
+        if(index_max(tmp) == 0):
             plot['lrate'] += (0.15 + (0.15 - 0.025))
-            plot['momentum'] += 0.5
-        elif(abs(tmp[0] - tmp[1]) <= 0.5):
+            plot['momentum'] += 0.2
+        elif(abs(tmp[0] - tmp[1]) <= 0.3):
             plot['lrate'] +=(0.15)
             plot['momentum'] +=(0.5)
         else:
             plot['lrate'] +=(0.025)
-            plot['momentum'] +=(0.075)
+            plot['momentum'] +=(0.7)
             
     def step_learn(network, inputs, outputs):
         cell = [0., 0.]
@@ -94,13 +94,13 @@ if __name__ == '__main__':
         network['SoN'].train(network['FoN'].stateHiddenNeurons, cell)
         if(index_max(tmp) == 0):
             network['FoN'].set_learning_rate(0.15 + (0.15 - 0.025))
-            network['FoN'].set_momentum(0.5)
-        elif(abs(tmp[0] - tmp[1]) <= 0.5):
+            network['FoN'].set_momentum(0.2)
+        elif(abs(tmp[0] - tmp[1]) <= 0.3):
             network['FoN'].set_learning_rate(0.15)
             network['FoN'].set_momentum(0.5)
         else:
             network['FoN'].set_learning_rate(0.025)
-            network['FoN'].set_momentum(0.075)
+            network['FoN'].set_momentum(0.7)
         network['FoN'].train(inputs, outputs)
         network['control'].train(inputs, outputs)
         
