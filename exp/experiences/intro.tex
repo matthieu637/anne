@@ -1,0 +1,62 @@
+\section{Introduction
+\label{sec:intro}}
+% ------------------------------------------------------------
+\subsection{SoN apprend plus vite
+\label{sec:app_vite}}
+En regardant les résultats des expériences \ref{expA1}, \ref{expA2} et \ref{expA3}, on peut s'interroger sur l'expression ``apprendre plus vite''.
+
+Si on regarde l'erreur de classification (graphes de droite) on voit~:
+\begin{itemize}
+\item expA1~: au début, SoN classifie mieux mais à partir de l'épisode 180, ce n'est plus le cas.
+\item expA2~: FoN classifie toujours mieux que SoN.
+\item expA3~: il semble que FoN classifie toujours un peu mieux que SoN.
+\end{itemize}
+
+Par contre, il est vrai que les courbes d'erreur normalisées peuvent faire penser que SoN apprend plus vite. Les graphes montrent que SoN apprend rapidement à ``recopier'' la couche cachée de FoN (mais c'est une input). Par contre il apprend beaucoup moins facilement à retrouver les entrées, surtout dans le cas des données manuscrites (ce qui paraît logique, car on n'est plus dans des relations bijectives entre les couches d'entrée et cachées de FoN). Pour ce qui est d'apprendre les valeurs de la couche de sortie, les courbes me paraissent induire des erreurs d'appréciation. Pour le réseau SoN, si l'on avait tracé l'erreur RMS de la couche de sortie en divisant par $n=10$ et non $n=20+5+10=35$ (pour expA1), cela parlerait peut-être plus.
+
+% ------------------------------------------------------------
+\subsection{Expériences B
+\label{sec:expB}}
+
+Des représentations pertinentes pour différencier les différentes classes en entrées semblent effectivement apprises relativement vite car, quand on fige les poids de la couche cachée de FoN, le changement de tâche (qui sont toujours des permutations sur la couche de sortie) sont apprise rapidement. Quand on ne fige pas les poids, j'imagine que la couche cachée essaie de se reconfigurer, ce qui est plus lent, et sans doute d'autant plus difficile que certains neurones doivent saturer et que leur dérivée est donc quasi-nulle, ce qui ralenti le changement de valeur des poids.
+
+Par contre, j'arrive moins à m'expliquer que le SoN ne puisse pas s'en sortir? Ou alors c'est pour la même raison que précédemment : la couche cachée essaie de se reconfigurer, ce qui ne doit pas être rapide pour au moins quelques un de ses neurones (ceux qui saturent)...
+
+[Q] qu'est-ce que ça donne si on prend des tâches qui ne sont plus de simples permutations?
+
+% ------------------------------------------------------------
+\subsection{Expériences C
+\label{sec:expC}}
+
+Deux questions ont motivés la reprise de cette expérience et le fait de jouer unpeu avec les paramètres des réseau. 
+
+D'une part, nous voulions en savoir plus sur le comportement du réseau SoN. Quand on a vu qu'il se ``contentait'' de parier ``low'' pendant les premiers épisodes (tant que FoN fait plus de 50\% d'erreur) puis ``high'' ensuite (quand le taux de succès de FoN dépasse 50\%), nous nous sommes dit que c'était le plus comportement le plus simple. Mais pas forcément le plus efficace.
+Ainsi, dans un deuxième temps, comme nous étions persuadés qu'avec 100 neurones dans la couche cachée, le SoN devrait être capable d'apprendre ``par coeur'' les cas où FoN se trompe, nous avons expérimentés avec les paramètres d'apprentissage jusqu'à trouver les résultats présentés qui confirme ce que nous pensions.
+
+[todo alain] regarder dans les prototypes et la discrétisation de A3 si on peut savoir pourquoi C3 ne marche pas...
+
+[C4] utiliser plus de neurones cachés?
+
+% ------------------------------------------------------------
+\subsection{Expériences D
+\label{sec:expD}}
+
+L'expériences \ref{expD3} est intéressante, elle montre qu'il est possible pour une architecture de ``monitorer'' son comportement de manière à influencer les parmètres d'apprentissage pour augmenter les performances. [en ce qui me concerne, faudrait que je comprenne un peu mieux l'influence du momentum].
+
+% ------------------------------------------------------------
+\subsection{Expériences F et G
+\label{sec:expFG}}
+
+Pas encore pris le temps de bien essayer de comprendre ce qui se passe là. Peut-être qu'un graphe comportant les différentes performances en feedback permettrait de mieux comparer les différentes architectures entre elles.
+
+% ------------------------------------------------------------
+\subsection{Choses pas comprises
+\label{sec:strange}}
+
+\begin{itemize}
+\item Prototypes secondaires dans expA1 (et sans doute les autres)~: préciser que ``la première partie de la couche de sortie'' correspond aux neurones qui essaient de redonner les entrées'' (c'est ça?).
+\item Conclusion finale de expA1~: j'aime pas ``abolir''. Je ne comprend pas ``des représentations rentant bloquées dans la chaîne de causalité...''
+\item Juste pour être sûr~: dans les expériences C, quand on passe à 20 neurones dans la couche cachée, c'est aussi le cas dans la couche cachée de SoN?
+\item Première conclusion de expC1~: je ne sais pas si on peut dire que le réseau apprend ET désapprend. Je me dis que si on regardait l'erreur de classification du SoN (quand il devrait parier ``low'' et quand il devrait parier ``high''), je pense que cette erreur de classification décroitrait de manière monotone.
+\item Expériences D~: le terme ``profondeur'' n'est sans doute pas le plus approprié pour qualifier la ``distance'' (terme impropre lui-aussi) entre l'indice du neurone gagnant le WTA et l'indice du neurone ayant la bonne réponse.
+\end{itemize}
