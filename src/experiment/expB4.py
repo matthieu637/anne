@@ -8,7 +8,7 @@ from multilayerp import MultilayerPerceptron
 from data import DataFile
 from utils import index_max, compare, compare_f
 from copy import deepcopy
-import representation
+from representation import graph_network
 from simulation import Simulation
 
 class tmpObject:
@@ -17,10 +17,10 @@ class tmpObject:
 
 if __name__ == '__main__':
     mode = MultilayerPerceptron.R0to1
-    nbr_network = 5
-    momentum = 0.9
+    nbr_network = 2
+    momentum = 0.5
     lrate = 0.1
-    nbr_try = 10
+    nbr_try = 20
     nbr_epoch = 1000
     nbOutputs = 10
     
@@ -43,7 +43,7 @@ if __name__ == '__main__':
 
 #   Data Sample Declaration
     def data():
-        return DataFile("digit_shape.txt", mode)
+        return DataFile("digit_handwritten_16.txt", mode)
     
 #   Network Declaration
 
@@ -117,8 +117,12 @@ if __name__ == '__main__':
     def step_learn2(network, inputs, outputs):
         #Learning
         entire_FoN = inputs + network['FoN'].stateHiddenNeurons + network['FoN'].stateOutputNeurons
-        network['SoN'].train(network['FoN'].stateHiddenNeurons, entire_FoN)
-        network['FoN'].train(inputs, outputs)
+        
+        for i in range(len(entire_FoN)):
+            network['SoN'].outputNeurons[i].train(network['SoN'].stateHiddenNeurons, entire_FoN[i])
+        
+        for i in range(len(outputs)):
+            network['FoN'].outputNeurons[i].train(network['FoN'].stateHiddenNeurons, outputs[i])
         
         entire_FoN2 = inputs + network['FoN2'].stateHiddenNeurons + network['FoN2'].stateOutputNeurons
         network['SoN2'].train(network['FoN2'].stateHiddenNeurons, entire_FoN2)
@@ -136,6 +140,7 @@ if __name__ == '__main__':
         plt.title('Classification error of first-order and high-order networks')
         plt.ylabel('ERROR')
         plt.xlabel("EPOCHS")
+        plt.axis((0, nbr_epoch*4, -0.01, 1.01))
     
     
     sim = Simulation(nbr_epoch, 0, data, nbr_network, [FoN, SoN, FoN2, SoN2])
@@ -162,19 +167,19 @@ if __name__ == '__main__':
     
     sim.plot(48, 'FoN_rms', ['FoN_rms', 'SoN_rms', 'SoN_rms_input', 'SoN_rms_hidden', 'SoN_rms_output'],
              ["FoN" , "SoN", "SoN input layer", "SoN hidden layer", "SoN output layer"],
-             [3, 3, 2, 2, 2], moregraph1)
+             [3, 3, 2, 2 , 2 ], moregraph1)
     
     
     sim.plot(48, 'FoN_rms', ['FoN_err', 'SoN_err_input', 'SoN_err_hidden', 'SoN_err_output'],
              ["FoN ( winner take all )" , "SoN input layer ( x > 0.5 => activation )", "SoN hidden layer ( | x - o | <= 0.3 )",
                         "SoN output layer ( winner take all )"],
-             [3, 2, 2 , 2], moregraph2)
+             [3, 2, 2 , 2 ], moregraph2)
     
     sim.plot(48, 'FoN2_rms', ['FoN2_rms', 'SoN2_rms', 'SoN2_rms_input', 'SoN2_rms_hidden', 'SoN2_rms_output'],
              ["FoN" , "SoN", "SoN input layer", "SoN hidden layer", "SoN output layer"],
-             [3, 3, 2, 2, 2], moregraph1)
+             [3, 3, 2, 2 , 2 ], moregraph1)
     
     sim.plot(48, 'FoN_rms', ['FoN2_err', 'SoN2_err_input', 'SoN2_err_hidden', 'SoN2_err_output'],
              ["FoN ( winner take all )" , "SoN input layer ( x > 0.5 => activation )", "SoN hidden layer ( | x - o | <= 0.3 )",
                         "SoN output layer ( winner take all )"],
-             [3, 2, 2, 2], moregraph2)
+             [3, 2, 2 , 2 ], moregraph2)

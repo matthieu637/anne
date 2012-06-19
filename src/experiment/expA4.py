@@ -53,6 +53,11 @@ if __name__ == '__main__':
         plot['SoN_rms_hidden'] += network['SoN'].calc_RMS_range(network['FoN'].stateHiddenNeurons, entire_FoN, lin, lhi) / lout * (lhi - lin)
         plot['SoN_rms_output'] += network['SoN'].calc_RMS_range(network['FoN'].stateHiddenNeurons, entire_FoN, lhi, lout) / lout * (lout - lhi)
         
+        #rms2
+        plot['SoN_rms2_input'] += network['SoN'].calc_RMS_range(network['FoN'].stateHiddenNeurons, entire_FoN, 0, lin) 
+        plot['SoN_rms2_hidden'] += network['SoN'].calc_RMS_range(network['FoN'].stateHiddenNeurons, entire_FoN, lin, lhi) 
+        plot['SoN_rms2_output'] += network['SoN'].calc_RMS_range(network['FoN'].stateHiddenNeurons, entire_FoN, lhi, lout)
+        
         #err
         simu.err('FoN', outputs)
         if(not compare_f(inputs, network['SoN'].stateOutputNeurons[0:lin], 0.3)):
@@ -86,13 +91,17 @@ if __name__ == '__main__':
     
     sim = Simulation(nbr_epoch, width, data, nbr_network, [FoN, SoN])
     sim.dgraph(['FoN_rms', 'SoN_rms', 'SoN_rms_input', 'SoN_rms_hidden', 'SoN_rms_output', 'FoN_err',
-                'SoN_err_input', 'SoN_err_hidden', 'SoN_err_output'], [Simulation.DISCRETIZE])
+                'SoN_err_input', 'SoN_err_hidden', 'SoN_err_output', 'SoN_rms2_input',
+                'SoN_rms2_hidden', 'SoN_rms2_output'], [Simulation.DISCRETIZE])
     sim.launch(nbr_try, step_propagation, step_statictics, step_learn)
     
     sim.plot(12, 'FoN_rms', ['FoN_rms', 'SoN_rms', 'SoN_rms_input', 'SoN_rms_hidden', 'SoN_rms_output'],
              ["FoN" , "SoN", "SoN input layer", "SoN hidden layer", "SoN output layer"],
              [3, 3, 2, 2 , 2 ], moregraph1)
     
+    sim.plot(12, 'FoN_rms', ['FoN_rms', 'SoN_rms', 'SoN_rms2_input', 'SoN_rms2_hidden', 'SoN_rms2_output'],
+             ["FoN" , "SoN", "SoN input layer", "SoN hidden layer", "SoN output layer"],
+             [3, 3, 2, 2 , 2 ], moregraph1)
     
     sim.plot(12, 'FoN_rms', ['FoN_err', 'SoN_err_input', 'SoN_err_hidden', 'SoN_err_output'],
              ["FoN ( winner take all )" , "SoN input layer ( x > 0.5 => activation )", "SoN hidden layer ( | x - o | <= 0.3 )",

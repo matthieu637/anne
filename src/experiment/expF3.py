@@ -11,6 +11,7 @@ from utils import index_max, index_max_nth
 import representation
 from simulation import Simulation
 from random import seed
+import numpy as np
 
 class tmpObject:
     i = 0
@@ -112,6 +113,7 @@ if __name__ == '__main__':
     sim.dgraph(['FoN_rms', 'SoN_rms', 'FoN_perf', 'SoN_perf', 'high_wager', 'feedback'], [])
     seed(100)
     sim.launch(nbr_try, step_propagation, step_statictics, step_learn)
+    np.savetxt("expF3.data", sim.plots['feedback'])
     
     sim.plot(point, 'FoN_rms', ['FoN_rms', 'SoN_rms'],
              ["FoN" , "SoN"],

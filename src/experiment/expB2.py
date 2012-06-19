@@ -101,7 +101,7 @@ if __name__ == '__main__':
         plot['SoN2_err_input'] += 1 - compare(inputs, network['SoN2'].stateOutputNeurons[0:lin])
         if(not compare_f(network['FoN2'].stateHiddenNeurons, network['SoN2'].stateOutputNeurons[lin:lhi], 0.3)):
             plot['SoN2_err_hidden'] += 1
-        if(index_max(network['SoN'].stateOutputNeurons[lhi:lout]) != index_max(network['FoN2'].stateOutputNeurons)):
+        if(index_max(network['SoN2'].stateOutputNeurons[lhi:lout]) != index_max(network['FoN2'].stateOutputNeurons)):
             plot['SoN2_err_output'] += 1
             
     def step_learn(network, inputs, outputs):
@@ -122,7 +122,7 @@ if __name__ == '__main__':
         
         entire_FoN2 = inputs + network['FoN2'].stateHiddenNeurons + network['FoN2'].stateOutputNeurons
         network['SoN2'].train(network['FoN2'].stateHiddenNeurons, entire_FoN2)
-        network['FoN2'].train(inputs, outputs)
+        
         for i in range(len(outputs)):
             network['FoN2'].outputNeurons[i].train(network['FoN2'].stateHiddenNeurons, outputs[i])
         

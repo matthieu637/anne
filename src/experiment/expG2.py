@@ -12,7 +12,7 @@ import representation
 from simulation import Simulation
 from random import seed
 from copy import deepcopy
-
+import numpy as np
 
 
 
@@ -253,6 +253,7 @@ if __name__ == '__main__':
     sim.dgraph(['FoN_rms', 'SoN_rms', 'FoN_perf', 'SoN_perf', 'high_wager', 'control_rms', 'control_perf'], [])
     seed(100)
     sim.launch(nbr_try, step_propagation, step_statictics, step_learn)
+    np.savetxt("expG2.data", sim.plots['FoN_perf'])
     
     sim.plot(point, 'FoN_rms', ['FoN_rms', 'SoN_rms', 'control_rms'],
              ["FoN" , "SoN", "Control"],
