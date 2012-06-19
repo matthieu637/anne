@@ -1,6 +1,6 @@
 #!/bin/bash
 
-ls *.aux | while read file
+ls *.aux | grep -v intro | while read file
 do 
 	bibtex $file
 done

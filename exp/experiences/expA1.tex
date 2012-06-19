@@ -78,6 +78,24 @@
 	  \item le second réseau apprend plus rapidement que le premier
 	\end{itemize}
     \paragraph{Secondaires}
+      RMS indépendant par couche
+      \begin{center}
+	\includegraphics[width=250px]{data/expA1/rms_new.png}
+      \end{center}
+      \subparagraph{Notes}
+	\begin{itemize}
+	  \item formule utilisée pour RMS (cf. Formules~\nameref{rms})
+	  \item les courbes SoN layer représentent les erreurs (du second réseaux) sur les couches à reproduire
+	\end{itemize}
+      \subparagraph{Conclusion}
+	\begin{itemize}
+	  \item le premier réseau réussit à apprendre sa tâche de classification
+	  \item le second réseau réussit à apprendre sa tâche de duplication
+	  \item la couche cachée et la couche de sortie ne posent aucun problèmes d'apprentissage
+	  \item les performances du second réseau dépendent principalement de sa capacité à reproduire les entrées
+	  \item le second réseau apprend plus rapidement que le premier
+	\end{itemize}
+    \paragraph{Secondaires}
       Discrétisation de la couche cachée du premier réseau
       \begin{center}
 	\begin{tabular}{lr}
@@ -119,7 +137,7 @@
         Au vu du peu d'entrées différentes présentées au réseau (10), on peut voir qu'il fixe 3 à 4 points précis
         pour classifier un nombre.
     \paragraph{Secondaires}
-      Prototypes à l'intérieur de la première partie de la couche de sortie du second réseau
+      Prototypes à l'intérieur des neurones du second réseau qui essaient de redonner les entrées
       \begin{center}
 	\includegraphics[width=250px]{data/expA1/prototype.png}
       \end{center} 
@@ -132,7 +150,7 @@
 	parler de prototype.
 	
   \subsection{Conclusion}
-  Comme il l'est dit dans \cite{Cleeremans_2007}, cette architecture tente d'abolir les problèmes des réseaux connexionnistes
+  Comme il l'est dit dans \cite{Cleeremans_2007}, cette architecture tente de résoudre les problèmes des réseaux connexionnistes
   classiques à avoir un semblant de conscience.
   
   À savoir :

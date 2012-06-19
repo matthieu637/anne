@@ -4,7 +4,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.1.2
-lastDocument=expB1.tex
+lastDocument=cahier.tex
 masterDocument=
 name=cahier
 pkg_extIsRegExp=false
@@ -298,12 +298,12 @@ order=-1
 
 [item:cahier.tex]
 archive=true
-column=17
+column=50
 encoding=UTF-8
 highlight=LaTeX
-line=95
+line=76
 mode=LaTeX
-open=false
+open=true
 order=0
 
 [item:discretize.tex]
@@ -321,9 +321,9 @@ archive=true
 column=0
 encoding=UTF-8
 highlight=LaTeX
-line=2
+line=0
 mode=LaTeX
-open=true
+open=false
 order=0
 
 [item:expA2.tex]
@@ -358,12 +358,12 @@ order=5
 
 [item:expB1.tex]
 archive=true
-column=55
+column=0
 encoding=UTF-8
 highlight=LaTeX
-line=15
+line=0
 mode=LaTeX
-open=true
+open=false
 order=1
 
 [item:expB2.tex]
@@ -567,8 +567,8 @@ open=false
 order=7
 
 [view-settings,view=0,item:cahier.tex]
-CursorColumn=17
-CursorLine=95
+CursorColumn=50
+CursorLine=76
 JumpList=
 ViMarks=
 

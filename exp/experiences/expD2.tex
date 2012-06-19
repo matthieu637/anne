@@ -10,8 +10,9 @@
       Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
       par 256 (16x16) neurones d'entrées. Il est composé d'une couche cachée de 100 neurones.
       
-      Un second réseau de perceptron multicouche apprend à suivre une \textbf{intuition} qui
-      représente la profondeur du neurone le plus actif contenant la bonne réponse.
+      Un second réseau de perceptron multicouche apprend à suivre une \textbf{intuition}
+      représentant la ``distance'' entre l'indice du neurone gagnant le winner-take-all et l'indice
+      du neurone ayant la bonne réponse.
       
       L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
       couche cachée du premier réseau.
