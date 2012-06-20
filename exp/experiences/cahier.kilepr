@@ -4,7 +4,7 @@ img_extIsRegExp=false
 img_extensions=.eps .jpg .jpeg .png .pdf .ps .fig .gif
 kileprversion=2
 kileversion=2.1.2
-lastDocument=cahier.tex
+lastDocument=expB2.tex
 masterDocument=
 name=cahier
 pkg_extIsRegExp=false
@@ -97,6 +97,26 @@ Mode=LaTeX
 ReadWrite=true
 
 [document-settings,item:expB3.tex]
+Bookmarks=
+Encoding=UTF-8
+FoldedColumns=
+FoldedLines=
+Highlighting=LaTeX
+Indentation Mode=normal
+Mode=LaTeX
+ReadWrite=true
+
+[document-settings,item:expB4.tex]
+Bookmarks=
+Encoding=UTF-8
+FoldedColumns=
+FoldedLines=
+Highlighting=LaTeX
+Indentation Mode=normal
+Mode=LaTeX
+ReadWrite=true
+
+[document-settings,item:expB5.tex]
 Bookmarks=
 Encoding=UTF-8
 FoldedColumns=
@@ -276,6 +296,16 @@ Indentation Mode=normal
 Mode=LaTeX
 ReadWrite=true
 
+[document-settings,item:intro.tex]
+Bookmarks=
+Encoding=UTF-8
+FoldedColumns=
+FoldedLines=
+Highlighting=LaTeX
+Indentation Mode=normal
+Mode=LaTeX
+ReadWrite=true
+
 [document-settings,item:rms.tex]
 Bookmarks=
 Encoding=UTF-8
@@ -298,13 +328,13 @@ order=-1
 
 [item:cahier.tex]
 archive=true
-column=50
+column=17
 encoding=UTF-8
 highlight=LaTeX
-line=76
+line=99
 mode=LaTeX
 open=true
-order=0
+order=4
 
 [item:discretize.tex]
 archive=true
@@ -318,63 +348,63 @@ order=-1
 
 [item:expA1.tex]
 archive=true
-column=0
+column=97
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=139
 mode=LaTeX
 open=false
 order=0
 
 [item:expA2.tex]
 archive=true
-column=2
+column=6
 encoding=UTF-8
 highlight=LaTeX
-line=143
+line=123
 mode=LaTeX
 open=false
 order=2
 
 [item:expA3.tex]
 archive=true
-column=27
+column=97
 encoding=UTF-8
 highlight=LaTeX
-line=150
+line=119
 mode=LaTeX
-open=false
-order=-1
+open=true
+order=1
 
 [item:expA4.tex]
 archive=true
-column=94
+column=19
 encoding=UTF-8
 highlight=LaTeX
-line=116
+line=89
 mode=LaTeX
 open=false
 order=5
 
 [item:expB1.tex]
 archive=true
-column=0
+column=6
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=15
 mode=LaTeX
 open=false
 order=1
 
 [item:expB2.tex]
 archive=true
-column=36
+column=3
 encoding=UTF-8
 highlight=LaTeX
-line=0
+line=82
 mode=LaTeX
-open=false
-order=-1
+open=true
+order=2
 
 [item:expB3.tex]
 archive=true
@@ -386,42 +416,62 @@ mode=LaTeX
 open=false
 order=-1
 
-[item:expC1.tex]
+[item:expB4.tex]
 archive=true
-column=3
+column=21
 encoding=UTF-8
 highlight=LaTeX
-line=70
+line=108
+mode=LaTeX
+open=true
+order=7
+
+[item:expB5.tex]
+archive=true
+column=28
+encoding=UTF-8
+highlight=LaTeX
+line=7
+mode=LaTeX
+open=true
+order=5
+
+[item:expC1.tex]
+archive=true
+column=88
+encoding=UTF-8
+highlight=LaTeX
+line=107
 mode=LaTeX
 open=false
 order=-1
 
 [item:expC2.tex]
 archive=true
-column=63
+column=90
 encoding=UTF-8
 highlight=LaTeX
-line=104
+line=112
 mode=LaTeX
 open=false
 order=4
 
 [item:expC3.tex]
 archive=true
-column=108
+column=86
 encoding=UTF-8
 highlight=LaTeX
-line=69
+line=97
 mode=LaTeX
 open=false
 order=2
 
 [item:expC4.tex]
 archive=true
-column=108
+column=69
 encoding=UTF-8
 highlight=LaTeX
-line=65
+line=79
 mode=LaTeX
 open=false
 order=1
@@ -438,20 +488,20 @@ order=3
 
 [item:expD2.tex]
 archive=true
-column=18
+column=26
 encoding=UTF-8
 highlight=LaTeX
-line=56
+line=23
 mode=LaTeX
-open=false
-order=2
+open=true
+order=3
 
 [item:expD3.tex]
 archive=true
-column=44
+column=23
 encoding=UTF-8
 highlight=LaTeX
-line=69
+line=1
 mode=LaTeX
 open=false
 order=3
@@ -473,8 +523,8 @@ encoding=UTF-8
 highlight=LaTeX
 line=21
 mode=LaTeX
-open=false
-order=2
+open=true
+order=6
 
 [item:expF2.tex]
 archive=true
@@ -556,6 +606,16 @@ mode=LaTeX
 open=false
 order=-1
 
+[item:intro.tex]
+archive=true
+column=32
+encoding=UTF-8
+highlight=LaTeX
+line=52
+mode=LaTeX
+open=true
+order=0
+
 [item:rms.tex]
 archive=true
 column=23
@@ -567,8 +627,8 @@ open=false
 order=7
 
 [view-settings,view=0,item:cahier.tex]
-CursorColumn=50
-CursorLine=76
+CursorColumn=17
+CursorLine=99
 JumpList=
 ViMarks=
 
@@ -579,38 +639,38 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expA1.tex]
-CursorColumn=0
-CursorLine=2
+CursorColumn=97
+CursorLine=139
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expA2.tex]
-CursorColumn=2
-CursorLine=143
+CursorColumn=6
+CursorLine=123
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expA3.tex]
-CursorColumn=27
-CursorLine=150
+CursorColumn=97
+CursorLine=119
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expA4.tex]
-CursorColumn=94
-CursorLine=116
+CursorColumn=19
+CursorLine=89
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expB1.tex]
-CursorColumn=55
+CursorColumn=6
 CursorLine=15
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expB2.tex]
-CursorColumn=36
-CursorLine=0
+CursorColumn=3
+CursorLine=82
 JumpList=
 ViMarks=
 
@@ -620,27 +680,39 @@ CursorLine=98
 JumpList=
 ViMarks=
 
+[view-settings,view=0,item:expB4.tex]
+CursorColumn=21
+CursorLine=108
+JumpList=
+ViMarks=
+
+[view-settings,view=0,item:expB5.tex]
+CursorColumn=28
+CursorLine=7
+JumpList=
+ViMarks=
+
 [view-settings,view=0,item:expC1.tex]
-CursorColumn=3
-CursorLine=70
+CursorColumn=88
+CursorLine=107
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expC2.tex]
-CursorColumn=63
-CursorLine=104
+CursorColumn=90
+CursorLine=112
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expC3.tex]
-CursorColumn=108
-CursorLine=69
+CursorColumn=86
+CursorLine=97
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expC4.tex]
-CursorColumn=108
-CursorLine=65
+CursorColumn=69
+CursorLine=79
 JumpList=
 ViMarks=
 
@@ -651,14 +723,14 @@ JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expD2.tex]
-CursorColumn=18
-CursorLine=56
+CursorColumn=26
+CursorLine=23
 JumpList=
 ViMarks=
 
 [view-settings,view=0,item:expD3.tex]
-CursorColumn=44
-CursorLine=69
+CursorColumn=23
+CursorLine=1
 JumpList=
 ViMarks=
 
@@ -719,6 +791,12 @@ ViMarks=
 [view-settings,view=0,item:gradient.tex]
 CursorColumn=0
 CursorLine=0
+JumpList=
+ViMarks=
+
+[view-settings,view=0,item:intro.tex]
+CursorColumn=32
+CursorLine=52
 JumpList=
 ViMarks=
 

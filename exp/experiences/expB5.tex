@@ -1,11 +1,7 @@
 \section{Expérience B5} \label{expB5}
   \subsection{Objectif}
-    Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
-    un réseau de neurone connexionniste, plus particulièrement sur des perceptrons multicouches.
-    
-    
-    À partir de la première expérience de l'article \cite{Cleeremans_2007}, expérimenter les représentations
-    sur des données réelles.
+  Il sagit d'une extension de l'\nameref{expB2} pour montrer que même un changement de tâche,
+  qui n'est pas simplement une simple combinaison, fonctionne.
   
   \subsection{Architecture}
     \paragraph{Description}
@@ -18,10 +14,11 @@
       L'apprentissage du second réseau, n'affecte pas les poids entre la couche d'entrée et la 
       couche cachée du premier réseau.
       
-      Toutes les 1000 époques, l'objectif de la tâche est changé (par une autre combinaison).
+      À l'époque 1000, l'objectif de la tâche est changé, il doit qualifier les formes par pair/impair (8 neurones sont alors supprimés).
+      
       
       Nous avons déroulé l'expérience en 2 fois, une normal, et une fois où on fige les poids
-      entre les entrées et la couche cachée du premier réseau après les 1000 premières époques.
+      entre les entrées et la couche cachée du premier réseau après le changement de tâche.
     \paragraph{Schéma}
       \begin{center}
 	\includegraphics[width=220px]{data/expA3/schema.png}
@@ -35,7 +32,7 @@
 	      \item momentum : 0.5 sur les 2 réseaux
 	      \item taux d'apprentissage : 0.1 sur les 2 réseaux
 	      \item \textbf{1600 formes} de chiffres différents présentées (shuffle) \cite{Handwritten_256}
-	      \item apprentissage 10 (formes) x 4000 (époques)
+	      \item apprentissage 10 (formes) x 2000 (époques)
 	    \end{itemize}
 	  \end{minipage}
 	  &
@@ -75,11 +72,9 @@
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
-	  \item lorsque l'on fige les poids, le premier réseau arrive à se réadapter aux nouvelles tâches, mais s'ils ne sont
+	  \item lorsque l'on fige les poids, le premier réseau arrive à se réadapter à la nouvelle tâche, mais s'ils ne sont
 	  pas figés, il n'y arrive pas
-	  \item la reproduction de la couche cachée par le second réseau ne pose pas de problème
 	  \item lorsque l'on ne fige pas les poids, le second réseau est lui aussi instable
-	  \item lorsque les poids sont figés, la couche de sortie a du mal à être totalement réapprise par le second réseau
 	  
 	\end{itemize}
     \paragraph{Secondaires}
@@ -105,13 +100,7 @@
 	Ces courbes sont a peu près équivalentes à celles de classifications.
 
   \subsection{Conclusion}
-    Le blocage des poids dans la couche cachée prouve la présence de représentations stables permettant le 
-  transfert de tâche.
-  
-  Ces représentations contiennent ce qui caractérise la forme sans encore lui mettre un sens dessus.
-  Il sait à quoi ressemble un 1 (dans la couche cachée) et lui met un donne le sens 1 (dans la couche de sortie).
-  Il est donc facile de lui dire que finalement, cette représentation correspond à un 2, sans qu'il ait à réapprendre
-  la forme entièrement.
+  L'\nameref{expB2} peut être étendu sur des changements de tâche plus complexe.
   
 
   \newpage 

@@ -1,12 +1,8 @@
 \section{Expérience B4} \label{expB4}
   \subsection{Objectif}
-    Comprendre de quelles manières peuvent émerger des représentations et méta-représentations dans 
-    un réseau de neurone connexionniste, plus particulièrement sur des perceptrons multicouches.
-    
-    
-    À partir de la première expérience de l'article \cite{Cleeremans_2007}, expérimenter les représentations
-    sur des données réelles.
-  
+  Il sagit d'une extension de l'\nameref{expB2} pour montrer qu'avec des changements de tâche :
+  le second réseau est lui aussi plus enclin à apprendre lorsque ses poids sont figés.
+   
   \subsection{Architecture}
     \paragraph{Description}
       Un premier réseau de perceptron multicouche apprend à discrétiser des chiffres représentés
@@ -20,8 +16,9 @@
       
       Toutes les 1000 époques, l'objectif de la tâche est changé (par une autre combinaison).
       
-      Nous avons déroulé l'expérience en 2 fois, une normal, et une fois où on fige les poids
-      entre les entrées et la couche cachée du premier réseau après les 1000 premières époques.
+      Nous avons déroulé l'expérience en 2 fois, une fois où on fige les poids
+      entre les entrées et la couche cachée du premier réseau après les 1000 premières époques, 
+      et une seconde où on fige les poids des couches cachées ( entrée - couche cachée ) des 2 réseaux.
     \paragraph{Schéma}
       \begin{center}
 	\includegraphics[width=220px]{data/expA3/schema.png}
@@ -75,11 +72,9 @@
 	\end{itemize}
       \subparagraph{Conclusion}
 	\begin{itemize}
-	  \item lorsque l'on fige les poids, le premier réseau arrive à se réadapter aux nouvelles tâches, mais s'ils ne sont
-	  pas figés, il n'y arrive pas
-	  \item la reproduction de la couche cachée par le second réseau ne pose pas de problème
-	  \item lorsque l'on ne fige pas les poids, le second réseau est lui aussi instable
-	  \item lorsque les poids sont figés, la couche de sortie a du mal à être totalement réapprise par le second réseau
+	  \item lorsque l'on fige les poids, le premier réseau arrive à se réadapter aux nouvelles tâches
+	  \item lorsqu'on fige également les poids du SoN, il est capable d'apprendre à dupliquer la sortie
+	  du FoN
 	  
 	\end{itemize}
     \paragraph{Secondaires}
@@ -103,15 +98,12 @@
 	\end{itemize}
       \subparagraph{Conclusion}
 	Ces courbes sont a peu près équivalentes à celles de classifications.
+	\\
+	Même avec un RMS très faible pour la couche de sortie, dans la courbe de droite,
+	cela suffit au réseau pour se tromper dans l'erreur de classification.
 
   \subsection{Conclusion}
-    Le blocage des poids dans la couche cachée prouve la présence de représentations stables permettant le 
-  transfert de tâche.
-  
-  Ces représentations contiennent ce qui caractérise la forme sans encore lui mettre un sens dessus.
-  Il sait à quoi ressemble un 1 (dans la couche cachée) et lui met un donne le sens 1 (dans la couche de sortie).
-  Il est donc facile de lui dire que finalement, cette représentation correspond à un 2, sans qu'il ait à réapprendre
-  la forme entièrement.
+  Preuve que le SoN subit le même phénomène (il faut bloquer des poids pour qu'il puisse s'adapter) que le FoN lors du changement de tâche.
   
 
   \newpage 
