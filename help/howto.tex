@@ -1,0 +1,100 @@
+\documentclass[a4paper,11pt]{article}
+\usepackage[utf8x]{inputenc} %commentaire
+
+\usepackage[francais]{babel} %FR
+\usepackage[T1]{fontenc}
+\usepackage{listings}
+\usepackage{color}
+\usepackage{verbatim}
+\usepackage[top=2cm, bottom=2cm, left=2cm, right=2cm]{geometry} %Réduire les marges
+
+
+
+\lstset{%
+ 	float=hbp,basicstyle=\footnotesize\ttfamily\color{white},%
+ 	columns=fixed,tabsize=4,frame=single,extendedchars=false,%
+	showspaces=false,showstringspaces=false,numbers=none,%
+	numberstyle=\tiny\ttfamily\color{black},
+ 	breaklines=true,breakindent=3em,breakautoindent=true,%
+ 	captionpos=t,xleftmargin=-1em,xrightmargin=-1em,lineskip=0pt,%
+ 	numbersep=1em,backgroundcolor=\color{black},%
+ 	keywordstyle=\bfseries\color{yellow}
+}
+
+
+\title{Comment utiliser le simulateur}
+\author{}
+\date{}
+
+
+\begin{document}
+\maketitle
+
+\section{En tant que commande}
+
+\subsection{Pour discrétiser un espace d'entrée à 2 dimensions}
+
+\begin{lstlisting}[language={sh}]
+java -jar mlp-simu.jar -x
+\end{lstlisting}
+
+Dans l'onglet \textbf{Params}, il suffit de renseigner les différents paramètres et valider.
+La ligne ''affichage du réseau'' correspond au nombre de colonnes pour une couche du réseau 
+(sachant que la couche d'entrée n'est pas comptée).
+
+Dans l'onglet \textbf{Réseau}, la structure du réseau est visible et il faut maintenant choisir
+à quelles entrées on assigne une croix ou un rond en cliquant dessus, puis lancer l'apprentissage.
+
+Avant de regarder les différents neurones il faut vérifier que l'apprentissage a réussi 
+dans l'onglet \textbf{Courbes}. Si ce n'est pas le cas, il faudra jouer sur les paramètres.\\
+Note : Le nombre d'époques représente le nombre de fois qu'on présente une entrée au réseau.
+
+\subsection{Pour simuler \& afficher un perceptron multicouche}
+
+\begin{lstlisting}[language={sh}]
+java -jar mlp-simu.jar <liste taille couche> <liste taille affichage couche> <fonction transfert> <fichier corpus> <taux apprentissage> <epoques> <precision courbe>
+\end{lstlisting}
+
+Par exemple,
+\begin{lstlisting}[language={sh}]
+java -jar mlp-simu.jar 256,50,10 16,5,1 sigmoid01 digits.corpus 0.15 55000 250
+\end{lstlisting}
+
+Le fichier corpus doit simplement être structuré par un couple d'entrée/sortie par ligne.
+
+Un tier des données du corpus seront considérées comme base de test, le reste en tant
+qu'apprentissage.
+
+\section{En tant que bibliothèque}
+
+Lier le fichier jar au projet.
+
+\subsection{Pour simuler \& afficher un perceptron multicouche}
+
+Exemple de simulation de la fonction XOR. Avec une couche intermédiaire contenant 2 neurones, 
+sur 1000 époques, avec une fonction sigmoid sur [0 ; 1].
+
+\begin{lstlisting}
+public static void AND() {
+	Simulation s = new Simulation(Arrays.asList(2, 2, 1), new Sigmoid01());
+	s.ajouterDonneeApp(Arrays.asList(0., 0., 0.));
+	s.ajouterDonneeApp(Arrays.asList(1., 0., 1.));
+	s.ajouterDonneeApp(Arrays.asList(0., 1., 1.));
+	s.ajouterDonneeApp(Arrays.asList(1., 1., 0.));
+	s.lancer(0.15F, 1000 * 4, 1);
+	new SimulationUI(s, Arrays.asList(1, 1, 1)).afficher();
+}
+\end{lstlisting}
+
+\newpage
+Exemple de simulation avec un corpus externe.
+\begin{lstlisting}
+	public static void digits() throws IOException {
+		Simulation s = new Simulation(Arrays.asList(16 * 16, 50, 10), new Sigmoid01());
+		s.corpusDepuis("digits.corpus");
+		s.lancer(0.15F, 55000, 250);
+		new SimulationUI(s, Arrays.asList(16, 5, 1)).afficher();
+	}
+\end{lstlisting}
+	
+\end{document}

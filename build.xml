@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<project name="QiS-GameServer" default="jar" basedir=".">
+
+	<path id="classpath">
+		<fileset dir="lib/">
+			<include name="*.jar" />
+		</fileset>
+	</path>
+
+
+	<target name="init">
+		<echo>Suppression des anciens fichiers compiles</echo>
+		<delete dir="bin/" />
+		<mkdir dir="bin/" />
+		<echo>Création du dossier de destination</echo>
+		<delete dir="build" />
+		<mkdir dir="build" />
+	</target>
+
+	<target name="compile" depends="init">
+		<echo>Compilation des sources</echo>
+		<javac destdir="bin/" optimize="on" debug="on" nowarn="off" source="1.7" target="1.7" encoding="utf-8">
+			<src path="src" />
+			<classpath refid="classpath" />
+		</javac>
+	</target>
+
+	<target name="jar" depends="compile">
+		<echo>Creation de l'archive jar</echo>
+		<jar destfile="build/mlp-simu.jar">
+			<manifest>
+				<attribute name="Main-Class" value="Args" />
+			</manifest>
+			<fileset dir="bin" />
+			<fileset dir="data" />
+			<zipgroupfileset dir="lib" includes="**/*.jar" />
+		</jar>
+	</target>
+</project>
